@@ -6,8 +6,8 @@ import CreationImage from '../components/CreationImage'
 import ProductCard from '../components/ProductCard'
 import { Button, Flourish, Pill, Stars } from '../components/ui'
 import { PALETTES } from '../art/palettes'
-import { PRODUCTS, computeLinePrice, getCategory, getProduct } from '../data/catalog'
-import { FULFILMENT } from '../data/site'
+import { computeLinePrice, getCategory } from '../data/catalog'
+import { useCatalog } from '../context/CatalogContext'
 import { useCart } from '../context/CartContext'
 import { classNames, money } from '../lib/format'
 import usePageMeta from '../lib/usePageMeta'
@@ -21,6 +21,7 @@ const TABS = [
 
 export default function ProductDetail() {
   const { slug } = useParams()
+  const { products, getProduct, fulfilment, loading } = useCatalog()
   const product = getProduct(slug)
   const { addItem } = useCart()
 
@@ -51,12 +52,14 @@ export default function ProductDetail() {
     [product, sizeId, flavorId, frostingId, addonIds],
   )
 
-  if (!product) return <NotFound />
+  // Wait for the live menu before deciding a slug is unknown, otherwise a
+  // newly added product 404s for anyone who lands on it directly.
+  if (!product) return loading ? <ProductSkeleton /> : <NotFound />
 
   const category = getCategory(product.category)
   /** The selected flavour repaints the illustration, so the choice is visible. */
   const artFlavor = PALETTES[flavorId] ? flavorId : product.flavorArt
-  const related = PRODUCTS.filter(
+  const related = products.filter(
     (p) => p.slug !== product.slug && (p.category === product.category || p.bestseller),
   ).slice(0, 3)
 
@@ -444,7 +447,7 @@ export default function ProductDetail() {
               <p className="mt-3 text-center text-[0.78rem] text-cocoa/55">
                 Order at least {product.leadDays}{' '}
                 {product.leadDays === 1 ? 'day' : 'days'} ahead · free delivery over{' '}
-                {money(FULFILMENT.freeDeliveryOver)}
+                {money(fulfilment.freeDeliveryOver)}
               </p>
             </div>
 
@@ -531,5 +534,27 @@ export default function ProductDetail() {
         </div>
       </section>
     </>
+  )
+}
+
+/** Shown while the live menu loads, so a valid product never flashes a 404. */
+function ProductSkeleton() {
+  return (
+    <div className="bg-cream pb-24 pt-32">
+      <div className="container-x grid gap-12 lg:grid-cols-[0.95fr_1.05fr]">
+        <div className="aspect-square animate-pulse rounded-[2rem] bg-blush/60" />
+        <div className="space-y-4">
+          <div className="h-4 w-24 animate-pulse rounded bg-blush/60" />
+          <div className="h-12 w-3/4 animate-pulse rounded bg-blush/60" />
+          <div className="h-4 w-full animate-pulse rounded bg-blush/50" />
+          <div className="h-4 w-5/6 animate-pulse rounded bg-blush/50" />
+          <div className="mt-8 grid gap-2 sm:grid-cols-2">
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className="h-20 animate-pulse rounded-2xl bg-blush/50" />
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }

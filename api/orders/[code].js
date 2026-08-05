@@ -1,4 +1,5 @@
-import { getOrder, saveOrder } from '../_lib/store.js'
+import { getOrder, saveOrder } from '../_lib/db.js'
+import { sendStatusUpdate } from '../_lib/notify.js'
 import {
   applyCors,
   clean,
@@ -85,6 +86,9 @@ export default async function handler(req, res) {
     } catch (error) {
       return sendJson(res, 500, { error: error.message || 'Could not update that order' })
     }
+
+    // Only on a real transition, so re-saving a note never re-emails anyone.
+    if (next.status !== order.status) sendStatusUpdate(next)
 
     return sendJson(res, 200, { order: next })
   }

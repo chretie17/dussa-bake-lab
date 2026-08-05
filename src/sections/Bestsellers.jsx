@@ -1,9 +1,10 @@
 import { ArrowRight } from 'lucide-react'
 import ProductCard from '../components/ProductCard'
 import { Button, Section, SectionHeading } from '../components/ui'
-import { bestsellers } from '../data/catalog'
+import { useCatalog } from '../context/CatalogContext'
 
 export default function Bestsellers() {
+  const { bestsellers } = useCatalog()
   const products = bestsellers().slice(0, 6)
 
   return (

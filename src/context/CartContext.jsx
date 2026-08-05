@@ -114,9 +114,11 @@ export function useCart() {
 }
 
 /** Delivery is free above a threshold — used by the cart drawer and checkout. */
-export function deliveryFeeFor(subtotal, fulfilment) {
-  if (fulfilment !== 'delivery') return 0
+export function deliveryFeeFor(subtotal, mode, config = FULFILMENT) {
+  if (mode !== 'delivery') return 0
   // An empty basket has nothing to deliver, so it must not carry a fee.
   if (subtotal <= 0) return 0
-  return subtotal >= FULFILMENT.freeDeliveryOver ? 0 : FULFILMENT.deliveryFee
+  const threshold = config?.freeDeliveryOver ?? FULFILMENT.freeDeliveryOver
+  const fee = config?.deliveryFee ?? FULFILMENT.deliveryFee
+  return subtotal >= threshold ? 0 : fee
 }

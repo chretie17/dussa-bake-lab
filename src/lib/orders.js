@@ -247,3 +247,63 @@ export function ordersToCsv(orders) {
   )
   return [header.join(','), ...rows].join('\n')
 }
+
+/* ------------------------------------------------------------------ */
+/* Admin: catalogue & settings                                          */
+/* ------------------------------------------------------------------ */
+
+export async function fetchAdminCatalog(adminKey) {
+  return request('/api/catalog', { headers: { 'x-admin-key': adminKey || '' } })
+}
+
+export async function createProduct(product, adminKey) {
+  const data = await request('/api/catalog', {
+    method: 'POST',
+    headers: { 'x-admin-key': adminKey || '' },
+    body: JSON.stringify(product),
+  })
+  return data?.product
+}
+
+export async function updateProduct(slug, product, adminKey) {
+  const data = await request(`/api/catalog/${encodeURIComponent(slug)}`, {
+    method: 'PUT',
+    headers: { 'x-admin-key': adminKey || '' },
+    body: JSON.stringify(product),
+  })
+  return data?.product
+}
+
+export async function removeProduct(slug, adminKey) {
+  return request(`/api/catalog/${encodeURIComponent(slug)}`, {
+    method: 'DELETE',
+    headers: { 'x-admin-key': adminKey || '' },
+  })
+}
+
+export async function reorderProducts(order, adminKey) {
+  const data = await request('/api/catalog', {
+    method: 'POST',
+    headers: { 'x-admin-key': adminKey || '' },
+    body: JSON.stringify({ order }),
+  })
+  return data?.products || []
+}
+
+export async function fetchSettings() {
+  const data = await request('/api/settings')
+  return data?.settings
+}
+
+export async function updateSettings(settings, adminKey) {
+  const data = await request('/api/settings', {
+    method: 'PATCH',
+    headers: { 'x-admin-key': adminKey || '' },
+    body: JSON.stringify(settings),
+  })
+  return data?.settings
+}
+
+export async function fetchHealth() {
+  return request('/api/health')
+}

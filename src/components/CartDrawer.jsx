@@ -4,12 +4,13 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Minus, Plus, ShoppingBag, Trash2, X } from 'lucide-react'
 import { useCart } from '../context/CartContext'
 import { money } from '../lib/format'
-import { FULFILMENT } from '../data/site'
+import { useCatalog } from '../context/CatalogContext'
 import CreationImage from './CreationImage'
 import { Button } from './ui'
 
 export default function CartDrawer() {
   const { items, isOpen, closeCart, removeItem, setQuantity, subtotal, count } = useCart()
+  const { fulfilment } = useCatalog()
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -23,8 +24,8 @@ export default function CartDrawer() {
     }
   }, [isOpen, closeCart])
 
-  const shortfall = FULFILMENT.freeDeliveryOver - subtotal
-  const progress = Math.min(100, (subtotal / FULFILMENT.freeDeliveryOver) * 100)
+  const shortfall = fulfilment.freeDeliveryOver - subtotal
+  const progress = Math.min(100, (subtotal / fulfilment.freeDeliveryOver) * 100)
 
   return (
     <AnimatePresence>

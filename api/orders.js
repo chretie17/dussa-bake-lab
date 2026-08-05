@@ -1,5 +1,5 @@
-import { listOrders, saveOrder, hasPersistentStore } from './_lib/store.js'
-import { notifyNewOrder } from './_lib/notify.js'
+import { listOrders, saveOrder, storageMode } from './_lib/db.js'
+import { notifyNewOrder, sendCustomerConfirmation } from './_lib/notify.js'
 import {
   applyCors,
   adminConfigured,
@@ -50,7 +50,7 @@ export default async function handler(req, res) {
       const orders = await listOrders(300)
       return sendJson(res, 200, {
         orders,
-        storage: hasPersistentStore ? 'persistent' : 'memory',
+        storage: storageMode(),
         secured: adminConfigured(),
       })
     } catch (error) {
@@ -105,9 +105,11 @@ export default async function handler(req, res) {
     }
 
     // Fire-and-forget: never let a slow inbox hold up the customer's response.
+    // Failures are logged inside the mailer, never surfaced as a failed order.
     notifyNewOrder(order)
+    sendCustomerConfirmation(order)
 
-    return sendJson(res, 201, { order, storage: hasPersistentStore ? 'persistent' : 'memory' })
+    return sendJson(res, 201, { order, storage: storageMode() })
   }
 
   res.setHeader('Allow', 'GET, POST, OPTIONS')

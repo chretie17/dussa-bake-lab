@@ -18,8 +18,7 @@ import PageHeader from '../components/PageHeader'
 import CreationImage from '../components/CreationImage'
 import { Field, Select, TextArea, TextInput } from '../components/Field'
 import { Button, Pill } from '../components/ui'
-import { OCCASIONS, bestsellers } from '../data/catalog'
-import { FULFILMENT } from '../data/site'
+import { useCatalog } from '../context/CatalogContext'
 import { deliveryFeeFor, useCart } from '../context/CartContext'
 import { createOrder } from '../lib/orders'
 import {
@@ -50,6 +49,7 @@ const TIME_SLOTS = [
 export default function OrderFlow() {
   const navigate = useNavigate()
   const { items, subtotal, count, leadDays, setQuantity, removeItem, clear, openCart } = useCart()
+  const { occasions, bestsellers, fulfilment } = useCatalog()
 
   const [step, setStep] = useState(0)
   const [submitting, setSubmitting] = useState(false)
@@ -57,9 +57,9 @@ export default function OrderFlow() {
   const [errors, setErrors] = useState({})
   const [form, setForm] = useState({
     fulfilment: 'delivery',
-    date: isoDaysFromNow(Math.max(2, leadDays)),
+    date: isoDaysFromNow(Math.max(fulfilment.leadDays?.standard ?? 2, leadDays)),
     time: TIME_SLOTS[2],
-    zone: FULFILMENT.deliveryZones[0],
+    zone: fulfilment.deliveryZones[0] || '',
     address: '',
     name: '',
     phone: '',
@@ -76,7 +76,7 @@ export default function OrderFlow() {
   })
 
   const earliestDate = isoDaysFromNow(leadDays)
-  const deliveryFee = deliveryFeeFor(subtotal, form.fulfilment)
+  const deliveryFee = deliveryFeeFor(subtotal, form.fulfilment, fulfilment)
   const total = subtotal + deliveryFee
   const needsDeposit = useMemo(
     () => items.some((i) => i.category === 'custom') || total >= 120000,
@@ -112,7 +112,7 @@ export default function OrderFlow() {
       if (!isValidPhone(form.phone)) next.phone = 'Enter a valid Rwandan number, e.g. 0788 722 064.'
       if (!isValidEmail(form.email)) next.email = 'That email address does not look right.'
       if (needsDeposit && !form.deposit) {
-        next.deposit = `Please acknowledge the ${FULFILMENT.depositPercent}% deposit for custom work.`
+        next.deposit = `Please acknowledge the ${fulfilment.depositPercent}% deposit for custom work.`
       }
     }
 
@@ -168,7 +168,7 @@ export default function OrderFlow() {
       subtotal,
       deliveryFee,
       total,
-      depositDue: needsDeposit ? Math.round((total * FULFILMENT.depositPercent) / 100) : 0,
+      depositDue: needsDeposit ? Math.round((total * fulfilment.depositPercent) / 100) : 0,
     }
 
     const result = await createOrder(payload)
@@ -414,7 +414,7 @@ export default function OrderFlow() {
                           id: 'delivery',
                           icon: Truck,
                           title: 'Deliver to me',
-                          body: `${money(FULFILMENT.deliveryFee)} across Kigali · free over ${money(FULFILMENT.freeDeliveryOver)}`,
+                          body: `${money(fulfilment.deliveryFee)} across Kigali · free over ${money(fulfilment.freeDeliveryOver)}`,
                         },
                         {
                           id: 'pickup',
@@ -505,7 +505,7 @@ export default function OrderFlow() {
                             value={form.zone}
                             onChange={(e) => update('zone', e.target.value)}
                           >
-                            {FULFILMENT.deliveryZones.map((z) => (
+                            {fulfilment.deliveryZones.map((z) => (
                               <option key={z} value={z}>
                                 {z}
                               </option>
@@ -601,7 +601,7 @@ export default function OrderFlow() {
                           onChange={(e) => update('occasion', e.target.value)}
                         >
                           <option value="">Not specified</option>
-                          {OCCASIONS.map((o) => (
+                          {occasions.map((o) => (
                             <option key={o.id} value={o.label}>
                               {o.label}
                             </option>
@@ -651,8 +651,8 @@ export default function OrderFlow() {
                         <span className="text-[0.875rem] leading-relaxed text-cocoa/75">
                           I understand this order is confirmed with a{' '}
                           <strong className="text-espresso">
-                            {FULFILMENT.depositPercent}% deposit (
-                            {money(Math.round((total * FULFILMENT.depositPercent) / 100))})
+                            {fulfilment.depositPercent}% deposit (
+                            {money(Math.round((total * fulfilment.depositPercent) / 100))})
                           </strong>
                           , with the balance settled before the order leaves the kitchen.
                           {errors.deposit && (
@@ -811,10 +811,10 @@ export default function OrderFlow() {
                 {needsDeposit && (
                   <div className="flex justify-between gap-4 text-[0.8125rem]">
                     <dt className="text-cocoa/55">
-                      Deposit to confirm ({FULFILMENT.depositPercent}%)
+                      Deposit to confirm ({fulfilment.depositPercent}%)
                     </dt>
                     <dd className="tabular-nums text-caramel">
-                      {money(Math.round((total * FULFILMENT.depositPercent) / 100))}
+                      {money(Math.round((total * fulfilment.depositPercent) / 100))}
                     </dd>
                   </div>
                 )}
@@ -836,7 +836,7 @@ export default function OrderFlow() {
               </div>
 
               <div className="mt-6 flex flex-wrap gap-2">
-                {FULFILMENT.payments.slice(0, 3).map((p) => (
+                {fulfilment.payments.slice(0, 3).map((p) => (
                   <Pill key={p} tone="outline" className="text-[0.6rem]">
                     {p}
                   </Pill>

@@ -4,7 +4,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import CreationArt from '../art/CreationArt'
 import { Button, Section, SectionHeading } from '../components/ui'
-import { OCCASIONS, fromPrice, productsForOccasion } from '../data/catalog'
+import { fromPrice } from '../data/catalog'
+import { useCatalog } from '../context/CatalogContext'
 import { money, classNames } from '../lib/format'
 
 /**
@@ -12,9 +13,10 @@ import { money, classNames } from '../lib/format'
  * which is far friendlier than dropping people straight into a full menu.
  */
 export default function OccasionFinder() {
-  const [active, setActive] = useState(OCCASIONS[0].id)
-  const occasion = OCCASIONS.find((o) => o.id === active)
-  const matches = productsForOccasion(active).slice(0, 3)
+  const { occasions, productsForOccasion } = useCatalog()
+  const [active, setActive] = useState(occasions[0].id)
+  const occasion = occasions.find((o) => o.id === active) || occasions[0]
+  const matches = productsForOccasion(occasion.id).slice(0, 3)
 
   return (
     <Section className="relative overflow-hidden bg-blush/45">
@@ -27,7 +29,7 @@ export default function OccasionFinder() {
         />
 
         <div className="mt-11 flex flex-wrap justify-center gap-2.5">
-          {OCCASIONS.map((o) => (
+          {occasions.map((o) => (
             <button
               key={o.id}
               type="button"

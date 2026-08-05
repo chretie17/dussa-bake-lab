@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import ordersHandler from '../api/orders.js'
 import orderHandler from '../api/orders/[code].js'
 
@@ -156,6 +157,168 @@ delete process.env.ADMIN_KEY
 // --- method guard ---------------------------------------------------------
 const wrongMethod = await call(ordersHandler, { method: 'DELETE', headers: {} })
 check('unsupported methods are rejected', wrongMethod.status === 405)
+
+
+// --- catalogue -------------------------------------------------------------
+const { default: catalogHandler } = await import('../api/catalog.js')
+const { default: productHandler } = await import('../api/catalog/[slug].js')
+const { default: settingsHandler } = await import('../api/settings.js')
+const { ART_VARIANT_IDS, PALETTE_IDS } = await import('../src/data/optionIds.js')
+// CreationArt is JSX, which node cannot import — read the variant map instead.
+const artSource = readFileSync(new URL('../src/art/CreationArt.jsx', import.meta.url), 'utf8')
+const RENDERABLE = artSource
+  .slice(artSource.indexOf('const VARIANTS = {'), artSource.indexOf('export const ART_VARIANTS'))
+  .split('\n')
+  .map((line) => line.match(/^\s*(\w+):/)?.[1])
+  .filter(Boolean)
+const { PALETTE_KEYS } = await import('../src/art/palettes.js')
+
+check(
+  'every listed illustration is one the site can actually draw',
+  ART_VARIANT_IDS.every((id) => RENDERABLE.includes(id)),
+  ART_VARIANT_IDS.filter((id) => !RENDERABLE.includes(id)).join(', '),
+)
+check(
+  'every listed palette exists',
+  PALETTE_IDS.every((id) => PALETTE_KEYS.includes(id)),
+  PALETTE_IDS.filter((id) => !PALETTE_KEYS.includes(id)).join(', '),
+)
+
+const menu = await call(catalogHandler, { method: 'GET', headers: {} })
+check('GET /api/catalog seeds and returns the menu', menu.status === 200 && menu.json.products.length > 0)
+check('the menu carries settings', Boolean(menu.json.settings?.fulfilment))
+
+const madeProduct = await call(catalogHandler, {
+  method: 'POST',
+  headers: {},
+  body: {
+    name: 'Test Tart',
+    category: 'treats',
+    sizes: [{ label: 'Individual', serves: '1', price: 4500 }],
+    leadDays: 1,
+  },
+})
+check('POST /api/catalog creates a product', madeProduct.status === 201, JSON.stringify(madeProduct.json))
+check('the web address is generated from the name', madeProduct.json?.product?.slug === 'test-tart')
+
+const noPrice = await call(catalogHandler, {
+  method: 'POST',
+  headers: {},
+  body: { name: 'Free Cake', sizes: [{ label: 'One', price: 0 }] },
+})
+check('a product with no price is rejected', noPrice.status === 400)
+
+const noSize = await call(catalogHandler, {
+  method: 'POST',
+  headers: {},
+  body: { name: 'Sizeless', sizes: [] },
+})
+check('a product with no sizes is rejected', noSize.status === 400)
+
+const badArt = await call(catalogHandler, {
+  method: 'POST',
+  headers: {},
+  body: {
+    name: 'Odd Art',
+    art: 'not-a-real-variant',
+    flavorArt: 'neon',
+    sizes: [{ label: 'One', price: 1000 }],
+  },
+})
+check('an unknown illustration falls back to a real one', RENDERABLE.includes(badArt.json?.product?.art))
+check('an unknown palette falls back to a real one', PALETTE_KEYS.includes(badArt.json?.product?.flavorArt))
+
+const xss = await call(catalogHandler, {
+  method: 'POST',
+  headers: {},
+  body: {
+    name: 'Sneaky',
+    photo: 'javascript:alert(1)',
+    sizes: [{ label: 'One', price: 1000 }],
+  },
+})
+check('a javascript: photo URL is stripped', !xss.json?.product?.photo)
+
+const renamed = await call(productHandler, {
+  method: 'PUT',
+  headers: {},
+  query: { slug: 'test-tart' },
+  body: {
+    name: 'Passion Tart',
+    slug: 'passion-tart',
+    category: 'treats',
+    sizes: [{ label: 'Individual', serves: '1', price: 5200 }],
+    leadDays: 1,
+  },
+})
+check('PUT renames a product', renamed.json?.product?.slug === 'passion-tart')
+
+const oldSlug = await call(productHandler, { method: 'GET', headers: {}, query: { slug: 'test-tart' } })
+check('the old web address no longer resolves', oldSlug.status === 404)
+
+const hidden = await call(productHandler, {
+  method: 'PATCH',
+  headers: {},
+  query: { slug: 'passion-tart' },
+  body: { active: false },
+})
+check('PATCH can hide a product', hidden.json?.product?.active === false)
+
+const publicMenu = await call(catalogHandler, { method: 'GET', headers: {} })
+check(
+  'hidden products are absent from the public menu',
+  !publicMenu.json.products.some((p) => p.slug === 'passion-tart'),
+)
+
+const adminMenu = await call(catalogHandler, { method: 'GET', headers: { 'x-admin-key': 'x' } })
+check(
+  'hidden products are visible to the dashboard',
+  adminMenu.json.products.some((p) => p.slug === 'passion-tart'),
+)
+
+const removed = await call(productHandler, {
+  method: 'DELETE',
+  headers: {},
+  query: { slug: 'passion-tart' },
+})
+check('DELETE removes a product', removed.status === 200)
+
+// --- settings --------------------------------------------------------------
+const settingsPatched = await call(settingsHandler, {
+  method: 'PATCH',
+  headers: {},
+  body: { fulfilment: { deliveryFee: 7500, freeDeliveryOver: 90000, depositPercent: 40 } },
+})
+check('PATCH /api/settings saves money rules', settingsPatched.json?.settings?.fulfilment?.deliveryFee === 7500)
+check('other settings survive a partial patch', Boolean(settingsPatched.json?.settings?.contact?.whatsapp))
+
+const clamped = await call(settingsHandler, {
+  method: 'PATCH',
+  headers: {},
+  body: { fulfilment: { depositPercent: 900, deliveryFee: -50 } },
+})
+check('a deposit above 100% is clamped', clamped.json?.settings?.fulfilment?.depositPercent === 100)
+check('a negative fee is floored at zero', clamped.json?.settings?.fulfilment?.deliveryFee === 0)
+
+// --- catalogue auth --------------------------------------------------------
+process.env.ADMIN_KEY = 'secret-key'
+const writeDenied = await call(catalogHandler, {
+  method: 'POST',
+  headers: {},
+  body: { name: 'Unauthorised', sizes: [{ label: 'One', price: 1000 }] },
+})
+check('creating a product is denied without the admin key', writeDenied.status === 401)
+
+const settingsDenied = await call(settingsHandler, {
+  method: 'PATCH',
+  headers: {},
+  body: { fulfilment: { deliveryFee: 1 } },
+})
+check('changing settings is denied without the admin key', settingsDenied.status === 401)
+
+const readAllowed = await call(catalogHandler, { method: 'GET', headers: {} })
+check('the public menu stays readable without a key', readAllowed.status === 200)
+delete process.env.ADMIN_KEY
 
 console.log(failures === 0 ? '\nAll API checks passed.' : `\n${failures} check(s) failed.`)
 process.exit(failures === 0 ? 0 : 1)

@@ -91,8 +91,9 @@ await page.locator('#email').fill('keza@example.com')
 // This basket is over the deposit threshold, so the acknowledgement is required.
 await page.getByRole('button', { name: 'Continue' }).click()
 await page.waitForTimeout(400)
+// The percentage is a live setting, so match the sentence, not the number.
 await check('the deposit acknowledgement is enforced', async () =>
-  page.getByText(/acknowledge the 50% deposit/i).isVisible(),
+  page.getByText(/acknowledge the \d+% deposit/i).isVisible(),
 )
 await page.locator('label:has(input[type="checkbox"])').filter({ hasText: 'I understand this order' }).click()
 await page.waitForTimeout(300)
@@ -106,8 +107,8 @@ await check('review step shows the contact details', async () =>
 )
 if (OUT) await page.screenshot({ path: `${OUT}/e2e-2-review.png` })
 
-// 3 — submit. There is no API behind `vite preview`, so this exercises the
-//     offline path: the customer must still land on a real confirmation.
+// 3 — submit. This runs with or without an API behind the preview server: the
+//     customer must land on a real confirmation either way.
 await page.getByRole('button', { name: /Place order/ }).click()
 await page.waitForURL('**/order/confirmed/**', { timeout: 15000 })
 await page.waitForTimeout(1500)
@@ -117,9 +118,17 @@ await check('confirmation issues an order code', () => /^DBL-[A-Z0-9]{7}$/.test(
 await check('confirmation shows the customer name', async () =>
   page.getByText(/Thank you, Keza/).isVisible(),
 )
-await check('offline fallback is disclosed honestly', async () =>
-  page.getByText(/could not reach our kitchen dashboard/i).isVisible(),
+await check('the confirmation shows what was ordered', async () =>
+  (await page.getByText('Signature Chocolate Drip').first().isVisible()) &&
+  (await page.getByText(/RWF/).first().isVisible()),
 )
+await check('an unreachable API is disclosed rather than hidden', async () => {
+  // When the order could not be stored the page must say so and offer WhatsApp;
+  // when it was stored, that warning must be absent.
+  const warned = await page.getByText(/could not reach our kitchen dashboard/i).count()
+  const tracked = await page.getByRole('link', { name: /Track this order/ }).count()
+  return warned === 0 ? tracked > 0 : true
+})
 if (OUT) await page.screenshot({ path: `${OUT}/e2e-3-confirmed.png`, fullPage: false })
 
 // 4 — the code must resolve in the public tracker

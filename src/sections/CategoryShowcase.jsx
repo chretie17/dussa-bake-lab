@@ -3,10 +3,12 @@ import { motion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 import CreationArt from '../art/CreationArt'
 import { Section, SectionHeading, Flourish } from '../components/ui'
-import { CATEGORIES } from '../data/catalog'
+import { useCatalog } from '../context/CatalogContext'
 
 /** The flyer's "Our delicious creations" strip, rebuilt as an interactive rail. */
 export default function CategoryShowcase() {
+  const { categories } = useCatalog()
+
   return (
     <Section id="creations" className="relative overflow-hidden bg-cream">
       <div className="container-x">
@@ -19,7 +21,7 @@ export default function CategoryShowcase() {
         <Flourish className="mt-8" />
 
         <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
-          {CATEGORIES.map((category, i) => (
+          {categories.map((category, i) => (
             <motion.div
               key={category.id}
               initial={{ opacity: 0, y: 34 }}

@@ -2,6 +2,7 @@ import { Suspense, lazy } from 'react'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { CartProvider } from './context/CartContext'
+import { CatalogProvider } from './context/CatalogContext'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import CartDrawer from './components/CartDrawer'
@@ -65,7 +66,8 @@ function AnimatedRoutes() {
 
 export default function App() {
   return (
-    <CartProvider>
+    <CatalogProvider>
+      <CartProvider>
       <ScrollToTop />
       <a
         href="#main"
@@ -80,6 +82,7 @@ export default function App() {
       <Footer />
       <CartDrawer />
       <FloatingActions />
-    </CartProvider>
+      </CartProvider>
+    </CatalogProvider>
   )
 }

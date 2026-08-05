@@ -5,7 +5,8 @@ import { Search, SlidersHorizontal, X } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
 import ProductCard from '../components/ProductCard'
 import { Button, Pill } from '../components/ui'
-import { CATEGORIES, OCCASIONS, PRODUCTS, fromPrice } from '../data/catalog'
+import { fromPrice } from '../data/catalog'
+import { useCatalog } from '../context/CatalogContext'
 import { classNames, money } from '../lib/format'
 import usePageMeta from '../lib/usePageMeta'
 
@@ -18,6 +19,7 @@ const SORTS = [
 ]
 
 export default function Creations() {
+  const { products, categories, occasions } = useCatalog()
   const [params, setParams] = useSearchParams()
   const category = params.get('category') || 'all'
   const occasion = params.get('occasion') || ''
@@ -46,7 +48,7 @@ export default function Creations() {
   }, [query])
 
   const results = useMemo(() => {
-    let list = [...PRODUCTS]
+    let list = [...products]
 
     if (category !== 'all') list = list.filter((p) => p.category === category)
     if (occasion) list = list.filter((p) => p.occasions?.includes(occasion))
@@ -79,9 +81,10 @@ export default function Creations() {
     }
 
     return list
-  }, [category, occasion, query, sort])
+  }, [products, category, occasion, query, sort])
 
-  const activeOccasion = OCCASIONS.find((o) => o.id === occasion)
+  const activeOccasion = occasions.find((o) => o.id === occasion)
+  const custom = products.find((p) => p.slug === 'bespoke-design-cake')
   const hasFilters = category !== 'all' || Boolean(occasion) || Boolean(query.trim())
 
   const clearAll = () => {
@@ -98,7 +101,7 @@ export default function Creations() {
         crumbs={[{ label: 'Creations' }]}
       >
         <div className="mt-8 flex flex-wrap gap-2">
-          {CATEGORIES.map((c) => (
+          {categories.map((c) => (
             <button
               key={c.id}
               type="button"
@@ -157,7 +160,7 @@ export default function Creations() {
               className="h-11 rounded-full border border-caramel/25 bg-porcelain px-4 pr-8 text-[0.8125rem] text-espresso focus:border-caramel focus:outline-none"
             >
               <option value="">All occasions</option>
-              {OCCASIONS.map((o) => (
+              {occasions.map((o) => (
                 <option key={o.id} value={o.id}>
                   {o.label}
                 </option>
@@ -195,7 +198,7 @@ export default function Creations() {
             {hasFilters && (
               <div className="flex flex-wrap items-center gap-2">
                 {category !== 'all' && (
-                  <Pill tone="gold">{CATEGORIES.find((c) => c.id === category)?.name}</Pill>
+                  <Pill tone="gold">{categories.find((c) => c.id === category)?.name}</Pill>
                 )}
                 {activeOccasion && <Pill tone="gold">{activeOccasion.label}</Pill>}
                 {query.trim() && <Pill tone="gold">“{query.trim()}”</Pill>}
@@ -235,7 +238,7 @@ export default function Creations() {
                   <Button onClick={clearAll} variant="outline">
                     Clear filters
                   </Button>
-                  <Button to="/creations/bespoke-design-cake">Request a custom design</Button>
+                  <Button to="/contact">Request a custom design</Button>
                 </div>
               </motion.div>
             )}
@@ -248,10 +251,10 @@ export default function Creations() {
             <p className="mx-auto mt-3 max-w-lg text-[0.9375rem] leading-relaxed text-cocoa/62">
               Custom work is what we enjoy most. Send a reference, a colour or a half-formed idea and
               we will sketch it, quote it and bake it. Bespoke designs start from{' '}
-              {money(fromPrice(PRODUCTS.find((p) => p.slug === 'bespoke-design-cake')))}.
+              {custom ? money(fromPrice(custom)) : 'RWF 65,000'}.
             </p>
             <div className="mt-7 flex flex-wrap justify-center gap-3">
-              <Button to="/creations/bespoke-design-cake" sheen>
+              <Button to={custom ? `/creations/${custom.slug}` : '/contact'} sheen>
                 Design something bespoke
               </Button>
               <Button to="/contact" variant="outline">
