@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2A1810"/>
+      <stop offset="55%" stop-color="#43281A"/>
+      <stop offset="100%" stop-color="#6B4429"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="76%" cy="46%" r="46%">
+      <stop offset="0%" stop-color="#E8C9A0" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#E8C9A0" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="cake" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7A4C2E"/>
+      <stop offset="100%" stop-color="#3A2011"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <g transform="translate(72 168)">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M20 12 H60 C93 12 114 32 114 62 C114 92 93 112 60 112 H20 Z M45 34 H60 C79 34 88 45 88 62 C88 79 79 90 60 90 H45 Z" fill="#FAF3EA"/>
+    <g stroke="#D4A574" stroke-width="3.4" stroke-linecap="round" fill="none">
+      <path d="M66 30 L66 44" stroke-width="4.6"/>
+      <path d="M66 45 C56 50 54 60 60 67"/>
+      <path d="M66 45 C62 52 61 60 64 68"/>
+      <path d="M66 45 C70 52 71 60 68 68"/>
+      <path d="M66 45 C76 50 78 60 72 67"/>
+    </g>
+    <path d="M50 70 h32 a16 16 0 0 1 -32 0 z" fill="#D4A574"/>
+    <rect x="47" y="66" width="38" height="6" rx="3" fill="#D4A574"/>
+  </g>
+
+  <text x="216" y="228" font-family="Georgia, serif" font-size="76" fill="#FAF3EA" letter-spacing="-2">Dussa</text>
+  <text x="218" y="272" font-family="Helvetica, Arial, sans-serif" font-size="24" fill="#D4A574" letter-spacing="12">BAKELAB</text>
+
+  <text x="72" y="378" font-family="Georgia, serif" font-size="46" fill="#FAF3EA" font-style="italic">Made with the finest ingredients,</text>
+  <text x="72" y="436" font-family="Georgia, serif" font-size="46" fill="#D4A574">baked to be loved.</text>
+  <text x="72" y="502" font-family="Helvetica, Arial, sans-serif" font-size="22" fill="#E8C9A0" letter-spacing="5">CAKES · CUPCAKES · COOKIES · CUSTOM ORDERS</text>
+  <text x="72" y="546" font-family="Helvetica, Arial, sans-serif" font-size="20" fill="#B98A5E" letter-spacing="3">KIGALI, RWANDA</text>
+
+  <g transform="translate(880 315)">
+    <ellipse cx="0" cy="176" rx="190" ry="26" fill="#180F09" opacity="0.35"/>
+    <ellipse cx="0" cy="150" rx="168" ry="42" fill="url(#cake)"/>
+    <rect x="-168" y="-42" width="336" height="192" fill="url(#cake)"/>
+    <ellipse cx="0" cy="-42" rx="168" ry="42" fill="#4A2A18"/>
+    <g fill="#4A2A18">
+      <rect x="-158" y="-58" width="24" height="86" rx="12"/>
+      <rect x="-108" y="-58" width="28" height="112" rx="14"/>
+      <rect x="-52" y="-58" width="22" height="96" rx="11"/>
+      <rect x="6" y="-58" width="30" height="118" rx="15"/>
+      <rect x="62" y="-58" width="24" height="92" rx="12"/>
+      <rect x="116" y="-58" width="26" height="80" rx="13"/>
+    </g>
+    <g fill="none" stroke="#5C3520" stroke-width="20" stroke-linecap="round">
+      <path d="M0 -70 a34 21 0 1 1 -0.1 0"/>
+      <path d="M-92 -56 a26 16 0 1 1 -0.1 0"/>
+      <path d="M92 -56 a26 16 0 1 1 -0.1 0"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,258 @@
+@import 'tailwindcss';
+
+/* ------------------------------------------------------------------
+   Dussa BakeLab — design tokens
+   Palette lifted from the brand flyer: espresso, cocoa, caramel, cream.
+------------------------------------------------------------------- */
+@theme {
+  --color-ink: #180f09;
+  --color-espresso: #2a1810;
+  --color-cocoa: #43281a;
+  --color-choco: #6b4429;
+  --color-mocha: #8a5f3d;
+  --color-caramel: #b98a5e;
+  --color-gold: #d4a574;
+  --color-honey: #e8c9a0;
+  --color-blush: #f3e3d3;
+  --color-cream: #faf3ea;
+  --color-porcelain: #fffdfa;
+
+  --font-display: 'Fraunces', 'Playfair Display', Georgia, serif;
+  --font-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+  --font-script: 'Parisienne', 'Brush Script MT', cursive;
+
+  --ease-silk: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-swift: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --shadow-soft: 0 2px 8px -2px rgb(42 24 16 / 0.08), 0 12px 32px -12px rgb(42 24 16 / 0.14);
+  --shadow-lift: 0 4px 12px -4px rgb(42 24 16 / 0.1), 0 24px 60px -20px rgb(42 24 16 / 0.24);
+  --shadow-glow: 0 20px 60px -24px rgb(212 165 116 / 0.7);
+
+  --radius-card: 1.5rem;
+}
+
+/* ------------------------------------------------------------------
+   Base
+------------------------------------------------------------------- */
+@layer base {
+  :root {
+    --nav-h: 76px;
+    color-scheme: light;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--nav-h) + 1rem);
+  }
+
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-espresso);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    font-optical-sizing: auto;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--color-gold);
+    color: var(--color-espresso);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-choco);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 11px;
+    height: 11px;
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--color-blush);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-caramel);
+    border-radius: 99px;
+    border: 3px solid var(--color-blush);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-choco);
+  }
+}
+
+/* ------------------------------------------------------------------
+   Utilities
+------------------------------------------------------------------- */
+@utility container-x {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 84rem;
+  padding-inline: 1.25rem;
+
+  @media (width >= 48rem) {
+    padding-inline: 2.5rem;
+  }
+  @media (width >= 80rem) {
+    padding-inline: 3.5rem;
+  }
+}
+
+/* Small all-caps label used above section headings */
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+}
+
+@utility script {
+  font-family: var(--font-script);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+/* Warm gradient text for accent words inside display headings */
+@utility text-gradient-gold {
+  background: linear-gradient(105deg, #b98a5e 0%, #e8c9a0 42%, #a97846 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Paper-grain overlay: sits above a section's background, below its content */
+@utility grain {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.3;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.42'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+}
+
+@utility glass {
+  background: color-mix(in srgb, var(--color-porcelain) 90%, transparent);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+}
+
+/* Thin hairline divider in brand brown */
+@utility hairline {
+  border-color: color-mix(in srgb, var(--color-caramel) 34%, transparent);
+}
+
+/* ------------------------------------------------------------------
+   Keyframes
+------------------------------------------------------------------- */
+@keyframes marquee-x {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -14px, 0) rotate(2deg);
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: -180% 0;
+  }
+  to {
+    background-position: 180% 0;
+  }
+}
+
+.animate-marquee {
+  animation: marquee-x var(--marquee-duration, 38s) linear infinite;
+}
+.animate-drift {
+  animation: drift 7s var(--ease-silk) infinite;
+}
+
+.pause-on-hover:hover .animate-marquee {
+  animation-play-state: paused;
+}
+
+/* Shimmering sweep used on primary buttons */
+.sheen {
+  background-image: linear-gradient(
+    100deg,
+    transparent 20%,
+    rgb(255 255 255 / 0.22) 38%,
+    transparent 56%
+  );
+  background-size: 220% 100%;
+  animation: shimmer 4.5s var(--ease-silk) infinite;
+}
+
+/* ------------------------------------------------------------------
+   Motion preferences
+------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Hide the number-input spinners on quantity fields */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type='number'] {
+  -moz-appearance: textfield;
+}
+
+/* Native date/time pickers, tinted to the brand */
+input[type='date']::-webkit-calendar-picker-indicator,
+input[type='time']::-webkit-calendar-picker-indicator {
+  filter: sepia(0.6) saturate(2.2) hue-rotate(340deg);
+  cursor: pointer;
+}
