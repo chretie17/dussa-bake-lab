@@ -27,6 +27,7 @@ const FALLBACK = {
       deliveryZones: [...FULFILMENT.deliveryZones],
       payments: [...FULFILMENT.payments],
     },
+    gallery: [],
   },
 }
 
@@ -84,6 +85,7 @@ export function CatalogProvider({ children }) {
       contact: settings.contact,
       fulfilment: settings.fulfilment,
       hours: settings.hours,
+      gallery: settings.gallery || [],
       brand: settings.brand,
     }
   }, [products, settings, live, loading, refresh])

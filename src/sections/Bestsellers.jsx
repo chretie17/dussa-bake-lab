@@ -14,7 +14,7 @@ export default function Bestsellers() {
           <SectionHeading
             eyebrow="Most requested"
             title="The ones people come back for"
-            lead="Six creations that leave the kitchen more often than any others — every one of them customisable."
+            lead="The six that leave the kitchen most often. All of them can be changed to suit you."
             className="max-w-xl"
           />
           <Button to="/creations" variant="outline" className="shrink-0">

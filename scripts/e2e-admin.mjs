@@ -45,7 +45,7 @@ await page.getByRole('button', { name: 'Open dashboard' }).click()
 await page.waitForTimeout(1800)
 
 await check('signing in opens the dashboard', async () =>
-  page.getByRole('heading', { name: /Incoming orders/ }).isVisible(),
+  page.getByRole('heading', { name: /Today at a glance/ }).isVisible(),
 )
 await check('missing setup is flagged, not hidden', async () =>
   page.getByText(/No database is connected/).first().isVisible(),
@@ -167,6 +167,85 @@ await page.waitForTimeout(1500)
 await check('the product is gone from the dashboard', async () =>
   (await page.getByRole('heading', { name: 'Passion Fruit Tart' }).count()) === 0,
 )
+
+
+// 9 — photos: upload, attach to a product, and check it reaches the site
+await page.getByRole('button', { name: 'Photos', exact: true }).click()
+await page.waitForTimeout(900)
+
+// Make a genuine oversized JPEG in the page and feed it to the file input.
+const jpegBase64 = await page.evaluate(() => {
+  const c = document.createElement('canvas')
+  c.width = 2400
+  c.height = 1800
+  const x = c.getContext('2d')
+  const g = x.createLinearGradient(0, 0, 2400, 1800)
+  g.addColorStop(0, '#6B4127')
+  g.addColorStop(1, '#F0DCC0')
+  x.fillStyle = g
+  x.fillRect(0, 0, 2400, 1800)
+  x.fillStyle = '#2A1810'
+  x.beginPath()
+  x.arc(1200, 900, 500, 0, Math.PI * 2)
+  x.fill()
+  return c.toDataURL('image/jpeg', 0.95).split(',')[1]
+})
+
+await page.setInputFiles('input[type=file]', {
+  name: 'test-cake.jpg',
+  mimeType: 'image/jpeg',
+  buffer: Buffer.from(jpegBase64, 'base64'),
+})
+await page.waitForTimeout(3000)
+
+await check('an uploaded photo appears in the library', async () =>
+  (await page.locator('figure').count()) >= 1,
+)
+const meta = await page.locator('figure p').nth(1).innerText().catch(() => '')
+await check('a 2400px photo is shrunk on the way in', () => /1600×1200/.test(meta))
+await shot('admin-5-photos')
+
+await page.getByRole('button', { name: 'Products', exact: true }).click()
+await page.waitForTimeout(1200)
+await page.getByLabel(/^Edit /).first().click()
+await page.waitForTimeout(800)
+await page.getByRole('button', { name: 'Display' }).click()
+await page.waitForTimeout(400)
+await page.getByRole('button', { name: /Choose an earlier photo/ }).click()
+await page.waitForTimeout(1200)
+await page.locator('button:has(img)').first().click()
+await page.waitForTimeout(600)
+await check('the picked photo previews in the editor', async () =>
+  page.getByRole('button', { name: /Remove/ }).isVisible(),
+)
+await page.getByRole('button', { name: 'Save product' }).click()
+await page.waitForTimeout(2000)
+
+await page.goto(`${BASE}/creations`, { waitUntil: 'networkidle' })
+await page.waitForTimeout(2000)
+await check('the photo shows on the storefront', async () =>
+  (await page.locator('img[src^="/api/images/"]').count()) >= 1,
+)
+await check('the image endpoint serves real image bytes', async () =>
+  page.evaluate(async () => {
+    const img = document.querySelector('img[src^="/api/images/"]')
+    if (!img) return false
+    const r = await fetch(img.src)
+    return r.ok && (r.headers.get('content-type') || '').startsWith('image/')
+  }),
+)
+
+// 10 — the overview tab is the landing screen and reads the same orders
+await page.goto(`${BASE}/admin`, { waitUntil: 'networkidle' })
+await page.waitForTimeout(1800)
+await check('the dashboard opens on the overview', async () =>
+  page.getByRole('heading', { name: /Today at a glance/ }).isVisible(),
+)
+await check('the overview shows the day lists', async () =>
+  (await page.getByRole('heading', { name: 'Today', exact: true }).isVisible()) &&
+  (await page.getByRole('heading', { name: 'Tomorrow', exact: true }).isVisible()),
+)
+await shot('admin-6-overview')
 
 console.log(errors.length ? `\nPAGE ERRORS:\n${[...new Set(errors)].join('\n')}` : '\nno page errors')
 console.log(failures === 0 ? 'All admin checks passed.' : `${failures} check(s) failed.`)

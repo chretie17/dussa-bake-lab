@@ -31,7 +31,7 @@ function buildChannels(contact) {
       icon: WhatsAppIcon,
       label: "WhatsApp",
       value: contact.phoneDisplay,
-      note: "Fastest — usually answered within the hour",
+      note: "Usually answered within the hour",
       href: whatsappEnquiryLink(),
       accent: "bg-[#25D366]/15 text-[#128C4A]",
     },
@@ -125,7 +125,7 @@ export default function Contact() {
       <PageHeader
         eyebrow="Say hello"
         title="Let's talk cake"
-        lead="Questions about a design, a date or a delivery zone? We answer fast — and we would rather talk it through than have you guess."
+        lead="Questions about a design, a date, or whether we come to your area? Ask. We would rather talk it through than have you guessing."
         crumbs={[{ label: "Contact" }]}
       />
 
@@ -170,7 +170,7 @@ export default function Contact() {
               <SectionHeading
                 eyebrow="Send an enquiry"
                 title="Tell us what you have in mind"
-                lead="Fill this in and we will open WhatsApp with your message ready to send — the quickest way to reach the kitchen."
+                lead="Fill this in and it opens WhatsApp with your message ready to send. That is the quickest way to reach us."
               />
 
               <form onSubmit={send} className="mt-8 grid gap-5 sm:grid-cols-2">
@@ -251,7 +251,7 @@ export default function Contact() {
                     rows={5}
                     value={form.message}
                     error={errors.message}
-                    placeholder="The date, roughly how many people, and any design ideas you have seen…"
+                    placeholder="The date, roughly how many people, and anything you have seen that you liked…"
                     onChange={(e) => update("message", e.target.value)}
                   />
                 </Field>
@@ -288,9 +288,9 @@ export default function Contact() {
                   </h3>
                 </div>
                 <p className="mt-3 text-[0.9rem] leading-relaxed text-cocoa/65">
-                  Our kitchen is in {contact.location}. We are a production
-                  kitchen rather than a walk-in shop, so collections happen at a
-                  booked slot — we send the exact pin with your confirmation.
+                  We bake in {contact.location}. It is a kitchen rather than a shop you
+                  can walk into, so pickups happen at a booked time. We send the
+                  exact spot with your confirmation.
                 </p>
                 <Button
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.mapQuery || contact.location)}`}
@@ -338,8 +338,7 @@ export default function Contact() {
                   ))}
                 </ul>
                 <p className="mt-4 text-[0.8rem] leading-relaxed text-cocoa/55">
-                  Somewhere else in Rwanda? Ask us — we quote longer runs case
-                  by case.
+                  Somewhere else in Rwanda? Ask us. We price longer trips one by one.
                 </p>
               </div>
             </div>

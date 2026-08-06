@@ -15,8 +15,8 @@ export default function CategoryShowcase() {
         <SectionHeading
           align="center"
           eyebrow="Our delicious creations"
-          title="Four ways to make the day sweeter"
-          lead="Everything is baked to order in small batches — pick a starting point and make it yours."
+          title="What we make"
+          lead="Everything is made to order in small batches. Pick something to start from and we will adjust it with you."
         />
         <Flourish className="mt-8" />
 

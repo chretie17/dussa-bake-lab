@@ -16,7 +16,7 @@ export const CATEGORIES = [
     name: 'Cakes',
     blurb: 'for all occasions',
     description:
-      'Tall, tender layers finished by hand — the centrepiece of every celebration we bake for.',
+      'Tall, soft layers finished by hand. Usually the thing everyone photographs.',
     art: 'dripCake',
     flavorArt: 'chocolate',
   },
@@ -25,7 +25,7 @@ export const CATEGORIES = [
     name: 'Cupcakes',
     blurb: 'beautifully made',
     description:
-      'Individually piped, boxed with care, and impossible to eat just one of.',
+      'Piped one at a time and boxed so they arrive standing up straight.',
     art: 'cupcake',
     flavorArt: 'vanilla',
   },
@@ -34,7 +34,7 @@ export const CATEGORIES = [
     name: 'Cookies',
     blurb: 'baked to perfection',
     description:
-      'Crisp at the edge, molten in the middle, still warm when we can manage it.',
+      'Crisp at the edge, soft in the middle, still warm if we can manage it.',
     art: 'cookieStack',
     flavorArt: 'caramel',
   },
@@ -43,7 +43,7 @@ export const CATEGORIES = [
     name: 'Treats',
     blurb: 'small & sweet',
     description:
-      'Brownies, macarons, doughnuts and cheesecakes for the everyday cravings.',
+      'Brownies, macarons, doughnuts and cheesecakes for an ordinary Tuesday.',
     art: 'macarons',
     flavorArt: 'berry',
   },
@@ -52,7 +52,7 @@ export const CATEGORIES = [
     name: 'Custom orders',
     blurb: 'made just for you',
     description:
-      'Tiered, sculpted, themed or entirely your own idea — designed with you from sketch to slice.',
+      'Tiered, sculpted, themed, or an idea you have not seen anywhere yet. We work it out with you.',
     art: 'tieredCake',
     flavorArt: 'ivory',
   },
@@ -100,7 +100,7 @@ export const PRODUCTS = [
     category: 'cakes',
     tagline: 'The one on the poster',
     description:
-      'Four layers of dark Belgian chocolate sponge under whipped ganache, finished with a slow chocolate drip, piped rosettes and shards of couverture. This is the cake that built Dussa BakeLab.',
+      'Four layers of dark chocolate sponge under whipped ganache, with a slow drip down the sides, piped rosettes on top and shards of good chocolate. This is the cake that got us started.',
     art: 'dripCake',
     flavorArt: 'chocolate',
     bestseller: true,
@@ -126,7 +126,7 @@ export const PRODUCTS = [
     category: 'cakes',
     tagline: 'Candles included',
     description:
-      'Deep red velvet layered with tangy cream cheese frosting, dressed in a shell border, sprinkles and candles. Made for singing around.',
+      'Deep red velvet with tangy cream cheese frosting, a piped shell border, sprinkles and candles. Made for singing around.',
     art: 'celebrationCake',
     flavorArt: 'redVelvet',
     bestseller: true,
@@ -151,7 +151,7 @@ export const PRODUCTS = [
     category: 'cakes',
     tagline: 'Weddings & milestones',
     description:
-      'Two or three tiers in ivory buttercream with pearl piping and sugar blossoms. Understated, photogenic and quietly enormous.',
+      'Two or three tiers in ivory buttercream with pearl piping and sugar blossoms. Quiet to look at, and bigger than it seems.',
     art: 'tieredCake',
     flavorArt: 'ivory',
     rating: 5,
@@ -179,7 +179,7 @@ export const PRODUCTS = [
     category: 'cakes',
     tagline: 'Bright and tropical',
     description:
-      'Lemon sponge soaked in passion fruit syrup, layered with citrus curd and vanilla buttercream. The cake people ask for twice.',
+      'Lemon sponge soaked in passion fruit syrup, layered with citrus curd and vanilla buttercream. People tend to order this one twice.',
     art: 'dripCake',
     flavorArt: 'lemon',
     rating: 4.7,
@@ -203,7 +203,7 @@ export const PRODUCTS = [
     category: 'cakes',
     tagline: 'Cake, without the commitment',
     description:
-      'Six individually boxed slices across our three signature flavours — the neat answer to an office birthday or a quiet Tuesday.',
+      'Individually boxed slices across our three main flavours. Good for an office birthday, or for keeping in the fridge.',
     art: 'cakeSlice',
     flavorArt: 'coffee',
     rating: 4.8,
@@ -229,7 +229,7 @@ export const PRODUCTS = [
     category: 'cupcakes',
     tagline: 'Piped tall, boxed neat',
     description:
-      'Our everyday hero: soft sponge under a generous swirl of silk buttercream, finished with a cherry or sprinkles. Choose one flavour or let us mix the box.',
+      'Soft sponge under a generous swirl of buttercream, topped with a cherry or sprinkles. Pick one flavour or let us mix the box.',
     art: 'cupcake',
     flavorArt: 'vanilla',
     bestseller: true,
@@ -254,7 +254,7 @@ export const PRODUCTS = [
     category: 'cupcakes',
     tagline: 'Filled, not just frosted',
     description:
-      'Dark chocolate cupcakes cored and filled with hazelnut praline, topped with a cocoa swirl and a toasted nut.',
+      'Dark chocolate cupcakes cored out and filled with hazelnut praline, then topped with a cocoa swirl and a toasted nut.',
     art: 'cupcake',
     flavorArt: 'chocolate',
     rating: 4.9,
@@ -277,7 +277,7 @@ export const PRODUCTS = [
     category: 'cupcakes',
     tagline: 'Piped florals, edible petals',
     description:
-      'Buttercream roses, ranunculus and leaves piped one at a time in your colour palette. As much a centrepiece as a dessert.',
+      'Buttercream roses, ranunculus and leaves, piped one at a time in whatever colours you are working with.',
     art: 'cupcake',
     flavorArt: 'berry',
     rating: 5,
@@ -302,7 +302,7 @@ export const PRODUCTS = [
     category: 'cookies',
     tagline: 'Crisp edge, molten middle',
     description:
-      'Browned butter, two chocolates, a 24-hour rest and a flake of sea salt. Baked to order so they reach you soft.',
+      'Browned butter, two kinds of chocolate, a full day of resting the dough, and a flake of sea salt. Baked the day they go out.',
     art: 'cookieStack',
     flavorArt: 'caramel',
     bestseller: true,
@@ -332,7 +332,7 @@ export const PRODUCTS = [
     category: 'cookies',
     tagline: 'Hand-iced, any theme',
     description:
-      'Vanilla-bean shortbread cut to your shapes and iced by hand — names, logos, baby feet, graduation caps. Send us a reference and we will draw it.',
+      'Vanilla shortbread cut to your shapes and iced by hand. Names, logos, baby feet, graduation caps. Send a picture and we will draw it.',
     art: 'cookieStack',
     flavorArt: 'ivory',
     rating: 4.9,
@@ -366,7 +366,7 @@ export const PRODUCTS = [
     category: 'treats',
     tagline: 'Dense, glossy, unrepentant',
     description:
-      '70% dark chocolate brownies with a crackled top and a centre that never quite sets. Cut into generous squares.',
+      'Dark chocolate brownies with a crackled top and a middle that never fully sets. Cut into big squares.',
     art: 'brownies',
     flavorArt: 'chocolate',
     bestseller: true,
@@ -394,7 +394,7 @@ export const PRODUCTS = [
     category: 'treats',
     tagline: 'Twelve tiny obsessions',
     description:
-      'Almond shells with a proper foot, matured overnight with ganache and curd fillings. Six flavours, twelve pieces, one box.',
+      'Almond shells with a proper foot, left overnight so the ganache and curd settle in. Six flavours to a box of twelve.',
     art: 'macarons',
     flavorArt: 'berry',
     rating: 4.8,
@@ -422,7 +422,7 @@ export const PRODUCTS = [
     category: 'treats',
     tagline: 'Proofed overnight, fried at dawn',
     description:
-      'Pillowy brioche doughnuts dipped in glaze while still warm and finished with sprinkles or a dusting of cocoa.',
+      'Brioche doughnuts dipped in glaze while they are still warm, then sprinkles or a dusting of cocoa.',
     art: 'donut',
     flavorArt: 'strawberry',
     rating: 4.7,
@@ -450,7 +450,7 @@ export const PRODUCTS = [
     category: 'treats',
     tagline: 'Slow-baked, fruit-topped',
     description:
-      'A biscuit base under slow-baked vanilla cheesecake, crowned with seasonal fruit compote. Chilled overnight before it leaves us.',
+      'A biscuit base under slow-baked vanilla cheesecake, with whatever fruit is good that week on top. Chilled overnight before it leaves us.',
     art: 'cheesecake',
     flavorArt: 'berry',
     rating: 4.9,
@@ -480,7 +480,7 @@ export const PRODUCTS = [
     category: 'custom',
     tagline: 'Your idea, our kitchen',
     description:
-      'Bring a reference, a colour, a theme or a half-formed idea. We sketch it, quote it and bake it — sculpted shapes, hand-painted panels, sugar figures and all.',
+      'Bring a picture, a colour, a theme, or an idea you cannot quite describe yet. We sketch it, price it, then build it. Sculpted shapes, hand-painted panels, sugar figures, whatever it takes.',
     art: 'tieredCake',
     flavorArt: 'caramel',
     bestseller: true,
@@ -510,7 +510,7 @@ export const PRODUCTS = [
     category: 'custom',
     tagline: 'Branded, styled, delivered',
     description:
-      'A full spread built around your brand — logo cookies, branded cupcakes, a centrepiece cake and styling on the day. Priced per guest.',
+      'A full spread built around your brand: logo cookies, branded cupcakes, a centrepiece cake, and we set it up on the day. Priced by guest count.',
     art: 'celebrationCake',
     flavorArt: 'ivory',
     rating: 4.9,
@@ -539,56 +539,56 @@ export const OCCASIONS = [
   {
     id: 'birthday',
     label: 'Birthday',
-    note: 'Candles, colour and something everyone recognises.',
+    note: 'Candles, colour, and something everyone will recognise.',
     art: 'celebrationCake',
     flavorArt: 'redVelvet',
   },
   {
     id: 'wedding',
     label: 'Wedding',
-    note: 'Tiers, tastings and a cake that survives the photos.',
+    note: 'Tiers, a tasting first, and a cake that holds up through the photos.',
     art: 'tieredCake',
     flavorArt: 'ivory',
   },
   {
     id: 'baby',
     label: 'Baby shower',
-    note: 'Soft palettes, iced cookies and gentle flavours.',
+    note: 'Soft colours, iced cookies, nothing too rich.',
     art: 'cupcake',
     flavorArt: 'strawberry',
   },
   {
     id: 'graduation',
     label: 'Graduation',
-    note: 'Caps, colours and enough slices for the whole family.',
+    note: 'Caps, school colours, and enough slices for the whole family.',
     art: 'cookieStack',
     flavorArt: 'ivory',
   },
   {
     id: 'corporate',
     label: 'Corporate',
-    note: 'Branded, invoiced and delivered on schedule.',
+    note: 'Branded, invoiced, and there when you said it would be.',
     art: 'macarons',
     flavorArt: 'coffee',
   },
   {
     id: 'anniversary',
     label: 'Anniversary',
-    note: 'Grown-up flavours and a quieter kind of beautiful.',
+    note: 'Grown-up flavours and something quieter to look at.',
     art: 'cakeSlice',
     flavorArt: 'chocolate',
   },
   {
     id: 'thanks',
     label: 'Thank you',
-    note: 'A box that says it better than a message would.',
+    note: 'A box that says it better than a text message would.',
     art: 'brownies',
     flavorArt: 'caramel',
   },
   {
     id: 'justbecause',
     label: 'Just because',
-    note: 'No occasion required. Genuinely.',
+    note: 'No occasion needed. Genuinely.',
     art: 'donut',
     flavorArt: 'strawberry',
   },

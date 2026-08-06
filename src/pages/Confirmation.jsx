@@ -94,11 +94,11 @@ export default function Confirmation() {
 
           <p className="eyebrow mt-8 text-gold">Order received</p>
           <h1 className="mt-5 text-[clamp(2.2rem,5.4vw,3.6rem)] leading-[1.06]">
-            Thank you{order?.name ? `, ${order.name.split(' ')[0]}` : ''} — we are on it
+            Thank you{order?.name ? `, ${order.name.split(' ')[0]}` : ''}. We are on it
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-[1.0625rem] leading-relaxed text-cream/62">
-            Your order has landed in our kitchen dashboard. We will confirm the details and the
-            final quote shortly — usually within a couple of hours during opening times.
+            It has landed in the kitchen. We will confirm the details and the final price
+            shortly, usually within a couple of hours while we are open.
           </p>
 
           <div className="mx-auto mt-9 inline-flex flex-col items-center gap-3 rounded-2xl border border-cream/18 bg-cream/6 px-8 py-6 backdrop-blur-sm">
@@ -117,7 +117,7 @@ export default function Confirmation() {
               </button>
             </div>
             <span className="text-[0.78rem] text-cream/45">
-              Keep this to track your order at any time
+              Keep this. You can check on your order with it any time
             </span>
           </div>
 
@@ -143,7 +143,7 @@ export default function Confirmation() {
               <p className="text-[0.85rem] leading-relaxed text-cream/75">
                 We saved this order on your device but could not reach our kitchen dashboard just
                 now. Please tap <strong className="text-gold">Send it to us on WhatsApp</strong> so
-                we definitely receive it — your code stays the same.
+                we definitely get it. Your code stays the same.
               </p>
             </div>
           )}
@@ -163,7 +163,7 @@ export default function Confirmation() {
                 <div className="mt-9 rounded-2xl border border-caramel/22 bg-porcelain p-6">
                   <h3 className="font-display text-[1.15rem] text-espresso">Paying for your order</h3>
                   <p className="mt-2 text-[0.9rem] leading-relaxed text-cocoa/65">
-                    Nothing was charged online. We will confirm your quote and take payment by{' '}
+                    Nothing has been charged. We will confirm the price and take payment by{' '}
                     {FULFILMENT.payments.slice(0, 3).join(', ')} or cash on collection.
                     {order.depositDue > 0 && (
                       <>
@@ -174,7 +174,7 @@ export default function Confirmation() {
                     )}
                   </p>
                   <p className="mt-4 text-[0.85rem] text-cocoa/60">
-                    Questions? Call{' '}
+                    Anything else? Call{' '}
                     <a href={CONTACT.phoneHref} className="text-caramel underline-offset-4 hover:underline">
                       {CONTACT.phoneDisplay}
                     </a>{' '}

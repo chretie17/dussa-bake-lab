@@ -5,6 +5,7 @@ import CreationImage from '../CreationImage'
 import { Field, Select, TextArea, TextInput } from '../Field'
 import { Button, Pill } from '../ui'
 import OptionRows, { ListInput, Toggle } from './OptionRows'
+import ImagePicker from './ImagePicker'
 import { ART_PALETTES, ART_VARIANTS } from '../../data/optionIds'
 import { CATEGORIES, OCCASIONS } from '../../data/catalog'
 import { classNames, money } from '../../lib/format'
@@ -44,7 +45,7 @@ const SECTIONS = [
  * Full-screen editor for one product. Everything the storefront renders is
  * editable here, and the artwork preview updates as you change it.
  */
-export default function ProductEditor({ product, onSave, onClose, saving, error }) {
+export default function ProductEditor({ product, onSave, onClose, saving, error, adminKey }) {
   const [form, setForm] = useState(() => ({ ...BLANK, ...(product || {}) }))
   const [section, setSection] = useState('basics')
   const [touchedSlug, setTouchedSlug] = useState(Boolean(product?.slug))
@@ -358,23 +359,26 @@ export default function ProductEditor({ product, onSave, onClose, saving, error 
           {section === 'display' && (
             <div className="grid gap-7 lg:grid-cols-[1.3fr_0.7fr]">
               <div className="space-y-6">
-                <Field
-                  label="Photo"
-                  htmlFor="p-photo"
-                  hint="leave blank to use the illustration"
-                >
-                  <TextInput
-                    id="p-photo"
-                    value={form.photo || ''}
-                    onChange={(e) => set('photo', e.target.value)}
-                    placeholder="/images/chocolate-drip.jpg"
-                  />
-                </Field>
-                <p className="-mt-3 text-[0.75rem] leading-relaxed text-cocoa/55">
-                  Put your photo in the site's <code className="rounded bg-espresso/8 px-1">public/images</code>{' '}
-                  folder and type the path here, or paste a full https:// link. If the photo ever
-                  fails to load, the illustration takes over automatically.
-                </p>
+                <div>
+                  <div className="flex items-baseline justify-between gap-3">
+                    <span className="text-[0.8125rem] font-medium text-cocoa">Photo</span>
+                    <span className="text-[0.72rem] text-cocoa/45">
+                      leave empty to use the drawing
+                    </span>
+                  </div>
+                  <div className="mt-2">
+                    <ImagePicker
+                      value={form.photo || ''}
+                      onChange={(url) => set('photo', url)}
+                      adminKey={adminKey}
+                      alt={form.name}
+                    />
+                  </div>
+                  <p className="mt-2.5 text-[0.75rem] leading-relaxed text-cocoa/55">
+                    If a photo ever fails to load, the drawing comes back on its own, so customers
+                    never see a broken picture.
+                  </p>
+                </div>
 
                 <div className="grid gap-5 sm:grid-cols-2">
                   <Field label="Illustration" htmlFor="p-art">

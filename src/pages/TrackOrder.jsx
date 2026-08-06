@@ -54,7 +54,7 @@ export default function TrackOrder() {
       <PageHeader
         eyebrow="Order tracking"
         title="Where is my cake?"
-        lead="Enter the code from your confirmation — it looks like DBL-XXXXXXX — and we will show you exactly where the order is."
+        lead="Put in the code from your confirmation, the one that looks like DBL-XXXXXXX, and we will show you where things are."
         crumbs={[{ label: 'Track order' }]}
       />
 
@@ -94,8 +94,8 @@ export default function TrackOrder() {
               <PackageSearch size={34} strokeWidth={1.4} className="mx-auto text-caramel" />
               <h2 className="mt-5 font-display text-2xl text-espresso">No order under that code</h2>
               <p className="mt-3 text-[0.9375rem] leading-relaxed text-cocoa/62">
-                Double-check the code from your confirmation. If it still will not load, message us
-                on WhatsApp with your name and date — we will find it in seconds.
+                Have another look at the code on your confirmation. If it still will not load,
+                message us on WhatsApp with your name and date and we will find it.
               </p>
               <div className="mt-7 flex flex-wrap justify-center gap-3">
                 <Button href={whatsappEnquiryLink(`Hello! I'm trying to track order ${code}.`)}>
@@ -196,7 +196,7 @@ export default function TrackOrder() {
 
               <div className="mt-7 text-center">
                 <p className="text-[0.9rem] text-cocoa/60">
-                  Something needs changing? Message us at least 48 hours before your date.
+                  Need to change something? Message us at least 48 hours before your date.
                 </p>
                 <div className="mt-4 flex flex-wrap justify-center gap-3">
                   <Button

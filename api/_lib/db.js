@@ -78,6 +78,19 @@ const SCHEMA = `
     updated_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
     value       JSONB NOT NULL
   );
+
+  CREATE TABLE IF NOT EXISTS images (
+    id          TEXT PRIMARY KEY,
+    filename    TEXT NOT NULL DEFAULT '',
+    alt         TEXT NOT NULL DEFAULT '',
+    mime        TEXT NOT NULL,
+    bytes       INTEGER NOT NULL DEFAULT 0,
+    width       INTEGER NOT NULL DEFAULT 0,
+    height      INTEGER NOT NULL DEFAULT 0,
+    created_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
+    data        BYTEA NOT NULL
+  );
+  CREATE INDEX IF NOT EXISTS images_created_idx ON images (created_at DESC);
 `
 
 /** Runs once per warm instance — CREATE TABLE IF NOT EXISTS is cheap and safe. */
@@ -98,7 +111,12 @@ async function ready() {
 
 function memory() {
   if (!globalThis.__dussaMemory) {
-    globalThis.__dussaMemory = { orders: new Map(), products: new Map(), settings: new Map() }
+    globalThis.__dussaMemory = {
+      orders: new Map(),
+      products: new Map(),
+      settings: new Map(),
+      images: new Map(),
+    }
   }
   return globalThis.__dussaMemory
 }
@@ -240,6 +258,91 @@ export async function saveSetting(key, value) {
     [key, JSON.stringify(value)],
   )
   return value
+}
+
+/* ------------------------------------------------------------------ */
+/* Images                                                               */
+/* ------------------------------------------------------------------ */
+
+/** Row without the binary payload — safe to list in the media library. */
+function imageMeta(row) {
+  return {
+    id: row.id,
+    filename: row.filename,
+    alt: row.alt,
+    mime: row.mime,
+    bytes: row.bytes,
+    width: row.width,
+    height: row.height,
+    createdAt: row.created_at || row.createdAt,
+    url: `/api/images/${row.id}`,
+  }
+}
+
+export async function saveImage(image) {
+  if (!hasDatabase) {
+    memory().images.set(image.id, { ...image, createdAt: new Date().toISOString() })
+    return imageMeta({ ...image, created_at: new Date().toISOString() })
+  }
+  await ready()
+  await query(
+    `INSERT INTO images (id, filename, alt, mime, bytes, width, height, data)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+     ON CONFLICT (id) DO UPDATE
+       SET filename = EXCLUDED.filename, alt = EXCLUDED.alt, data = EXCLUDED.data`,
+    [
+      image.id,
+      image.filename || '',
+      image.alt || '',
+      image.mime,
+      image.bytes || 0,
+      image.width || 0,
+      image.height || 0,
+      image.data,
+    ],
+  )
+  return imageMeta({ ...image, created_at: new Date().toISOString() })
+}
+
+/** Returns { mime, data } for serving, or null. */
+export async function getImage(id) {
+  if (!hasDatabase) {
+    const row = memory().images.get(id)
+    return row ? { mime: row.mime, data: row.data } : null
+  }
+  await ready()
+  const rows = await query('SELECT mime, data FROM images WHERE id = $1', [id])
+  return rows[0] || null
+}
+
+export async function listImages(limit = 200) {
+  if (!hasDatabase) {
+    return [...memory().images.values()]
+      .sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)))
+      .slice(0, limit)
+      .map((row) => imageMeta({ ...row, created_at: row.createdAt }))
+  }
+  await ready()
+  const rows = await query(
+    `SELECT id, filename, alt, mime, bytes, width, height, created_at
+     FROM images ORDER BY created_at DESC LIMIT $1`,
+    [Math.min(500, Math.max(1, limit))],
+  )
+  return rows.map(imageMeta)
+}
+
+export async function deleteImage(id) {
+  if (!hasDatabase) return memory().images.delete(id)
+  await ready()
+  await query('DELETE FROM images WHERE id = $1', [id])
+  return true
+}
+
+export async function countImages() {
+  if (!hasDatabase) return memory().images.size
+  await ready()
+  const rows = await query('SELECT count(*)::int AS n FROM images')
+  return rows[0]?.n ?? 0
 }
 
 /** One round trip for a health check the dashboard can show plainly. */

@@ -189,7 +189,7 @@ export default function OrderFlow() {
       <PageHeader
         eyebrow="Booking"
         title="Let's get this baked"
-        lead="Four short steps. You will get an order code straight away and a confirmation from us shortly after."
+        lead="Four short steps. You get an order code straight away, and a reply from us not long after."
         crumbs={[{ label: 'Order' }]}
       />
 
@@ -258,8 +258,8 @@ export default function OrderFlow() {
                     <h2 className="text-[1.75rem] text-espresso">Your order</h2>
                     <p className="mt-2 text-[0.9375rem] text-cocoa/62">
                       {count > 0
-                        ? 'Check the quantities and finishing touches before you continue.'
-                        : 'Your basket is empty — here are the creations people order most.'}
+                        ? 'Check the quantities and extras before you carry on.'
+                        : 'Your basket is empty. Here is what people order most.'}
                     </p>
 
                     {errors.basket && (
@@ -401,7 +401,7 @@ export default function OrderFlow() {
                   <div>
                     <h2 className="text-[1.75rem] text-espresso">When &amp; where</h2>
                     <p className="mt-2 text-[0.9375rem] text-cocoa/62">
-                      Your basket needs{' '}
+                      This basket needs{' '}
                       <strong className="text-espresso">
                         {leadDays} {leadDays === 1 ? 'day' : 'days'}
                       </strong>{' '}
@@ -536,8 +536,8 @@ export default function OrderFlow() {
                       <div className="mt-5 flex items-start gap-3 rounded-2xl border border-caramel/22 bg-porcelain p-5">
                         <MapPin size={18} strokeWidth={1.7} className="mt-0.5 shrink-0 text-caramel" />
                         <p className="text-[0.875rem] leading-relaxed text-cocoa/70">
-                          We will send the exact pickup point and a map pin with your confirmation.
-                          Collections run from our kitchen in Kigali during the slot you choose.
+                          We will send the exact spot and a map pin with your confirmation. Pickups
+                          happen at our kitchen in Kigali during the time you choose.
                         </p>
                       </div>
                     )}
@@ -618,7 +618,7 @@ export default function OrderFlow() {
                         <TextArea
                           id="notes"
                           value={form.notes}
-                          placeholder="Allergies, colour palette, the name to pipe, a gate code, the surprise plan…"
+                          placeholder="Allergies, colours, the name to pipe, a gate code, who not to tell…"
                           onChange={(e) => update('notes', e.target.value)}
                         />
                       </Field>
@@ -671,7 +671,7 @@ export default function OrderFlow() {
                   <div>
                     <h2 className="text-[1.75rem] text-espresso">Review &amp; confirm</h2>
                     <p className="mt-2 text-[0.9375rem] text-cocoa/62">
-                      One last look. Nothing is charged online — we confirm the order and arrange
+                      One last look. Nothing is charged here. We confirm the order and sort out
                       payment with you directly.
                     </p>
 
@@ -823,11 +823,11 @@ export default function OrderFlow() {
               <div className="mt-6 space-y-2.5 border-t border-caramel/22 pt-5 text-[0.78rem] text-cocoa/60">
                 <p className="flex items-start gap-2">
                   <Check size={14} strokeWidth={2.4} className="mt-0.5 shrink-0 text-caramel" />
-                  Baked to order — never frozen
+                  Made to order, never frozen
                 </p>
                 <p className="flex items-start gap-2">
                   <Check size={14} strokeWidth={2.4} className="mt-0.5 shrink-0 text-caramel" />
-                  Free changes up to 48h before your date
+                  Change anything up to 48h before your date
                 </p>
                 <p className="flex items-start gap-2">
                   <Check size={14} strokeWidth={2.4} className="mt-0.5 shrink-0 text-caramel" />

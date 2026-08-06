@@ -26,6 +26,8 @@ export function defaultSettings() {
       deliveryZones: [...FULFILMENT.deliveryZones],
       payments: [...FULFILMENT.payments],
     },
+    /** Photos for the "fresh from the oven" strip. Empty means use the drawings. */
+    gallery: [],
   }
 }
 

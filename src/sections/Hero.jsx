@@ -98,8 +98,8 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.85 }}
             className="mt-7 max-w-lg text-[1.0625rem] leading-relaxed text-cream/65"
           >
-            Handcrafted cakes, cupcakes, cookies and custom creations — baked to order in Kigali
-            for every occasion worth celebrating.
+            Cakes, cupcakes, cookies and custom orders, baked by hand in Kigali for whatever
+            you are celebrating.
           </motion.p>
 
           <motion.div

@@ -37,12 +37,12 @@ export default function CtaBanner() {
                 {BRAND.script}
               </p>
               <h2 className="mx-auto mt-6 max-w-2xl text-[clamp(1.9rem,4.4vw,3rem)] leading-[1.1]">
-                Every celebration deserves something{' '}
-                <span className="italic text-gradient-gold">baked to be loved</span>
+                Tell us the date and we will{' '}
+                <span className="italic text-gradient-gold">take it from there</span>
               </h2>
               <p className="mx-auto mt-5 max-w-lg text-[1.0625rem] leading-relaxed text-cream/65">
-                Tell us the date and the occasion — we will handle the rest, from the first sketch to
-                the moment it lands on your table.
+                Two minutes to book. We come back to you with a price, and after that it is our
+                problem until it reaches your table.
               </p>
 
               <div className="mt-9 flex flex-wrap justify-center gap-3">

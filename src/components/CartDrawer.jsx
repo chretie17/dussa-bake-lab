@@ -73,7 +73,7 @@ export default function CartDrawer() {
                 <div>
                   <h3 className="text-xl">Nothing sweet in here yet</h3>
                   <p className="mt-2 text-sm text-cocoa/65">
-                    Browse the creations and build your box — every item is customisable.
+                    Have a look at what we make. Everything can be adjusted to suit you.
                   </p>
                 </div>
                 <Button
@@ -190,7 +190,7 @@ export default function CartDrawer() {
                     <span className="font-display text-2xl tabular-nums">{money(subtotal)}</span>
                   </div>
                   <p className="text-[0.7rem] text-cocoa/55">
-                    Delivery and any deposit are confirmed at the next step.
+                    Delivery and any deposit are worked out at the next step.
                   </p>
 
                   <Button

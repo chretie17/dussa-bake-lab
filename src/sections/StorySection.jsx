@@ -56,7 +56,7 @@ export default function StorySection() {
                 <span className="italic text-caramel">very high standards</span>
               </>
             }
-            lead="Dussa BakeLab started with one oven, a hand whisk and a stubborn belief that a cake should taste as good as it looks. Everything we send out is still made in small batches, by hand, on the day."
+            lead="We started with one oven, a hand whisk, and a stubborn view that a cake should taste as good as it looks. Everything still goes out in small batches, made by hand, on the day."
           />
 
           <div className="mt-9 grid gap-x-8 gap-y-6 sm:grid-cols-2">

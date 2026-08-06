@@ -35,6 +35,8 @@ const routes = [
   { pattern: /^\/api\/orders$/, module: '../api/orders.js', params: [] },
   { pattern: /^\/api\/catalog\/([^/]+)$/, module: '../api/catalog/[slug].js', params: ['slug'] },
   { pattern: /^\/api\/catalog$/, module: '../api/catalog.js', params: [] },
+  { pattern: /^\/api\/images\/([^/]+)$/, module: '../api/images/[id].js', params: ['id'] },
+  { pattern: /^\/api\/images$/, module: '../api/images.js', params: [] },
   { pattern: /^\/api\/settings$/, module: '../api/settings.js', params: [] },
   { pattern: /^\/api\/health$/, module: '../api/health.js', params: [] },
 ]

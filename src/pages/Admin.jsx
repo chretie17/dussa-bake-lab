@@ -3,7 +3,9 @@ import { AlertTriangle, CheckCircle2, Download, KeyRound, Loader2, LogOut, Refre
 import { LogoMark } from '../art/Logo'
 import { Button } from '../components/ui'
 import { TextInput } from '../components/Field'
+import OverviewPanel from '../components/admin/OverviewPanel'
 import OrdersPanel from '../components/admin/OrdersPanel'
+import MediaPanel from '../components/admin/MediaPanel'
 import ProductsPanel from '../components/admin/ProductsPanel'
 import SettingsPanel from '../components/admin/SettingsPanel'
 import { useCatalog } from '../context/CatalogContext'
@@ -29,11 +31,22 @@ import usePageMeta from '../lib/usePageMeta'
 const POLL_MS = 20000
 
 const TABS = [
+  { id: 'overview', label: 'Overview' },
   { id: 'orders', label: 'Orders' },
   { id: 'products', label: 'Products' },
+  { id: 'photos', label: 'Photos' },
   { id: 'settings', label: 'Settings' },
   { id: 'setup', label: 'Setup' },
 ]
+
+const TITLES = {
+  overview: 'Today at a glance',
+  orders: 'Incoming orders',
+  products: 'Your menu',
+  photos: 'Your photos',
+  settings: 'Business settings',
+  setup: 'Setup',
+}
 
 export default function Admin() {
   const { refresh: refreshStorefront } = useCatalog()
@@ -41,7 +54,7 @@ export default function Admin() {
   const [adminKey, setAdminKey] = useState(loadAdminKey)
   const [authed, setAuthed] = useState(false)
   const [keyInput, setKeyInput] = useState('')
-  const [tab, setTab] = useState('orders')
+  const [tab, setTab] = useState('overview')
 
   const [orders, setOrders] = useState([])
   const [products, setProducts] = useState([])
@@ -256,7 +269,7 @@ export default function Admin() {
             <LogoMark className="mx-auto h-14 w-14" tone="#FAF3EA" accent="#D4A574" />
             <h1 className="mt-6 text-[1.9rem]">Kitchen dashboard</h1>
             <p className="mt-2 text-[0.9rem] text-cream/55">
-              Enter the bakery key to manage orders, products and settings.
+              Sign in to manage orders, products and settings.
             </p>
           </div>
 
@@ -290,8 +303,8 @@ export default function Admin() {
           )}
 
           <p className="mt-6 text-center text-[0.75rem] leading-relaxed text-cream/35">
-            The key is the ADMIN_KEY environment variable on your deployment. If it is not set, any
-            value will open the dashboard.
+            This is the ADMIN_KEY you set on your deployment. If you have not set one yet, any
+            word will get you in.
           </p>
         </div>
       </section>
@@ -309,9 +322,7 @@ export default function Admin() {
           <div>
             <p className="eyebrow text-caramel">Kitchen dashboard</p>
             <h1 className="mt-3 text-[clamp(1.8rem,4vw,2.6rem)] text-espresso">
-              {TABS.find((t) => t.id === tab)?.label === 'Orders'
-                ? 'Incoming orders'
-                : `Manage ${TABS.find((t) => t.id === tab)?.label.toLowerCase()}`}
+              {TITLES[tab] || 'Dashboard'}
             </h1>
             <p className="mt-2 text-[0.85rem] text-cocoa/55">
               {lastSync ? `Synced ${prettyDateTime(lastSync)}` : 'Loading…'} · refreshes
@@ -368,8 +379,8 @@ export default function Admin() {
               {storage === 'memory'
                 ? 'No database is connected, so orders are not being saved. Open Setup to fix this.'
                 : storage === 'offline'
-                  ? 'The order service is unreachable — showing orders saved in this browser only.'
-                  : 'This dashboard has no password set. Open Setup to see how to protect it.'}
+                  ? 'Cannot reach the order service. Showing what this browser has saved.'
+                  : 'This dashboard has no password set. Open Setup to see how to lock it.'}
             </span>
           </button>
         )}
@@ -380,6 +391,15 @@ export default function Admin() {
 
         {/* ---------------------------------------------------- body */}
         <div className="mt-2">
+          {tab === 'overview' && (
+            <OverviewPanel
+              orders={orders}
+              products={products}
+              onGoToOrders={() => setTab('orders')}
+              onGoToProducts={() => setTab('products')}
+            />
+          )}
+
           {tab === 'orders' && (
             <OrdersPanel orders={orders} onChangeStatus={changeStatus} busyCode={busyCode} />
           )}
@@ -387,6 +407,7 @@ export default function Admin() {
           {tab === 'products' && (
             <div className="mt-8">
               <ProductsPanel
+                adminKey={adminKey}
                 products={products}
                 loading={loading}
                 error={error}
@@ -399,10 +420,18 @@ export default function Admin() {
             </div>
           )}
 
+          {tab === 'photos' && (
+            <MediaPanel
+              adminKey={adminKey}
+              usedUrls={products.map((p) => p.photo).filter(Boolean)}
+            />
+          )}
+
           {tab === 'settings' && (
             <div className="mt-8">
               {settings ? (
                 <SettingsPanel
+                  adminKey={adminKey}
                   settings={settings}
                   onSave={handleSaveSettings}
                   onReset={handleResetSettings}
@@ -472,25 +501,25 @@ function SetupPanel({ health, storage, secured }) {
       <div className="rounded-[1.5rem] border border-caramel/22 bg-porcelain p-6">
         <h3 className="font-display text-[1.2rem] text-espresso">Connecting a database</h3>
         <p className="mt-2 text-[0.9rem] leading-relaxed text-cocoa/65">
-          Orders, products and settings all live in one Postgres database. Any provider works —
-          Neon has a free tier that suits a bakery this size.
+          Orders, products, photos and settings all live in one Postgres database. Any provider
+          works. Neon has a free plan that is plenty for a bakery this size.
         </p>
         <ol className="mt-5 space-y-3 text-[0.9rem] leading-relaxed text-cocoa/75">
           <Step n="1">
-            Create a free account at <Code>neon.com</Code> and make a project. Copy the connection
-            string it gives you — it starts with <Code>postgresql://</Code>.
+            Make a free account at <Code>neon.com</Code> and create a project. Copy the connection
+            string it gives you. It starts with <Code>postgresql://</Code>.
           </Step>
           <Step n="2">
             In your Vercel project, open <Code>Settings → Environment Variables</Code> and add{' '}
             <Code>DATABASE_URL</Code> with that connection string.
           </Step>
           <Step n="3">
-            Add <Code>ADMIN_KEY</Code> too — any long phrase you will remember. That becomes the
+            Add <Code>ADMIN_KEY</Code> too. Any long phrase you will remember. That becomes the
             password for this dashboard.
           </Step>
           <Step n="4">
-            Redeploy. The tables are created automatically and your current menu is copied in, ready
-            to edit here.
+            Redeploy. The tables get created for you and your current menu is copied in, ready to
+            edit here.
           </Step>
         </ol>
       </div>
@@ -498,9 +527,9 @@ function SetupPanel({ health, storage, secured }) {
       <div className="rounded-[1.5rem] border border-caramel/22 bg-porcelain p-6">
         <h3 className="font-display text-[1.2rem] text-espresso">Email notifications</h3>
         <p className="mt-2 text-[0.9rem] leading-relaxed text-cocoa/65">
-          To be emailed the moment an order arrives — and to send customers a confirmation and
-          updates as you move their order along — create a free account at <Code>resend.com</Code>{' '}
-          and add two more variables:
+          To get an email the moment an order arrives, and to send customers a confirmation and
+          updates as you move their order along, make a free account at <Code>resend.com</Code> and
+          add two more variables:
         </p>
         <ul className="mt-4 space-y-2 text-[0.9rem] text-cocoa/75">
           <li>

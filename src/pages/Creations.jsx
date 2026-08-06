@@ -97,7 +97,7 @@ export default function Creations() {
       <PageHeader
         eyebrow="The full menu"
         title="Our creations"
-        lead="Every item below is baked to order and customisable — choose a size, a flavour, a finish, and we take it from there."
+        lead="Everything here is made to order. Pick a size, a flavour and a finish, and we take it from there."
         crumbs={[{ label: 'Creations' }]}
       >
         <div className="mt-8 flex flex-wrap gap-2">
@@ -231,8 +231,7 @@ export default function Creations() {
               >
                 <h2 className="font-display text-2xl text-espresso">Nothing matches that yet</h2>
                 <p className="mx-auto mt-3 max-w-sm text-[0.9375rem] text-cocoa/60">
-                  Try a different filter — or tell us what you had in mind and we will bake it
-                  specially.
+                  Try a different filter, or tell us what you were after and we will make it specially.
                 </p>
                 <div className="mt-7 flex flex-wrap justify-center gap-3">
                   <Button onClick={clearAll} variant="outline">
@@ -246,11 +245,11 @@ export default function Creations() {
 
           <div className="mt-16 rounded-[2rem] border border-caramel/22 bg-porcelain p-8 text-center md:p-12">
             <h2 className="font-display text-[clamp(1.5rem,3vw,2.1rem)] text-espresso">
-              Cannot see quite what you pictured?
+              Not seeing what you had in mind?
             </h2>
             <p className="mx-auto mt-3 max-w-lg text-[0.9375rem] leading-relaxed text-cocoa/62">
-              Custom work is what we enjoy most. Send a reference, a colour or a half-formed idea and
-              we will sketch it, quote it and bake it. Bespoke designs start from{' '}
+              Custom work is the part we enjoy most. Send a picture, a colour, or an idea you cannot
+              quite explain yet, and we will sketch it and price it. Bespoke designs start from{' '}
               {custom ? money(fromPrice(custom)) : 'RWF 65,000'}.
             </p>
             <div className="mt-7 flex flex-wrap justify-center gap-3">

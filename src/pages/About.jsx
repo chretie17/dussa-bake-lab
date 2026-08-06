@@ -14,22 +14,22 @@ const PRINCIPLES = [
   {
     icon: Leaf,
     title: 'Real ingredients only',
-    body: 'Belgian couverture, butter, free-range eggs, Madagascan vanilla, market fruit. No compound chocolate, no premixes, no preservatives.',
+    body: 'Real chocolate, butter, free-range eggs, proper vanilla, fruit from the market. No compound chocolate, no packet mixes, no preservatives.',
   },
   {
     icon: Timer,
     title: 'Made close to your date',
-    body: 'Nothing is frozen and nothing sits in a case. Your order has a bake day, and it is as near your event as food safety allows.',
+    body: 'Nothing frozen, nothing sitting in a case. Your order has a bake day, as near your event as is safe.',
   },
   {
     icon: HeartHandshake,
     title: 'Designed with you',
-    body: 'For custom work you see a sketch and a firm quote before we start. No surprises at the door.',
+    body: 'For custom work you see a sketch and a fixed price before we start. No surprises at the door.',
   },
   {
     icon: Award,
     title: 'Finished by hand',
-    body: 'Every rosette, drip and piped letter is done by hand in our kitchen. That is why no two of ours look identical.',
+    body: 'Every rosette, drip and piped letter is done by hand here. It is also why no two come out identical.',
   },
 ]
 
@@ -37,22 +37,22 @@ const TIMELINE = [
   {
     year: '2021',
     title: 'One oven, one whisk',
-    body: 'Dussa BakeLab started as weekend orders from a home kitchen in Kigali — mostly birthday cakes for friends of friends.',
+    body: 'It started as weekend orders out of a home kitchen in Kigali. Mostly birthday cakes, mostly for friends of friends.',
   },
   {
     year: '2022',
     title: 'The chocolate drip',
-    body: 'A four-layer chocolate cake with a slow ganache drip became the order everyone wanted. It is still our signature.',
+    body: 'A four-layer chocolate cake with a slow ganache drip became the one everyone asked for. Still is.',
   },
   {
     year: '2024',
     title: 'Weddings & events',
-    body: 'Tiered cakes, tasting boxes and branded dessert tables joined the menu as corporate clients started calling.',
+    body: 'Tiered cakes, tasting boxes and branded dessert tables went on the menu once companies started calling.',
   },
   {
     year: 'Today',
     title: 'Order online, city-wide',
-    body: 'Book in a couple of minutes, track your order by code, and have it delivered anywhere in Kigali.',
+    body: 'Book in a couple of minutes, follow your order with a code, and have it brought to you anywhere in Kigali.',
   },
 ]
 
@@ -97,7 +97,7 @@ export default function About() {
             <SectionHeading
               eyebrow={`Baked in ${BRAND.city} since ${BRAND.founded}`}
               title="We started because good cake was hard to find"
-              lead="Not sweet-enough-to-hurt cake. Not cake that photographs well and tastes of nothing. Cake with a proper crumb, real chocolate, and a finish that looks like someone cared — because someone did."
+              lead="Not the kind that is sweet enough to hurt. Not the kind that photographs well and tastes of nothing. Cake with a proper crumb, real chocolate, and a finish that looks like somebody cared."
             />
 
             <div className="mt-6 space-y-4 text-[1rem] leading-relaxed text-cocoa/70">
@@ -134,7 +134,7 @@ export default function About() {
           <SectionHeading
             align="center"
             eyebrow="What we will not compromise on"
-            title="Four standards, kept stubbornly"
+            title="Four things we will not bend on"
           />
           <Flourish className="mt-8" />
 
@@ -208,8 +208,7 @@ export default function About() {
               The promises behind every box
             </h2>
             <p className="mt-5 max-w-md text-[1rem] leading-relaxed text-cream/60">
-              These are not marketing lines. They are the rules the kitchen runs on, and the reason
-              people order from us twice.
+              These are not slogans. They are how the kitchen runs, and the reason people come back.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button to="/creations" variant="gold" sheen>

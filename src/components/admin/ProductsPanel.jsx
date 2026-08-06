@@ -37,6 +37,7 @@ export default function ProductsPanel({
   onDelete,
   onReorder,
   busy,
+  adminKey,
 }) {
   const [editing, setEditing] = useState(null)
   const [open, setOpen] = useState(false)
@@ -186,7 +187,7 @@ export default function ProductsPanel({
           </h3>
           <p className="mt-2 text-[0.9rem] text-cocoa/55">
             {products.length === 0
-              ? 'Add your first creation and it appears on the site straight away.'
+              ? 'Add your first one and it shows up on the site right away.'
               : 'Try a different name or category.'}
           </p>
           {products.length === 0 && (
@@ -286,6 +287,7 @@ export default function ProductsPanel({
 
       <ProductEditorPortal
         open={open}
+        adminKey={adminKey}
         product={editing}
         onSave={save}
         onClose={() => {
@@ -307,8 +309,8 @@ export default function ProductsPanel({
               Delete “{confirmDelete.name}”?
             </h3>
             <p className="mt-2.5 text-[0.9rem] leading-relaxed text-cocoa/65">
-              It will be removed from the site immediately. Orders already placed keep their record
-              of it. If you only want it off the menu for now, hide it instead.
+              It comes off the site straight away. Orders already placed keep their own record of
+              it. If you just want it off the menu for now, hide it instead.
             </p>
             <div className="mt-6 flex flex-wrap justify-end gap-2">
               <Button variant="ghost" size="sm" onClick={() => setConfirmDelete(null)}>

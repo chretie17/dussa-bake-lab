@@ -26,7 +26,7 @@ export default function Testimonials() {
         <SectionHeading
           align="center"
           eyebrow="Kind words"
-          title="What Kigali says about us"
+          title="What people tell us"
         />
 
         <div

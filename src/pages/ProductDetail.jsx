@@ -445,8 +445,8 @@ export default function ProductDetail() {
               </Button>
 
               <p className="mt-3 text-center text-[0.78rem] text-cocoa/55">
-                Order at least {product.leadDays}{' '}
-                {product.leadDays === 1 ? 'day' : 'days'} ahead · free delivery over{' '}
+                We need at least {product.leadDays}{' '}
+                {product.leadDays === 1 ? 'day' : 'days'} notice · free delivery over{' '}
                 {money(fulfilment.freeDeliveryOver)}
               </p>
             </div>
@@ -476,37 +476,36 @@ export default function ProductDetail() {
                   <div className="space-y-3">
                     <p>{product.description}</p>
                     <p>
-                      Baked to order in small batches, never frozen. Your {product.name.toLowerCase()}{' '}
-                      is made as close to your date as we can safely manage, and boxed for travel
-                      before it leaves the kitchen.
+                      Made to order in small batches, never frozen. Yours is baked as close to
+                      your date as we can safely manage, and boxed properly before it leaves us.
                     </p>
                   </div>
                 )}
                 {tab === 'ingredients' && (
                   <div className="space-y-3">
                     <p>
-                      Made with Belgian couverture chocolate, real butter, free-range eggs,
-                      Madagascan vanilla and fruit bought fresh at market. No compound chocolate, no
-                      cake mixes, no preservatives.
+                      Real chocolate, real butter, free-range eggs, proper vanilla, and fruit
+                      bought fresh at the market. No compound chocolate, no cake mixes, no
+                      preservatives.
                     </p>
                     <p>
                       <strong className="font-medium text-espresso">Allergens:</strong> contains
                       dairy, eggs, gluten and may contain nuts. Our kitchen handles all four, so we
-                      cannot guarantee an allergen-free environment. Eggless and reduced-sugar
-                      versions are available on request — add a note at checkout.
+                      cannot promise an allergen-free environment. Eggless and lower-sugar versions
+                      are available if you ask; add a note at checkout.
                     </p>
                   </div>
                 )}
                 {tab === 'care' && (
                   <div className="space-y-3">
                     <p>
-                      Keep buttercream and ganache creations refrigerated, and bring them out 45
-                      minutes before serving — that is when the crumb is at its best.
+                      Keep buttercream and ganache cakes in the fridge, then bring them out 45
+                      minutes before serving. That is when they taste best.
                     </p>
                     <p>
-                      Cookies, brownies and macarons keep at room temperature in a sealed box for
-                      three to four days. Wedding tiers are delivered assembled and should stay cool
-                      and out of direct sun until cutting.
+                      Cookies, brownies and macarons keep in a sealed box at room temperature for
+                      three or four days. Wedding tiers arrive assembled and should stay cool and out
+                      of the sun until you cut them.
                     </p>
                   </div>
                 )}

@@ -138,9 +138,17 @@ export function sanitiseSettings(input = {}, current = {}) {
   // The WhatsApp link only works with digits.
   cleanedContact.whatsapp = String(cleanedContact.whatsapp || '').replace(/[^\d]/g, '')
 
+  const gallery = Array.isArray(input.gallery)
+    ? input.gallery
+        .slice(0, 24)
+        .map((g) => ({ url: clean(g.url, 500), caption: clean(g.caption, 90) }))
+        .filter((g) => /^(\/|https?:\/\/)/i.test(g.url))
+    : current.gallery || []
+
   return {
     brand: cleanedBrand,
     contact: cleanedContact,
+    gallery,
     hours: Array.isArray(input.hours)
       ? input.hours
           .slice(0, 10)

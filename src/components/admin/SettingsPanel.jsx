@@ -3,6 +3,7 @@ import { Check, Loader2, RotateCcw, Save } from 'lucide-react'
 import { Field, TextArea, TextInput } from '../Field'
 import { Button } from '../ui'
 import OptionRows from './OptionRows'
+import GalleryEditor from './GalleryEditor'
 import { money } from '../../lib/format'
 
 /**
@@ -10,7 +11,7 @@ import { money } from '../../lib/format'
  * times, delivery zones, contact details and opening hours. Saving here
  * changes the storefront, the order flow and the emails at once.
  */
-export default function SettingsPanel({ settings, onSave, onReset, saving, error }) {
+export default function SettingsPanel({ settings, onSave, onReset, saving, error, adminKey }) {
   const [form, setForm] = useState(settings)
   const [saved, setSaved] = useState(false)
 
@@ -208,6 +209,18 @@ export default function SettingsPanel({ settings, onSave, onReset, saving, error
             { key: 'time', label: 'Hours', placeholder: '8:00 AM – 7:00 PM' },
           ]}
           max={10}
+        />
+      </Card>
+
+      {/* ------------------------------------------- gallery */}
+      <Card
+        title="Photos on the home page"
+        note='The moving shelf under "Today on the shelf".'
+      >
+        <GalleryEditor
+          rows={form.gallery || []}
+          onChange={(v) => setForm((f) => ({ ...f, gallery: v }))}
+          adminKey={adminKey}
         />
       </Card>
 

@@ -320,5 +320,84 @@ const readAllowed = await call(catalogHandler, { method: 'GET', headers: {} })
 check('the public menu stays readable without a key', readAllowed.status === 200)
 delete process.env.ADMIN_KEY
 
+
+// --- images ----------------------------------------------------------------
+const { default: imagesHandler } = await import('../api/images.js')
+const { default: imageHandler } = await import('../api/images/[id].js')
+
+// Smallest possible valid PNG.
+const PNG =
+  'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=='
+
+const uploaded = await call(imagesHandler, {
+  method: 'POST',
+  headers: {},
+  body: { dataUrl: PNG, filename: 'dot.png', alt: 'a dot', width: 1, height: 1 },
+})
+check('POST /api/images stores a photo', uploaded.status === 201, JSON.stringify(uploaded.json))
+check('the stored photo gets a servable url', /^\/api\/images\//.test(uploaded.json?.image?.url || ''))
+
+const imageId = uploaded.json?.image?.id
+const served = mockRes()
+await imageHandler({ method: 'GET', headers: {}, query: { id: imageId } }, served)
+check('GET /api/images/:id serves the bytes', served.statusCode === 200)
+check('it is served as an image', (served.headers['Content-Type'] || '').startsWith('image/'))
+check('it is cached hard', /immutable/.test(served.headers['Cache-Control'] || ''))
+
+const notImage = await call(imagesHandler, {
+  method: 'POST',
+  headers: {},
+  body: { dataUrl: 'data:text/html;base64,PHNjcmlwdD4=', filename: 'x.html' },
+})
+check('a non-image upload is refused', notImage.status === 400)
+
+const junk = await call(imagesHandler, {
+  method: 'POST',
+  headers: {},
+  body: { dataUrl: 'not-a-data-url' },
+})
+check('a malformed upload is refused', junk.status === 400)
+
+const missingImage = mockRes()
+await imageHandler({ method: 'GET', headers: {}, query: { id: 'nope.png' } }, missingImage)
+check('an unknown photo 404s', missingImage.statusCode === 404)
+
+const traversal = mockRes()
+await imageHandler({ method: 'GET', headers: {}, query: { id: '../../etc/passwd' } }, traversal)
+check('a path-traversal id is refused', traversal.statusCode === 400)
+
+const listed = await call(imagesHandler, { method: 'GET', headers: {} })
+check('GET /api/images lists them', listed.status === 200 && listed.json.images.length >= 1)
+check('the listing leaves the binary out', listed.json.images.every((i) => !i.data))
+
+const galleryPatch = await call(settingsHandler, {
+  method: 'PATCH',
+  headers: {},
+  body: {
+    gallery: [
+      { url: uploaded.json.image.url, caption: 'Fresh batch' },
+      { url: 'javascript:alert(1)', caption: 'bad' },
+    ],
+  },
+})
+check('the home gallery accepts a real photo', galleryPatch.json?.settings?.gallery?.length === 1)
+check('a javascript: gallery url is dropped', galleryPatch.json?.settings?.gallery?.[0]?.caption === 'Fresh batch')
+
+const removedImage = await call(imagesHandler, {
+  method: 'DELETE',
+  headers: {},
+  body: { id: imageId },
+})
+check('DELETE removes a photo', removedImage.status === 200)
+
+process.env.ADMIN_KEY = 'secret-key'
+const uploadDenied = await call(imagesHandler, {
+  method: 'POST',
+  headers: {},
+  body: { dataUrl: PNG },
+})
+check('uploading is denied without the admin key', uploadDenied.status === 401)
+delete process.env.ADMIN_KEY
+
 console.log(failures === 0 ? '\nAll API checks passed.' : `\n${failures} check(s) failed.`)
 process.exit(failures === 0 ? 0 : 1)

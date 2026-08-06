@@ -27,8 +27,8 @@ export default function NotFound() {
           Someone ate this page
         </h1>
         <p className="mx-auto mt-5 max-w-md text-[1.0625rem] leading-relaxed text-cream/60">
-          We looked everywhere — the shelf, the fridge, the box marked “do not touch”. It is gone.
-          Let us point you at something still warm.
+          We checked the shelf, the fridge, and the box marked “do not touch”. It is gone. Let us
+          point you at something still warm.
         </p>
         <div className="mt-9 flex flex-wrap justify-center gap-3">
           <Button to="/creations" variant="gold" size="lg" sheen>

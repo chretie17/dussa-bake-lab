@@ -44,21 +44,25 @@ hand-off — an order is never silently lost.
 
 ### Running the bakery from the dashboard
 
-`/admin` has four tabs:
+`/admin` has six tabs:
 
-- **Orders** — the kitchen queue, newest date first. Move an order through
+- **Overview** — what you look at first thing. What is due today and tomorrow,
+  which orders still need a reply from you, money over the last week and month,
+  and what has been selling.
+- **Orders** — the kitchen queue, soonest date first. Move an order through
   _New → Confirmed → In the kitchen → Ready → Completed_, search it, call or
   WhatsApp the customer, export the lot to CSV. It refreshes itself every 20
-  seconds, so new orders appear without touching anything.
+  seconds, so new orders turn up on their own.
 - **Products** — add, edit, duplicate, reorder, hide or delete anything on the
-  menu. Every price, size, flavour, finish, add-on, photo, lead time and tag is
-  editable, with a live preview. Changes reach the website immediately.
-- **Settings** — delivery fee, free-delivery threshold, deposit percentage,
-  lead times, delivery zones, payment methods, phone, WhatsApp, Instagram,
-  email, opening hours and the brand lines. These drive the storefront, the
-  checkout totals and the emails at once.
-- **Setup** — a plain-language check of your database, dashboard password and
-  email, with the exact steps to fix anything missing.
+  menu. Every price, size, flavour, finish, extra, photo, lead time and tag,
+  with a live preview. Saves show on the website straight away.
+- **Photos** — everything you have uploaded, in one place. Drag files in, see
+  what is being used where, copy a link, delete what you no longer need.
+- **Settings** — delivery fee, free-delivery threshold, deposit, lead times,
+  delivery zones, payment methods, phone, WhatsApp, Instagram, email, opening
+  hours, the photos on the home page, and the brand lines.
+- **Setup** — a plain check of your database, dashboard password and email,
+  with the steps to fix anything missing.
 
 ---
 
@@ -75,9 +79,9 @@ Other scripts:
 npm run build        # production build into dist/
 npm run preview      # serve the production build
 npm run lint         # oxlint
-npm run test:api     # order, catalogue and settings APIs (45 checks)
+npm run test:api     # orders, catalogue, settings and photos (60 checks)
 npm run test:e2e     # browser walk-through of ordering (13 checks)
-npm run test:admin   # browser walk-through of the dashboard (14 checks)
+npm run test:admin   # browser walk-through of the dashboard (21 checks)
 ```
 
 `npm run dev` serves the front end only. To get the API as well, run both:
@@ -140,31 +144,38 @@ Copy `.env.example` for the full list. The ones that matter:
 
 | Variable | Why |
 | --- | --- |
-| `DATABASE_URL` | Where orders, products and settings live. **Required** for anything to be saved. |
+| `DATABASE_URL` | Where orders, products, photos and settings live. **Required** for anything to be saved. |
 | `ADMIN_KEY` | The password for `/admin`. **Set this before going live** — while unset, any value opens the dashboard, and the dashboard says so on screen. |
 | `RESEND_API_KEY` + `ORDER_NOTIFY_EMAIL` | Email alerts on new orders, plus confirmations and status updates to customers. Free account at [resend.com](https://resend.com). |
 | `ALLOWED_ORIGIN` | Optional. Locks the API to your own domain. |
 
 ---
 
-## Using your own photographs
+## Adding your photos
 
-Every product ships with hand-built SVG artwork (see `src/art/CreationArt.jsx`),
-so the site is complete and nothing is ever missing or broken. To use your own
-photos instead:
+Open **Photos** in the dashboard and drag your pictures in. That is the whole
+job. You can drop several at once, straight off a phone.
 
-1. Put the image in `public/images/`, e.g. `public/images/chocolate-drip.jpg`,
-   and push it.
-2. In the dashboard, open the product, go to **Display**, and put
-   `/images/chocolate-drip.jpg` in the **Photo** field. A full `https://` link to
-   an image hosted elsewhere works too.
+Photos are stored in the same database as your orders, so there is no second
+account to sign up for and no folder to manage. Each one gets its own address
+like `/api/images/abc123.webp`, which you can copy and use anywhere.
 
-The photo takes over everywhere that product appears — cards, product page,
-basket, confirmation. If a file is ever missing or fails to load, the
-illustration comes back automatically, so a broken image never reaches a
-customer.
+Big camera photos get shrunk in your browser before they are sent, so a 6 MB
+picture arrives at a few hundred kilobytes and the site stays quick on mobile
+data. Longest edge is capped at 1600px.
 
-Square or 4:3 images at roughly 1200px wide work best.
+To put a photo on a product: **Products → edit → Display**, then either upload a
+new one, pick one you have already uploaded, or paste a link to a picture hosted
+somewhere else.
+
+To put photos on the moving strip on the home page: **Settings → Photos on the
+home page**. Leave it empty and the drawings are used instead.
+
+Every product also ships with hand-drawn artwork (see `src/art/CreationArt.jsx`),
+which is what shows before you add a photo. If a photo ever fails to load, the
+drawing comes back on its own, so a customer never sees a broken picture.
+
+Square or 4:3 pictures work best.
 
 ---
 
@@ -201,6 +212,8 @@ api/                  Vercel serverless functions
   orders/[code].js      GET track · PATCH status (admin)
   catalog.js            GET menu · POST create/reorder (admin)
   catalog/[slug].js     GET one · PUT/PATCH/DELETE (admin)
+  images.js             GET list · POST upload · DELETE (admin)
+  images/[id].js        serves an uploaded photo
   settings.js           GET settings · PATCH/DELETE (admin)
   health.js             setup check shown in the dashboard
   _lib/                 Postgres store, HTTP helpers, validation, emails
@@ -209,7 +222,7 @@ src/
   components/           Nav, footer, cart drawer, product card, form fields, UI kit
   sections/             Home page sections
   pages/                Route components
-  components/admin/     Dashboard panels: orders, products, settings
+  components/admin/     Dashboard panels: overview, orders, products, photos, settings
   context/CartContext   Basket state, persisted to localStorage
   context/CatalogContext  Live menu and settings, with static fallback
   data/                 Site config, catalogue, editorial content
