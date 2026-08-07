@@ -3,6 +3,7 @@ import { Route, Routes, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { CartProvider } from './context/CartContext'
 import { CatalogProvider } from './context/CatalogContext'
+import { ThemeProvider } from './context/ThemeContext'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import CartDrawer from './components/CartDrawer'
@@ -66,7 +67,8 @@ function AnimatedRoutes() {
 
 export default function App() {
   return (
-    <CatalogProvider>
+    <ThemeProvider>
+      <CatalogProvider>
       <CartProvider>
       <ScrollToTop />
       <a
@@ -83,6 +85,7 @@ export default function App() {
       <CartDrawer />
       <FloatingActions />
       </CartProvider>
-    </CatalogProvider>
+      </CatalogProvider>
+    </ThemeProvider>
   )
 }

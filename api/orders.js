@@ -1,5 +1,6 @@
 import { listOrders, saveOrder, storageMode } from './_lib/db.js'
 import { notifyNewOrder, sendCustomerConfirmation } from './_lib/notify.js'
+import { notifyOrderOnWhatsApp } from './_lib/whatsapp.js'
 import {
   applyCors,
   adminConfigured,
@@ -108,6 +109,7 @@ export default async function handler(req, res) {
     // Failures are logged inside the mailer, never surfaced as a failed order.
     notifyNewOrder(order)
     sendCustomerConfirmation(order)
+    notifyOrderOnWhatsApp(order)
 
     return sendJson(res, 201, { order, storage: storageMode() })
   }

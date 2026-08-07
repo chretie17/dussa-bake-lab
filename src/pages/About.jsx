@@ -194,20 +194,20 @@ export default function About() {
       </Section>
 
       {/* ---------------------------------------------------- values */}
-      <Section className="grain relative overflow-hidden bg-espresso text-cream">
+      <Section className="grain relative overflow-hidden bg-deep text-on-deep">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -right-40 top-0 h-[30rem] w-[30rem] rounded-full bg-caramel/14 blur-3xl"
+          className="pointer-events-none absolute -right-40 top-0 h-[30rem] w-[30rem] rounded-full bg-accent-soft/14 blur-3xl"
         />
         <div className="container-x relative z-10 grid gap-14 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
-            <p className="script text-[clamp(2.2rem,5vw,3.2rem)] leading-none text-gold">
+            <p className="script text-[clamp(2.2rem,5vw,3.2rem)] leading-none text-accent">
               {BRAND.script}
             </p>
             <h2 className="mt-6 text-[clamp(1.8rem,4vw,2.8rem)] leading-[1.1]">
               The promises behind every box
             </h2>
-            <p className="mt-5 max-w-md text-[1rem] leading-relaxed text-cream/60">
+            <p className="mt-5 max-w-md text-[1rem] leading-relaxed text-on-deep/60">
               These are not slogans. They are how the kitchen runs, and the reason people come back.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -226,9 +226,9 @@ export default function About() {
           <div className="grid gap-4 sm:grid-cols-2">
             {VALUES.map((v, i) => (
               <Reveal key={v.title} delay={i * 0.07}>
-                <div className="h-full rounded-2xl border border-cream/14 bg-cream/6 p-6">
-                  <h3 className="font-display text-[1.1rem] text-gold">{v.title}</h3>
-                  <p className="mt-2 text-[0.875rem] leading-relaxed text-cream/60">{v.body}</p>
+                <div className="h-full rounded-2xl border border-on-deep/14 bg-on-deep/6 p-6">
+                  <h3 className="font-display text-[1.1rem] text-accent">{v.title}</h3>
+                  <p className="mt-2 text-[0.875rem] leading-relaxed text-on-deep/60">{v.body}</p>
                 </div>
               </Reveal>
             ))}

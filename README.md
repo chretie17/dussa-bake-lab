@@ -21,7 +21,14 @@ serverless order API designed to run on **Vercel**.
 | `/order/confirmed/:code` | Confirmation with the order code, progress timeline and a WhatsApp hand-off |
 | `/track` · `/track/:code` | Public order tracking by code |
 | `/about` · `/contact` | Brand story, principles, timeline; contact channels, delivery zones, FAQ |
-| `/admin` | **Kitchen dashboard** — orders, product editing, business settings and a setup checker |
+| `/admin` | **Kitchen dashboard** — overview, orders, products, photos, settings and a setup checker |
+
+The site ships with two looks, switched from the little toggle in the navbar and
+remembered between visits: **Bright** (the default, warm ivory) and
+**Chocolate** (the darker original). The home page hero is a real 3D cake built
+in three.js — drag it to turn it. It only loads on desktop machines with WebGL;
+phones, low-powered devices and anyone who has asked for reduced motion get the
+drawn cake instead, so the page stays fast.
 
 ### How ordering works
 
@@ -35,8 +42,9 @@ serverless order API designed to run on **Vercel**.
 5. The kitchen moves the order through _New → Confirmed → In the kitchen →
    Ready → Completed_, and the customer sees that live on `/track`.
 
-You are emailed the moment an order arrives, and the customer gets a
-confirmation plus an email each time you move their order along.
+You are told the moment an order arrives — by email, on WhatsApp, or both — and
+the customer gets a confirmation plus an email each time you move their order
+along.
 
 If the API is ever unreachable, the order is saved in the customer's browser,
 they still get their code, and the confirmation page pushes them to the WhatsApp
@@ -79,7 +87,7 @@ Other scripts:
 npm run build        # production build into dist/
 npm run preview      # serve the production build
 npm run lint         # oxlint
-npm run test:api     # orders, catalogue, settings and photos (60 checks)
+npm run test:api     # orders, catalogue, settings, photos, WhatsApp (80 checks)
 npm run test:e2e     # browser walk-through of ordering (13 checks)
 npm run test:admin   # browser walk-through of the dashboard (21 checks)
 ```
@@ -147,7 +155,78 @@ Copy `.env.example` for the full list. The ones that matter:
 | `DATABASE_URL` | Where orders, products, photos and settings live. **Required** for anything to be saved. |
 | `ADMIN_KEY` | The password for `/admin`. **Set this before going live** — while unset, any value opens the dashboard, and the dashboard says so on screen. |
 | `RESEND_API_KEY` + `ORDER_NOTIFY_EMAIL` | Email alerts on new orders, plus confirmations and status updates to customers. Free account at [resend.com](https://resend.com). |
+| `WHATSAPP_TOKEN` + `WHATSAPP_PHONE_ID` + `WHATSAPP_TO` | Sends orders to your WhatsApp and lets you reply with commands. See the WhatsApp section above. |
 | `ALLOWED_ORIGIN` | Optional. Locks the API to your own domain. |
+
+---
+
+## Orders on WhatsApp
+
+Every order can land on your WhatsApp the second it is placed, and you can move
+orders along by replying, without opening the dashboard:
+
+```
+today                  what is due today
+tomorrow               what is due tomorrow
+new                    orders waiting for you
+DBL-K2XMQ4A            show that order
+confirm DBL-K2XMQ4A    accept it
+baking DBL-K2XMQ4A     it is in the oven
+ready DBL-K2XMQ4A      boxed and waiting
+done DBL-K2XMQ4A       delivered or collected
+cancel DBL-K2XMQ4A     called off
+help                   this list
+```
+
+The customer gets the same status email they would if you had clicked the button
+in the dashboard.
+
+### Setting it up
+
+1. At [developers.facebook.com](https://developers.facebook.com), create an app
+   and add the **WhatsApp** product. Meta gives you a free test number to try it
+   with before you connect your own.
+2. Add `WHATSAPP_TOKEN`, `WHATSAPP_PHONE_ID` and `WHATSAPP_TO` (your number,
+   digits only, e.g. `250788722064`).
+3. Under **Configuration → Webhook**, set the callback URL to
+   `https://yourdomain.com/api/whatsapp` and use the same words for the verify
+   token as `WHATSAPP_VERIFY_TOKEN`. Subscribe to the `messages` field.
+4. Add `WHATSAPP_APP_SECRET` so we can check each webhook really came from Meta.
+5. Send one message to your business number to open the chat, then place a test
+   order.
+
+Only the number in `WHATSAPP_TO` (plus anything in `WHATSAPP_ADMINS`) can send
+commands. Messages from anyone else are ignored.
+
+### What it costs, and the one catch
+
+There is no monthly fee. Meta charges per message you start, priced by country;
+Rwanda sits in the "Rest of Africa" band, which is fractions of a US cent per
+message. At bakery volumes this is very small.
+
+The catch: Meta only lets a business send a plain text message within 24 hours of
+your last message to it. Because you reply to these notifications, that window
+normally stays open on its own. If it does close, the send is refused and the log
+says so — send any message to your business number to reopen it, or set
+`WHATSAPP_TEMPLATE` to an approved template name to send through it.
+
+### Could customers order entirely inside WhatsApp?
+
+Technically yes, and it is a bigger job than it sounds. You would need Meta
+business verification, an approved message template for every kind of message,
+and a chat flow that walks someone through 16 products with sizes, flavours,
+finishes and add-ons. A chat menu handles that much worse than a page does.
+
+**Paying inside WhatsApp is not available in Rwanda.** WhatsApp Pay only works in
+India and Singapore; Meta scaled back the Brazilian business programme in January
+2026. What works here is what the site already does: agree the order, then take
+payment by MTN Mobile Money or Airtel Money. If you want that automated later,
+MTN publishes a MoMo API with a Request-to-Pay call that pushes a PIN prompt to
+the customer's phone, and it can be triggered from the site or from a WhatsApp
+reply.
+
+The setup that actually suits this business: **the website builds the order, and
+WhatsApp carries the conversation.** That is what is wired up here.
 
 ---
 
@@ -215,6 +294,7 @@ api/                  Vercel serverless functions
   images.js             GET list · POST upload · DELETE (admin)
   images/[id].js        serves an uploaded photo
   settings.js           GET settings · PATCH/DELETE (admin)
+  whatsapp.js           WhatsApp webhook: verify, receive, run commands
   health.js             setup check shown in the dashboard
   _lib/                 Postgres store, HTTP helpers, validation, emails
 src/
@@ -225,6 +305,8 @@ src/
   components/admin/     Dashboard panels: overview, orders, products, photos, settings
   context/CartContext   Basket state, persisted to localStorage
   context/CatalogContext  Live menu and settings, with static fallback
+  context/ThemeContext  Bright / Chocolate, saved between visits
+  three/CakeScene       The 3D cake on the home page
   data/                 Site config, catalogue, editorial content
   lib/                  Formatting, order client, page meta
 scripts/dev-api.mjs   Local stand-in for the Vercel runtime

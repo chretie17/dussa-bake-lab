@@ -10,13 +10,13 @@ import { classNames } from '../lib/format'
 const VARIANTS = {
   primary:
     'bg-espresso text-cream hover:bg-cocoa shadow-soft hover:shadow-lift border border-espresso',
-  gold: 'bg-gold text-espresso hover:bg-honey shadow-soft hover:shadow-lift border border-gold',
+  gold: 'bg-accent text-porcelain hover:opacity-90 shadow-soft hover:shadow-lift border border-accent',
   outline:
     'bg-transparent text-espresso border border-espresso/25 hover:border-espresso hover:bg-espresso/5',
-  /** Outline sibling for dark backgrounds — keeps its own colours so it never
-   *  collides with `outline`'s dark text when both classes are present. */
+  /** Outline sibling for the "deep" sections. Keeps its own colours so it never
+   *  collides with `outline`'s dark text, and follows the chosen theme. */
   outlineLight:
-    'bg-transparent text-cream border border-cream/30 hover:border-cream/70 hover:bg-cream/10',
+    'bg-transparent text-on-deep border border-on-deep/30 hover:border-on-deep/70 hover:bg-on-deep/10',
   light:
     'bg-porcelain text-espresso border border-white/60 hover:bg-white shadow-soft hover:shadow-lift',
   ghost: 'bg-transparent text-espresso hover:bg-espresso/6 border border-transparent',

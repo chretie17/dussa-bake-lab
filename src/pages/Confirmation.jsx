@@ -58,14 +58,11 @@ export default function Confirmation() {
 
   return (
     <>
-      <section className="grain relative overflow-hidden bg-espresso pb-20 pt-32 text-cream md:pt-40">
+      <section className="grain relative overflow-hidden bg-deep pb-20 pt-32 text-on-deep md:pt-40">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              'radial-gradient(50% 55% at 50% 26%, rgba(212,165,116,0.3) 0%, transparent 68%)',
-          }}
+          style={{ background: 'var(--hero-glow)' }}
         />
 
         {/* A small shower of caramel confetti on arrival */}
@@ -87,36 +84,36 @@ export default function Confirmation() {
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-            className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border border-gold/40 bg-gold/15 text-gold"
+            className="mx-auto flex h-20 w-20 items-center justify-center rounded-full border border-accent/40 bg-accent/15 text-accent"
           >
             <Check size={34} strokeWidth={2.2} />
           </motion.div>
 
-          <p className="eyebrow mt-8 text-gold">Order received</p>
+          <p className="eyebrow mt-8 text-accent">Order received</p>
           <h1 className="mt-5 text-[clamp(2.2rem,5.4vw,3.6rem)] leading-[1.06]">
             Thank you{order?.name ? `, ${order.name.split(' ')[0]}` : ''}. We are on it
           </h1>
-          <p className="mx-auto mt-5 max-w-xl text-[1.0625rem] leading-relaxed text-cream/62">
+          <p className="mx-auto mt-5 max-w-xl text-[1.0625rem] leading-relaxed text-on-deep/62">
             It has landed in the kitchen. We will confirm the details and the final price
             shortly, usually within a couple of hours while we are open.
           </p>
 
-          <div className="mx-auto mt-9 inline-flex flex-col items-center gap-3 rounded-2xl border border-cream/18 bg-cream/6 px-8 py-6 backdrop-blur-sm">
-            <span className="eyebrow text-cream/45">Your order code</span>
+          <div className="mx-auto mt-9 inline-flex flex-col items-center gap-3 rounded-2xl border border-on-deep/18 bg-on-deep/6 px-8 py-6 backdrop-blur-sm">
+            <span className="eyebrow text-on-deep/45">Your order code</span>
             <div className="flex items-center gap-3">
-              <span className="font-display text-[clamp(1.8rem,4vw,2.6rem)] leading-none tracking-[0.06em] text-gold">
+              <span className="font-display text-[clamp(1.8rem,4vw,2.6rem)] leading-none tracking-[0.06em] text-accent">
                 {code}
               </span>
               <button
                 type="button"
                 onClick={copyCode}
-                className="flex h-10 w-10 items-center justify-center rounded-full border border-cream/22 text-cream/70 transition-colors hover:border-gold hover:text-gold"
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-on-deep/22 text-on-deep/70 transition-colors hover:border-accent hover:text-accent"
                 aria-label="Copy order code"
               >
                 {copied ? <Check size={16} strokeWidth={2.4} /> : <Copy size={16} strokeWidth={1.8} />}
               </button>
             </div>
-            <span className="text-[0.78rem] text-cream/45">
+            <span className="text-[0.78rem] text-on-deep/45">
               Keep this. You can check on your order with it any time
             </span>
           </div>
@@ -138,11 +135,11 @@ export default function Confirmation() {
           )}
 
           {state?.offline && (
-            <div className="mx-auto mt-8 flex max-w-xl items-start gap-3 rounded-2xl border border-gold/30 bg-gold/10 p-5 text-left">
-              <Info size={18} strokeWidth={1.8} className="mt-0.5 shrink-0 text-gold" />
-              <p className="text-[0.85rem] leading-relaxed text-cream/75">
+            <div className="mx-auto mt-8 flex max-w-xl items-start gap-3 rounded-2xl border border-accent/30 bg-accent/10 p-5 text-left">
+              <Info size={18} strokeWidth={1.8} className="mt-0.5 shrink-0 text-accent" />
+              <p className="text-[0.85rem] leading-relaxed text-on-deep/75">
                 We saved this order on your device but could not reach our kitchen dashboard just
-                now. Please tap <strong className="text-gold">Send it to us on WhatsApp</strong> so
+                now. Please tap <strong className="text-accent">Send it to us on WhatsApp</strong> so
                 we definitely get it. Your code stays the same.
               </p>
             </div>

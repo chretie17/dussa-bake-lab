@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
 import { ArrowRight, Star } from 'lucide-react'
 import CreationArt from '../art/CreationArt'
+import HeroCake from '../components/HeroCake'
 import SealBadge from '../components/SealBadge'
 import { Button } from '../components/ui'
 import { BRAND } from '../data/site'
@@ -27,20 +28,17 @@ export default function Hero() {
   return (
     <section
       ref={ref}
-      className="grain relative isolate flex min-h-[100svh] items-center overflow-hidden bg-espresso pb-24 pt-32 text-cream md:pb-16"
+      className="grain relative isolate flex min-h-[100svh] items-center overflow-hidden bg-deep pb-24 pt-32 text-on-deep md:pb-16"
     >
       {/* Warm light pooling behind the cake */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            'radial-gradient(58% 62% at 72% 44%, rgba(212,165,116,0.30) 0%, rgba(212,165,116,0.06) 46%, transparent 72%), radial-gradient(46% 50% at 12% 88%, rgba(107,68,41,0.5) 0%, transparent 70%)',
-        }}
+        style={{ background: 'var(--hero-glow)' }}
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-espresso to-transparent"
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-deep to-transparent"
       />
 
       <div className="container-x relative z-10 grid w-full items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
@@ -50,9 +48,9 @@ export default function Hero() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="eyebrow flex items-center gap-3 text-gold"
+            className="eyebrow flex items-center gap-3 text-accent"
           >
-            <span aria-hidden="true" className="h-px w-9 bg-gold/60" />
+            <span aria-hidden="true" className="h-px w-9 bg-accent/60" />
             {BRAND.city}, {BRAND.country} · est. {BRAND.founded}
           </motion.p>
 
@@ -96,7 +94,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.85 }}
-            className="mt-7 max-w-lg text-[1.0625rem] leading-relaxed text-cream/65"
+            className="mt-7 max-w-lg text-[1.0625rem] leading-relaxed text-on-deep/65"
           >
             Cakes, cupcakes, cookies and custom orders, baked by hand in Kigali for whatever
             you are celebrating.
@@ -121,23 +119,23 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 1.2 }}
-            className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-cream/12 pt-7"
+            className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-on-deep/12 pt-7"
           >
             <div className="flex items-center gap-2.5">
-              <span className="flex text-gold">
+              <span className="flex text-accent">
                 {[0, 1, 2, 3, 4].map((i) => (
                   <Star key={i} size={14} fill="currentColor" strokeWidth={0} />
                 ))}
               </span>
-              <span className="text-[0.8125rem] text-cream/60">
-                <strong className="font-medium text-cream">4.9</strong> from 600+ reviews
+              <span className="text-[0.8125rem] text-on-deep/60">
+                <strong className="font-medium text-on-deep">4.9</strong> from 600+ reviews
               </span>
             </div>
-            <p className="text-[0.8125rem] text-cream/60">
-              <strong className="font-medium text-cream">4,000+</strong> celebrations baked for
+            <p className="text-[0.8125rem] text-on-deep/60">
+              <strong className="font-medium text-on-deep">4,000+</strong> celebrations baked for
             </p>
-            <p className="text-[0.8125rem] text-cream/60">
-              <strong className="font-medium text-cream">48h</strong> standard turnaround
+            <p className="text-[0.8125rem] text-on-deep/60">
+              <strong className="font-medium text-on-deep">48h</strong> standard turnaround
             </p>
           </motion.div>
         </motion.div>
@@ -153,12 +151,7 @@ export default function Hero() {
             transition={{ duration: 1.2, delay: 0.25, ease: [0.22, 1, 0.36, 1] }}
             className="relative"
           >
-            <CreationArt
-              variant="dripCake"
-              flavor="chocolate"
-              seed="hero-cake"
-              className="w-full drop-shadow-[0_40px_60px_rgba(0,0,0,0.45)]"
-            />
+            <HeroCake />
           </motion.div>
 
           {/* Rotating flyer seal */}
@@ -199,7 +192,7 @@ export default function Hero() {
         style={{ opacity: fade }}
         className="absolute inset-x-0 bottom-6 z-10 hidden justify-center md:flex"
       >
-        <div className="flex flex-col items-center gap-2.5 text-cream/40">
+        <div className="flex flex-col items-center gap-2.5 text-on-deep/40">
           <span className="eyebrow text-[0.6rem]">Scroll</span>
           <span className="relative h-12 w-px overflow-hidden bg-cream/18">
             <motion.span

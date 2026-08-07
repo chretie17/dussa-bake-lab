@@ -399,5 +399,80 @@ const uploadDenied = await call(imagesHandler, {
 check('uploading is denied without the admin key', uploadDenied.status === 401)
 delete process.env.ADMIN_KEY
 
+
+// --- whatsapp --------------------------------------------------------------
+const {
+  parseCommand,
+  isAuthorisedSender,
+  formatOrder,
+  whatsappConfigured,
+} = await import('../api/_lib/whatsapp.js')
+const { default: waHandler } = await import('../api/whatsapp.js')
+
+check('whatsapp stays off until it is configured', whatsappConfigured() === false)
+
+check('"confirm DBL-TESTA1" is understood', () => {
+  const c = parseCommand('confirm DBL-TESTA1')
+  return c.kind === 'status' && c.status === 'confirmed' && c.code === 'DBL-TESTA1'
+})
+check('"ready dbl-testa1" is case-insensitive', () => {
+  const c = parseCommand('ready dbl-testa1')
+  return c.status === 'ready' && c.code === 'DBL-TESTA1'
+})
+check('"done" alone asks which order', parseCommand('done').kind === 'needs-code')
+check('a bare code is a lookup', parseCommand('DBL-TESTA1').kind === 'lookup')
+check('"today" lists the day', parseCommand('today').kind === 'today')
+check('"new" lists what is waiting', parseCommand('new').kind === 'new')
+check('anything else gets the help text', parseCommand('hello there').kind === 'unknown')
+check('cancel maps to cancelled', parseCommand('cancel DBL-TESTA1').status === 'cancelled')
+
+process.env.WHATSAPP_TO = '250788722064'
+check('the bakery number is authorised', isAuthorisedSender('250788722064'))
+check('a formatted number still matches', isAuthorisedSender('+250 788 722 064'))
+check('any other number is not', isAuthorisedSender('250700000000') === false)
+process.env.WHATSAPP_ADMINS = '250799111222'
+check('extra admin numbers are honoured', isAuthorisedSender('250799111222'))
+delete process.env.WHATSAPP_ADMINS
+
+const waText = formatOrder({
+  code: 'DBL-TESTA1',
+  name: 'Keza Uwase',
+  phone: '0788722064',
+  fulfilment: 'delivery',
+  date: '2026-09-01',
+  time: '13:00 – 15:00',
+  address: 'KG 11 Ave',
+  total: 84000,
+  items: [{ quantity: 2, name: 'Signature Chocolate Drip', sizeLabel: '8" round' }],
+})
+check('the WhatsApp message names the order', waText.includes('DBL-TESTA1'))
+check('it lists the items', waText.includes('2 × Signature Chocolate Drip'))
+check('it shows the total', waText.includes('RWF 84,000'))
+check('it tells the baker what to reply', /confirm DBL-TESTA1/.test(waText))
+
+// webhook verification handshake
+process.env.WHATSAPP_VERIFY_TOKEN = 'verify-me'
+const verified = mockRes()
+await waHandler(
+  { method: 'GET', headers: {}, query: { 'hub.mode': 'subscribe', 'hub.verify_token': 'verify-me', 'hub.challenge': '12345' } },
+  verified,
+)
+check('the webhook completes Meta\'s handshake', verified.statusCode === 200 && verified.body === '12345')
+
+const refused = mockRes()
+await waHandler(
+  { method: 'GET', headers: {}, query: { 'hub.mode': 'subscribe', 'hub.verify_token': 'wrong', 'hub.challenge': '12345' } },
+  refused,
+)
+check('a wrong verify token is refused', refused.statusCode === 403)
+
+const badSig = mockRes()
+process.env.WHATSAPP_APP_SECRET = 'app-secret'
+await waHandler({ method: 'POST', headers: { 'x-hub-signature-256': 'sha256=deadbeef' }, body: {} }, badSig)
+check('a webhook with a bad signature is rejected', badSig.statusCode === 401)
+delete process.env.WHATSAPP_APP_SECRET
+delete process.env.WHATSAPP_VERIFY_TOKEN
+delete process.env.WHATSAPP_TO
+
 console.log(failures === 0 ? '\nAll API checks passed.' : `\n${failures} check(s) failed.`)
 process.exit(failures === 0 ? 0 : 1)

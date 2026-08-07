@@ -7,10 +7,10 @@ const ICONS = { chat: MessageSquare, pencil: PencilRuler, oven: Flame, truck: Tr
 
 export default function ProcessSection() {
   return (
-    <Section className="grain relative overflow-hidden bg-espresso text-cream">
+    <Section className="grain relative overflow-hidden bg-deep text-on-deep">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-0 h-[30rem] w-[46rem] -translate-x-1/2 rounded-full bg-caramel/12 blur-[100px]"
+        className="pointer-events-none absolute left-1/2 top-0 h-[30rem] w-[46rem] -translate-x-1/2 rounded-full bg-accent-soft/12 blur-[100px]"
       />
 
       <div className="container-x relative z-10">
@@ -41,14 +41,14 @@ export default function ProcessSection() {
                   transition={{ duration: 0.7, delay: i * 0.12, ease: [0.22, 1, 0.36, 1] }}
                   className="relative flex gap-5 md:gap-6 lg:block"
                 >
-                  <div className="relative z-10 flex h-[3.3rem] w-[3.3rem] shrink-0 items-center justify-center rounded-full border border-caramel/45 bg-espresso text-gold">
+                  <div className="relative z-10 flex h-[3.3rem] w-[3.3rem] shrink-0 items-center justify-center rounded-full border border-caramel/45 bg-deep text-accent">
                     <Icon size={21} strokeWidth={1.6} />
                   </div>
 
                   <div className="lg:mt-7">
                     <span className="eyebrow text-caramel/70">Step {step.step}</span>
-                    <h3 className="mt-2.5 text-[1.3rem] text-cream">{step.title}</h3>
-                    <p className="mt-2.5 max-w-xs text-[0.9rem] leading-relaxed text-cream/60">
+                    <h3 className="mt-2.5 text-[1.3rem] text-on-deep">{step.title}</h3>
+                    <p className="mt-2.5 max-w-xs text-[0.9rem] leading-relaxed text-on-deep/60">
                       {step.body}
                     </p>
                   </div>

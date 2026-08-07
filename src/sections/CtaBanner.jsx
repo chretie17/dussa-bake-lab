@@ -9,14 +9,14 @@ export default function CtaBanner() {
     <section className="relative overflow-hidden bg-cream py-20 md:py-28">
       <div className="container-x">
         <Reveal>
-          <div className="grain relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-cocoa via-espresso to-ink px-7 py-16 text-center text-cream md:px-16 md:py-20">
+          <div className="grain relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-deep-2 via-deep to-deep-3 px-7 py-16 text-center text-on-deep md:px-16 md:py-20">
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-gold/18 blur-3xl"
+              className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-accent/18 blur-3xl"
             />
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute -bottom-32 -right-16 h-80 w-80 rounded-full bg-caramel/16 blur-3xl"
+              className="pointer-events-none absolute -bottom-32 -right-16 h-80 w-80 rounded-full bg-accent-soft/16 blur-3xl"
             />
 
             <div
@@ -33,14 +33,14 @@ export default function CtaBanner() {
             </div>
 
             <div className="relative z-10">
-              <p className="script text-[clamp(2rem,5vw,3rem)] leading-none text-gold">
+              <p className="script text-[clamp(2rem,5vw,3rem)] leading-none text-accent">
                 {BRAND.script}
               </p>
               <h2 className="mx-auto mt-6 max-w-2xl text-[clamp(1.9rem,4.4vw,3rem)] leading-[1.1]">
                 Tell us the date and we will{' '}
                 <span className="italic text-gradient-gold">take it from there</span>
               </h2>
-              <p className="mx-auto mt-5 max-w-lg text-[1.0625rem] leading-relaxed text-cream/65">
+              <p className="mx-auto mt-5 max-w-lg text-[1.0625rem] leading-relaxed text-on-deep/65">
                 Two minutes to book. We come back to you with a price, and after that it is our
                 problem until it reaches your table.
               </p>

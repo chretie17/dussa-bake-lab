@@ -17,6 +17,18 @@
   --color-cream: #faf3ea;
   --color-porcelain: #fffdfa;
 
+  /* ----------------------------------------------------------------
+     Themed roles. Sections that used to be hard-coded chocolate now
+     use these, so the whole site can flip between the two looks.
+     Values here are the Chocolate theme; Bright overrides them below.
+  ---------------------------------------------------------------- */
+  --color-deep: #2a1810;
+  --color-deep-2: #43281a;
+  --color-deep-3: #180f09;
+  --color-on-deep: #faf3ea;
+  --color-accent: #d4a574;
+  --color-accent-soft: #b98a5e;
+
   --font-display: 'Fraunces', 'Playfair Display', Georgia, serif;
   --font-sans: 'Outfit', ui-sans-serif, system-ui, sans-serif;
   --font-script: 'Parisienne', 'Brush Script MT', cursive;
@@ -38,6 +50,47 @@
   :root {
     --nav-h: 76px;
     color-scheme: light;
+
+    /* Warm light pooling behind the hero cake. */
+    --hero-glow: radial-gradient(
+        58% 62% at 72% 44%,
+        rgb(212 165 116 / 0.3) 0%,
+        rgb(212 165 116 / 0.06) 46%,
+        transparent 72%
+      ),
+      radial-gradient(46% 50% at 12% 88%, rgb(107 68 41 / 0.5) 0%, transparent 70%);
+    --deep-grain: 0.3;
+  }
+
+  /* ------------------------------------------------------------------
+     Bright: the chocolate sections become warm ivory with dark type.
+     Same layout, same brand, much airier.
+  ------------------------------------------------------------------ */
+  :root[data-theme='bright'] {
+    --color-deep: #fdf4e9;
+    --color-deep-2: #f8e8d6;
+    --color-deep-3: #f3ddc6;
+    --color-on-deep: #2f1c11;
+    --color-accent: #a0692f;
+    --color-accent-soft: #8a5f3d;
+
+    --color-cream: #fffaf3;
+    --color-porcelain: #ffffff;
+    --color-blush: #fbe9d8;
+
+    --hero-glow: radial-gradient(
+        60% 64% at 70% 40%,
+        rgb(255 214 158 / 0.55) 0%,
+        rgb(255 236 210 / 0.4) 44%,
+        transparent 74%
+      ),
+      radial-gradient(50% 54% at 10% 90%, rgb(246 220 190 / 0.85) 0%, transparent 72%);
+    --deep-grain: 0.16;
+  }
+
+  /* The site starts bright unless someone picks otherwise. */
+  html {
+    background-color: var(--color-cream);
   }
 
   * {
@@ -51,6 +104,9 @@
 
   body {
     background-color: var(--color-cream);
+    transition:
+      background-color 0.4s var(--ease-silk),
+      color 0.4s var(--ease-silk);
     color: var(--color-espresso);
     font-family: var(--font-sans);
     font-synthesis-weight: none;
@@ -151,11 +207,17 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-    opacity: 0.3;
+    opacity: var(--deep-grain, 0.3);
     mix-blend-mode: multiply;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.42'/%3E%3C/svg%3E");
     background-size: 200px 200px;
   }
+}
+
+/* Shared background for the hero and other "deep" panels. */
+@utility deep-panel {
+  background-color: var(--color-deep);
+  color: var(--color-on-deep);
 }
 
 @utility glass {

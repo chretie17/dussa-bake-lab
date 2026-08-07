@@ -14,19 +14,19 @@ export default function Footer() {
   const phoneHref = contact.phoneHref || `tel:+${contact.whatsapp}`
 
   return (
-    <footer className="grain relative overflow-hidden bg-espresso text-cream">
+    <footer className="grain relative overflow-hidden bg-deep text-on-deep">
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -left-40 -top-40 h-96 w-96 rounded-full bg-caramel/16 blur-3xl"
+        className="pointer-events-none absolute -left-40 -top-40 h-96 w-96 rounded-full bg-accent-soft/16 blur-3xl"
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -bottom-52 right-0 h-[28rem] w-[28rem] rounded-full bg-gold/10 blur-3xl"
+        className="pointer-events-none absolute -bottom-52 right-0 h-[28rem] w-[28rem] rounded-full bg-accent/10 blur-3xl"
       />
 
       <div className="container-x relative z-10 py-20">
         <div className="text-center">
-          <p className="script text-[clamp(2.4rem,6vw,3.6rem)] leading-none text-gold">
+          <p className="script text-[clamp(2.4rem,6vw,3.6rem)] leading-none text-accent">
             {brand.script}
           </p>
           <Flourish className="mt-7" tone="text-caramel" />
@@ -38,7 +38,7 @@ export default function Footer() {
               <LogoMark className="h-12 w-12" tone="#FAF3EA" accent="#D4A574" />
               <Wordmark tone="#FAF3EA" accent="#D4A574" className="text-[1rem]" />
             </div>
-            <p className="mt-5 max-w-xs text-[0.9rem] leading-relaxed text-cream/60">
+            <p className="mt-5 max-w-xs text-[0.9rem] leading-relaxed text-on-deep/60">
               {brand.description}
             </p>
             <div className="mt-6 flex gap-3">
@@ -46,7 +46,7 @@ export default function Footer() {
                 href={whatsappEnquiryLink()}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-cream/20 text-cream/80 transition-all hover:border-gold hover:bg-gold hover:text-espresso"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-on-deep/20 text-on-deep/80 transition-all hover:border-accent hover:bg-accent hover:text-espresso"
                 aria-label="Message Dussa BakeLab on WhatsApp"
               >
                 <WhatsAppIcon size={18} />
@@ -55,14 +55,14 @@ export default function Footer() {
                 href={instagramUrl}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-cream/20 text-cream/80 transition-all hover:border-gold hover:bg-gold hover:text-espresso"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-on-deep/20 text-on-deep/80 transition-all hover:border-accent hover:bg-accent hover:text-espresso"
                 aria-label="Dussa BakeLab on Instagram"
               >
                 <InstagramIcon size={18} strokeWidth={1.7} />
               </a>
               <a
                 href={`mailto:${contact.email}`}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-cream/20 text-cream/80 transition-all hover:border-gold hover:bg-gold hover:text-espresso"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-on-deep/20 text-on-deep/80 transition-all hover:border-accent hover:bg-accent hover:text-espresso"
                 aria-label="Email Dussa BakeLab"
               >
                 <Mail size={18} strokeWidth={1.7} />
@@ -71,13 +71,13 @@ export default function Footer() {
           </div>
 
           <nav aria-label="Creations">
-            <h3 className="eyebrow text-gold">Creations</h3>
+            <h3 className="eyebrow text-accent">Creations</h3>
             <ul className="mt-5 space-y-3 text-[0.9rem]">
               {categories.map((c) => (
                 <li key={c.id}>
                   <Link
                     to={`/creations?category=${c.id}`}
-                    className="text-cream/65 transition-colors hover:text-gold"
+                    className="text-on-deep/65 transition-colors hover:text-accent"
                   >
                     {c.name}
                   </Link>
@@ -87,17 +87,17 @@ export default function Footer() {
           </nav>
 
           <nav aria-label="Company">
-            <h3 className="eyebrow text-gold">Company</h3>
+            <h3 className="eyebrow text-accent">Company</h3>
             <ul className="mt-5 space-y-3 text-[0.9rem]">
               {NAV_LINKS.map((l) => (
                 <li key={l.to}>
-                  <Link to={l.to} className="text-cream/65 transition-colors hover:text-gold">
+                  <Link to={l.to} className="text-on-deep/65 transition-colors hover:text-accent">
                     {l.label}
                   </Link>
                 </li>
               ))}
               <li>
-                <Link to="/admin" className="text-cream/40 transition-colors hover:text-gold">
+                <Link to="/admin" className="text-on-deep/40 transition-colors hover:text-accent">
                   Bakery dashboard
                 </Link>
               </li>
@@ -105,12 +105,12 @@ export default function Footer() {
           </nav>
 
           <div>
-            <h3 className="eyebrow text-gold">Order via</h3>
+            <h3 className="eyebrow text-accent">Order via</h3>
             <ul className="mt-5 space-y-4 text-[0.9rem]">
               <li>
                 <a
                   href={phoneHref}
-                  className="flex items-start gap-3 text-cream/65 transition-colors hover:text-gold"
+                  className="flex items-start gap-3 text-on-deep/65 transition-colors hover:text-accent"
                 >
                   <Phone size={16} strokeWidth={1.7} className="mt-0.5 shrink-0 text-caramel" />
                   {contact.phoneDisplay}
@@ -121,37 +121,37 @@ export default function Footer() {
                   href={instagramUrl}
                   target="_blank"
                   rel="noreferrer noopener"
-                  className="flex items-start gap-3 text-cream/65 transition-colors hover:text-gold"
+                  className="flex items-start gap-3 text-on-deep/65 transition-colors hover:text-accent"
                 >
                   <InstagramIcon size={16} strokeWidth={1.7} className="mt-0.5 shrink-0 text-caramel" />
                   @{contact.instagram}
                 </a>
               </li>
-              <li className="flex items-start gap-3 text-cream/65">
+              <li className="flex items-start gap-3 text-on-deep/65">
                 <MapPin size={16} strokeWidth={1.7} className="mt-0.5 shrink-0 text-caramel" />
                 {contact.location}
               </li>
             </ul>
 
-            <h3 className="eyebrow mt-8 text-gold">Kitchen hours</h3>
-            <ul className="mt-4 space-y-2 text-[0.8rem] text-cream/55">
+            <h3 className="eyebrow mt-8 text-accent">Kitchen hours</h3>
+            <ul className="mt-4 space-y-2 text-[0.8rem] text-on-deep/55">
               {hours.map((h) => (
                 <li key={h.day} className="flex justify-between gap-4">
                   <span>{h.day}</span>
-                  <span className="text-cream/75">{h.time}</span>
+                  <span className="text-on-deep/75">{h.time}</span>
                 </li>
               ))}
             </ul>
           </div>
         </div>
 
-        <div className="mt-16 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 border-y border-cream/12 py-5 text-center text-[0.72rem] tracking-[0.12em] text-cream/45 uppercase">
+        <div className="mt-16 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 border-y border-on-deep/12 py-5 text-center text-[0.72rem] tracking-[0.12em] text-on-deep/45 uppercase">
           {fulfilment.payments.map((p) => (
             <span key={p}>{p}</span>
           ))}
         </div>
 
-        <div className="mt-8 flex flex-col items-center justify-between gap-3 text-[0.78rem] text-cream/45 md:flex-row">
+        <div className="mt-8 flex flex-col items-center justify-between gap-3 text-[0.78rem] text-on-deep/45 md:flex-row">
           <p>
             © {year} {brand.name}. Baked in {brand.city}, {brand.country}.
           </p>

@@ -263,12 +263,12 @@ export default function Admin() {
 
   if (!authed) {
     return (
-      <section className="grain flex min-h-[100svh] items-center justify-center bg-espresso px-5 py-32 text-cream">
+      <section className="grain flex min-h-[100svh] items-center justify-center bg-deep px-5 py-32 text-on-deep">
         <div className="w-full max-w-sm">
           <div className="text-center">
             <LogoMark className="mx-auto h-14 w-14" tone="#FAF3EA" accent="#D4A574" />
             <h1 className="mt-6 text-[1.9rem]">Kitchen dashboard</h1>
-            <p className="mt-2 text-[0.9rem] text-cream/55">
+            <p className="mt-2 text-[0.9rem] text-on-deep/55">
               Sign in to manage orders, products and settings.
             </p>
           </div>
@@ -302,7 +302,7 @@ export default function Admin() {
             </p>
           )}
 
-          <p className="mt-6 text-center text-[0.75rem] leading-relaxed text-cream/35">
+          <p className="mt-6 text-center text-[0.75rem] leading-relaxed text-on-deep/35">
             This is the ADMIN_KEY you set on your deployment. If you have not set one yet, any
             word will get you in.
           </p>
@@ -372,7 +372,7 @@ export default function Admin() {
           <button
             type="button"
             onClick={() => setTab('setup')}
-            className="mt-6 flex w-full items-start gap-3 rounded-2xl border border-gold/45 bg-gold/12 p-4 text-left transition-colors hover:bg-gold/18"
+            className="mt-6 flex w-full items-start gap-3 rounded-2xl border border-accent/45 bg-accent/12 p-4 text-left transition-colors hover:bg-accent/18"
           >
             <AlertTriangle size={17} strokeWidth={1.8} className="mt-0.5 shrink-0 text-caramel" />
             <span className="text-[0.85rem] leading-relaxed text-cocoa/80">
@@ -482,7 +482,7 @@ function SetupPanel({ health, storage, secured }) {
             key={check.id}
             className={classNames(
               'flex items-start gap-3 rounded-2xl border p-5',
-              check.ok ? 'border-emerald-200 bg-emerald-50/60' : 'border-gold/45 bg-gold/12',
+              check.ok ? 'border-emerald-200 bg-emerald-50/60' : 'border-accent/45 bg-accent/12',
             )}
           >
             {check.ok ? (
@@ -525,6 +525,35 @@ function SetupPanel({ health, storage, secured }) {
       </div>
 
       <div className="rounded-[1.5rem] border border-caramel/22 bg-porcelain p-6">
+        <h3 className="font-display text-[1.2rem] text-espresso">Orders on WhatsApp</h3>
+        <p className="mt-2 text-[0.9rem] leading-relaxed text-cocoa/65">
+          Every order can land on your WhatsApp the moment it is placed, and you can reply with a
+          short command to move it along without opening this dashboard.
+        </p>
+        <ol className="mt-5 space-y-3 text-[0.9rem] leading-relaxed text-cocoa/75">
+          <Step n="1">
+            At <Code>developers.facebook.com</Code>, make an app and add the WhatsApp product. It
+            gives you a test number to try straight away.
+          </Step>
+          <Step n="2">
+            Add <Code>WHATSAPP_TOKEN</Code>, <Code>WHATSAPP_PHONE_ID</Code> and{' '}
+            <Code>WHATSAPP_TO</Code> (your own number, digits only, e.g. 250788722064).
+          </Step>
+          <Step n="3">
+            Under Configuration, set the callback URL to <Code>/api/whatsapp</Code> on your domain,
+            and use the same words for the verify token as <Code>WHATSAPP_VERIFY_TOKEN</Code>.
+          </Step>
+          <Step n="4">
+            Message your business number once to open the chat, then place a test order.
+          </Step>
+        </ol>
+        <p className="mt-5 rounded-xl bg-cream/70 px-4 py-3 text-[0.82rem] leading-relaxed text-cocoa/70">
+          Reply <Code>help</Code> for the list of commands. The useful ones are{' '}
+          <Code>today</Code>, <Code>new</Code>, and <Code>confirm DBL-XXXXXXX</Code>.
+        </p>
+      </div>
+
+      <div className="rounded-[1.5rem] border border-caramel/22 bg-porcelain p-6">
         <h3 className="font-display text-[1.2rem] text-espresso">Email notifications</h3>
         <p className="mt-2 text-[0.9rem] leading-relaxed text-cocoa/65">
           To get an email the moment an order arrives, and to send customers a confirmation and
@@ -551,7 +580,7 @@ function SetupPanel({ health, storage, secured }) {
 function Step({ n, children }) {
   return (
     <li className="flex gap-3">
-      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-espresso text-[0.7rem] font-semibold text-cream">
+      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-deep text-[0.7rem] font-semibold text-on-deep">
         {n}
       </span>
       <span>{children}</span>
@@ -561,7 +590,7 @@ function Step({ n, children }) {
 
 function Code({ children }) {
   return (
-    <code className="rounded bg-espresso/8 px-1.5 py-0.5 font-mono text-[0.85em] text-espresso">
+    <code className="rounded bg-deep/8 px-1.5 py-0.5 font-mono text-[0.85em] text-espresso">
       {children}
     </code>
   )

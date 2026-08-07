@@ -116,25 +116,25 @@ export default function TrackOrder() {
               className="mx-auto mt-12 max-w-4xl"
             >
               <div className="overflow-hidden rounded-[2rem] border border-caramel/25 bg-porcelain shadow-soft">
-                <div className="grain relative bg-espresso px-7 py-8 text-cream md:px-10">
+                <div className="grain relative bg-deep px-7 py-8 text-on-deep md:px-10">
                   <div className="relative z-10 flex flex-wrap items-start justify-between gap-5">
                     <div>
-                      <p className="eyebrow text-gold">Order {order.code}</p>
+                      <p className="eyebrow text-accent">Order {order.code}</p>
                       <h2 className="mt-3 text-[1.9rem] leading-tight">
                         {statusMeta(order.status).label}
                       </h2>
-                      <p className="mt-2 text-[0.9rem] text-cream/60">
+                      <p className="mt-2 text-[0.9rem] text-on-deep/60">
                         {statusMeta(order.status).hint}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-[0.72rem] uppercase tracking-[0.14em] text-cream/45">
+                      <p className="text-[0.72rem] uppercase tracking-[0.14em] text-on-deep/45">
                         {order.fulfilment === 'delivery' ? 'Delivery' : 'Collection'}
                       </p>
-                      <p className="mt-1.5 font-display text-[1.25rem] text-gold">
+                      <p className="mt-1.5 font-display text-[1.25rem] text-accent">
                         {prettyDate(order.date)}
                       </p>
-                      <p className="text-[0.8rem] text-cream/55">
+                      <p className="text-[0.8rem] text-on-deep/55">
                         {order.time} · {relativeDay(order.date)}
                       </p>
                     </div>

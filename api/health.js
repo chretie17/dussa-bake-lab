@@ -1,5 +1,6 @@
 import { countProducts, healthCheck, listOrders } from './_lib/db.js'
 import { emailConfigured } from './_lib/notify.js'
+import { whatsappConfigured } from './_lib/whatsapp.js'
 import { adminConfigured, applyCors, sendJson } from './_lib/http.js'
 
 /**
@@ -45,6 +46,14 @@ export default async function handler(req, res) {
       detail: adminConfigured()
         ? 'ADMIN_KEY is set — the dashboard is protected.'
         : 'ADMIN_KEY is not set, so anyone with the link can open this dashboard.',
+    },
+    {
+      id: 'whatsapp',
+      label: 'WhatsApp',
+      ok: whatsappConfigured(),
+      detail: whatsappConfigured()
+        ? 'New orders are sent to your WhatsApp, and you can reply with commands to move them along.'
+        : 'Set WHATSAPP_TOKEN, WHATSAPP_PHONE_ID and WHATSAPP_TO to get orders on WhatsApp.',
     },
     {
       id: 'email',

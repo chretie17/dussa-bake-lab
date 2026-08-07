@@ -38,6 +38,7 @@ const routes = [
   { pattern: /^\/api\/images\/([^/]+)$/, module: '../api/images/[id].js', params: ['id'] },
   { pattern: /^\/api\/images$/, module: '../api/images.js', params: [] },
   { pattern: /^\/api\/settings$/, module: '../api/settings.js', params: [] },
+  { pattern: /^\/api\/whatsapp$/, module: '../api/whatsapp.js', params: [] },
   { pattern: /^\/api\/health$/, module: '../api/health.js', params: [] },
 ]
 

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { ImageIcon, Loader2, Plus, Trash2, Upload } from 'lucide-react'
+import { ImageIcon, Loader2, Trash2, Upload } from 'lucide-react'
 import { MediaModal } from './ImagePicker'
 import { TextInput } from '../Field'
 import { ACCEPTED, listImages, uploadImage } from '../../lib/images'

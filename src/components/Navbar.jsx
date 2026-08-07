@@ -5,6 +5,8 @@ import { Menu, ShoppingBag, X, Phone } from 'lucide-react'
 import { LogoMark, Wordmark } from '../art/Logo'
 import { NAV_LINKS, CONTACT } from '../data/site'
 import { useCart } from '../context/CartContext'
+import { useTheme } from '../context/ThemeContext'
+import ThemeToggle from './ThemeToggle'
 import { classNames } from '../lib/format'
 import { Button } from './ui'
 
@@ -12,10 +14,13 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const { count, openCart } = useCart()
+  const { isBright } = useTheme()
   const { pathname } = useLocation()
 
-  /** The home hero is dark, so the bar starts transparent there and only there. */
+  /** Over the hero the bar is transparent; its ink follows the theme. */
   const overHero = pathname === '/' && !scrolled
+  const heroInk = isBright ? '#2F1C11' : '#FAF3EA'
+  const heroAccent = isBright ? '#A0692F' : '#D4A574'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -53,13 +58,13 @@ export default function Navbar() {
           >
             <LogoMark
               className="h-11 w-11 transition-transform duration-500 group-hover:rotate-[-6deg] md:h-12 md:w-12"
-              tone={overHero ? '#FAF3EA' : '#2A1810'}
-              accent={overHero ? '#D4A574' : '#B98A5E'}
+              tone={overHero ? heroInk : 'var(--color-espresso)'}
+              accent={overHero ? heroAccent : 'var(--color-caramel)'}
             />
             <Wordmark
               className="hidden text-[0.9rem] sm:inline-flex"
-              tone={overHero ? '#FAF3EA' : '#2A1810'}
-              accent={overHero ? '#D4A574' : '#B98A5E'}
+              tone={overHero ? heroInk : 'var(--color-espresso)'}
+              accent={overHero ? heroAccent : 'var(--color-caramel)'}
             />
           </Link>
 
@@ -72,9 +77,9 @@ export default function Navbar() {
                     classNames(
                       'relative rounded-full px-4 py-2.5 text-[0.875rem] font-medium transition-colors duration-300',
                       overHero
-                        ? 'text-cream/80 hover:text-cream'
+                        ? 'text-on-deep/80 hover:text-on-deep'
                         : 'text-cocoa/75 hover:text-espresso',
-                      isActive && (overHero ? 'text-cream' : 'text-espresso'),
+                      isActive && (overHero ? 'text-on-deep' : 'text-espresso'),
                     )
                   }
                 >
@@ -86,7 +91,7 @@ export default function Navbar() {
                           layoutId="nav-active"
                           className={classNames(
                             'absolute inset-x-3 -bottom-0.5 h-px',
-                            overHero ? 'bg-gold' : 'bg-caramel',
+                            overHero ? 'bg-accent' : 'bg-caramel',
                           )}
                           transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                         />
@@ -103,12 +108,14 @@ export default function Navbar() {
               href={CONTACT.phoneHref}
               className={classNames(
                 'hidden items-center gap-2 rounded-full px-3 py-2 text-[0.8125rem] font-medium transition-colors xl:inline-flex',
-                overHero ? 'text-cream/75 hover:text-cream' : 'text-cocoa/70 hover:text-espresso',
+                overHero ? 'text-on-deep/75 hover:text-on-deep' : 'text-cocoa/70 hover:text-espresso',
               )}
             >
               <Phone size={15} strokeWidth={1.8} />
               {CONTACT.phoneDisplay}
             </a>
+
+            <ThemeToggle onDark={overHero} className="hidden sm:flex" />
 
             <button
               type="button"
@@ -116,7 +123,7 @@ export default function Navbar() {
               className={classNames(
                 'relative flex h-11 w-11 items-center justify-center rounded-full border transition-all duration-300',
                 overHero
-                  ? 'border-cream/25 text-cream hover:bg-cream/10'
+                  ? 'border-on-deep/25 text-on-deep hover:bg-on-deep/10'
                   : 'border-caramel/30 text-espresso hover:border-caramel hover:bg-blush/60',
               )}
               aria-label={`Open order basket, ${count} item${count === 1 ? '' : 's'}`}
@@ -129,7 +136,7 @@ export default function Navbar() {
                     initial={{ scale: 0.4, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.4, opacity: 0 }}
-                    className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-gold px-1 text-[0.6875rem] font-semibold text-espresso"
+                    className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1 text-[0.6875rem] font-semibold text-espresso"
                   >
                     {count}
                   </motion.span>
@@ -151,7 +158,7 @@ export default function Navbar() {
               className={classNames(
                 'flex h-11 w-11 items-center justify-center rounded-full border transition-colors lg:hidden',
                 overHero
-                  ? 'border-cream/25 text-cream hover:bg-cream/10'
+                  ? 'border-on-deep/25 text-on-deep hover:bg-on-deep/10'
                   : 'border-caramel/30 text-espresso hover:bg-blush/60',
               )}
               aria-label="Open menu"
@@ -219,6 +226,10 @@ export default function Navbar() {
               </ul>
 
               <div className="relative z-10 space-y-3 border-t border-caramel/20 px-6 py-6">
+                <div className="flex items-center justify-between gap-3 pb-1">
+                  <span className="text-[0.85rem] text-cocoa/70">Look</span>
+                  <ThemeToggle />
+                </div>
                 <Button to="/order" className="w-full" sheen>
                   Start an order
                 </Button>

@@ -147,6 +147,26 @@ await check('the basket is cleared after ordering', async () =>
   page.getByText(/Your basket is empty/).isVisible(),
 )
 
+
+// 6 — the two looks
+await page.goto(`${BASE}/`, { waitUntil: 'networkidle' })
+await page.waitForTimeout(1500)
+await check('the site starts on the bright look', async () =>
+  (await page.evaluate(() => document.documentElement.getAttribute('data-theme'))) === 'bright',
+)
+await page.getByRole('switch').first().click()
+await page.waitForTimeout(900)
+await check('the switch moves it to chocolate', async () =>
+  (await page.evaluate(() => document.documentElement.getAttribute('data-theme'))) === 'chocolate',
+)
+await page.reload({ waitUntil: 'networkidle' })
+await page.waitForTimeout(1500)
+await check('the choice survives a reload', async () =>
+  (await page.evaluate(() => document.documentElement.getAttribute('data-theme'))) === 'chocolate',
+)
+await page.getByRole('switch').first().click()
+await page.waitForTimeout(700)
+
 console.log(errors.length ? `\nPAGE ERRORS:\n${[...new Set(errors)].join('\n')}` : '\nno page errors')
 console.log(failures === 0 ? 'All E2E checks passed.' : `${failures} check(s) failed.`)
 
