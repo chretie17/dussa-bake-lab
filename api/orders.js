@@ -1,6 +1,6 @@
 import { listOrders, saveOrder, storageMode } from './_lib/db.js'
 import { notifyNewOrder, sendCustomerConfirmation } from './_lib/notify.js'
-import { notifyOrderOnWhatsApp } from './_lib/whatsapp.js'
+import { notifyOrderOnWhatsApp, sendCustomerOrderConfirmation } from './_lib/whatsapp.js'
 import {
   applyCors,
   adminConfigured,
@@ -97,6 +97,9 @@ export default async function handler(req, res) {
       deliveryFee: toNumber(body.deliveryFee),
       total: toNumber(body.total),
       depositDue: toNumber(body.depositDue),
+      // Opt-out, not opt-in: anything but an explicit false means we may send
+      // WhatsApp updates to the number they just gave us.
+      whatsappUpdates: body.whatsappUpdates !== false,
     }
 
     try {
@@ -110,6 +113,7 @@ export default async function handler(req, res) {
     notifyNewOrder(order)
     sendCustomerConfirmation(order)
     notifyOrderOnWhatsApp(order)
+    sendCustomerOrderConfirmation(order)
 
     return sendJson(res, 201, { order, storage: storageMode() })
   }

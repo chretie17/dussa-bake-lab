@@ -5,6 +5,7 @@ import {
   HELP_TEXT,
   isAuthorisedSender,
   parseCommand,
+  sendCustomerStatusUpdate,
   sendWhatsApp,
   summariseList,
   summariseOrder,
@@ -76,8 +77,10 @@ async function handleCommand(text, from) {
   const next = { ...order, status: command.status, updatedAt: new Date().toISOString() }
   await saveOrder(next)
 
-  // The customer hears about it the same way they would from the dashboard.
+  // The customer hears about it the same way they would from the dashboard —
+  // by email, and on their own WhatsApp.
   sendStatusUpdate(next)
+  sendCustomerStatusUpdate(next)
 
   console.log(`[whatsapp] ${from} moved ${order.code} to ${command.status}`)
   return `✅ ${order.code} is now *${command.status}*.\n\n${summariseOrder(next)}`

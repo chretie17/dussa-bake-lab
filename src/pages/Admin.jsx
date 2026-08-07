@@ -554,6 +554,60 @@ function SetupPanel({ health, storage, secured }) {
       </div>
 
       <div className="rounded-[1.5rem] border border-caramel/22 bg-porcelain p-6">
+        <h3 className="font-display text-[1.2rem] text-espresso">
+          WhatsApp updates for your customers
+        </h3>
+        <p className="mt-2 text-[0.9rem] leading-relaxed text-cocoa/65">
+          Customers get their own messages too: a confirmation the moment they order, then one
+          every time you move the order along — whether you moved it here or by replying on your
+          phone. There is a tickbox at checkout for anyone who would rather not be messaged.
+        </p>
+        <p className="mt-4 text-[0.9rem] leading-relaxed text-cocoa/65">
+          Meta will not let a business message someone who has not messaged it in the last 24
+          hours, and a customer who just ordered on the website never has. The way through is a
+          template Meta approves in advance. Open{' '}
+          <Code>WhatsApp Manager → Message templates → Create template</Code>, choose the category{' '}
+          <Code>Utility</Code>, and paste these two in exactly.
+        </p>
+
+        <TemplateBlock
+          name="dussa_order_confirmation"
+          body={`Hi {{1}}, thank you — Dussa BakeLab has your order.
+
+Order code: {{2}}
+{{3}}: {{4}} at {{5}}
+Total: {{6}}
+
+We will message you here each time your order moves along. Nothing has been charged yet — we will arrange payment with you directly.`}
+          samples="Keza · DBL-K2XMQ4A · Delivery · Sat, 22 Aug · 14:00 – 16:00 · RWF 68,000"
+        />
+
+        <TemplateBlock
+          name="dussa_order_status"
+          body={`Hi {{1}}, an update on your order {{2}}.
+
+{{3}}
+
+{{4}}: {{5}} at {{6}}
+
+Dussa BakeLab · Kigali`}
+          samples="Keza · DBL-K2XMQ4A · Your order is confirmed and booked into the kitchen. · Delivery · Sat, 22 Aug · 14:00 – 16:00"
+        />
+
+        <p className="mt-5 text-[0.9rem] leading-relaxed text-cocoa/65">
+          Once both are approved, add <Code>WHATSAPP_CUSTOMER_TEMPLATE</Code> and{' '}
+          <Code>WHATSAPP_STATUS_TEMPLATE</Code> with those two names, plus{' '}
+          <Code>WHATSAPP_TEMPLATE_LANG</Code> matching the language you picked — <Code>en</Code> for
+          plain English, <Code>en_US</Code> if you chose English (US).
+        </p>
+        <p className="mt-4 rounded-xl bg-cream/70 px-4 py-3 text-[0.82rem] leading-relaxed text-cocoa/70">
+          Two things get a template rejected, worth knowing if you edit the wording: the body
+          cannot start or end with a <Code>{'{{n}}'}</Code>, and two of them cannot sit side by
+          side. Keep some words in between.
+        </p>
+      </div>
+
+      <div className="rounded-[1.5rem] border border-caramel/22 bg-porcelain p-6">
         <h3 className="font-display text-[1.2rem] text-espresso">Email notifications</h3>
         <p className="mt-2 text-[0.9rem] leading-relaxed text-cocoa/65">
           To get an email the moment an order arrives, and to send customers a confirmation and
@@ -585,6 +639,42 @@ function Step({ n, children }) {
       </span>
       <span>{children}</span>
     </li>
+  )
+}
+
+/** A template ready to paste into Meta, with the sample values it asks for. */
+function TemplateBlock({ name, body, samples }) {
+  const [copied, setCopied] = useState(false)
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(body)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      /* clipboard blocked — the text is on screen to select by hand */
+    }
+  }
+
+  return (
+    <div className="mt-5 rounded-2xl border border-caramel/22 bg-cream/60 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="font-mono text-[0.85rem] text-espresso">{name}</p>
+        <button
+          type="button"
+          onClick={copy}
+          className="rounded-lg border border-caramel/35 px-3 py-1 text-[0.75rem] text-cocoa/70 transition-colors hover:border-espresso hover:text-espresso"
+        >
+          {copied ? 'Copied' : 'Copy the body'}
+        </button>
+      </div>
+      <pre className="mt-3 overflow-x-auto whitespace-pre-wrap break-words rounded-xl bg-porcelain p-3.5 font-mono text-[0.78rem] leading-relaxed text-cocoa/80">
+        {body}
+      </pre>
+      <p className="mt-2.5 text-[0.76rem] leading-relaxed text-cocoa/55">
+        Sample values, for the boxes Meta asks for: {samples}
+      </p>
+    </div>
   )
 }
 

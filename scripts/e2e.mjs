@@ -95,15 +95,30 @@ await page.waitForTimeout(400)
 await check('the deposit acknowledgement is enforced', async () =>
   page.getByText(/acknowledge the \d+% deposit/i).isVisible(),
 )
-await page.locator('label:has(input[type="checkbox"])').filter({ hasText: 'I understand this order' }).click()
+const depositBox = page
+  .locator('label:has(input[type="checkbox"])')
+  .filter({ hasText: 'I understand this order' })
+const whatsappBox = page
+  .locator('label:has(input[type="checkbox"])')
+  .filter({ hasText: 'Send me WhatsApp updates' })
+
+await check('WhatsApp updates are offered, already ticked', async () =>
+  whatsappBox.locator('input').isChecked(),
+)
+
+await depositBox.click()
 await page.waitForTimeout(300)
-console.log('  deposit checked =', await page.locator('input[type="checkbox"]').first().isChecked())
+console.log('  deposit checked =', await depositBox.locator('input').isChecked())
 await page.getByRole('button', { name: 'Continue' }).click()
 await page.waitForTimeout(600)
 
 await check('review step shows the contact details', async () =>
   (await page.getByText('Keza Uwase').first().isVisible()) &&
   (await page.getByText('KG 11 Ave, Ikaze House, 3rd floor').first().isVisible()),
+)
+
+await check('review step records the WhatsApp choice', async () =>
+  page.getByText('WhatsApp updates').first().isVisible(),
 )
 if (OUT) await page.screenshot({ path: `${OUT}/e2e-2-review.png` })
 

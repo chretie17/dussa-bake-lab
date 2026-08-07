@@ -1,6 +1,10 @@
 import { countProducts, healthCheck, listOrders } from './_lib/db.js'
 import { emailConfigured } from './_lib/notify.js'
-import { whatsappConfigured } from './_lib/whatsapp.js'
+import {
+  customerTemplatesConfigured,
+  customerWhatsappConfigured,
+  whatsappConfigured,
+} from './_lib/whatsapp.js'
 import { adminConfigured, applyCors, sendJson } from './_lib/http.js'
 
 /**
@@ -54,6 +58,16 @@ export default async function handler(req, res) {
       detail: whatsappConfigured()
         ? 'New orders are sent to your WhatsApp, and you can reply with commands to move them along.'
         : 'Set WHATSAPP_TOKEN, WHATSAPP_PHONE_ID and WHATSAPP_TO to get orders on WhatsApp.',
+    },
+    {
+      id: 'whatsapp-customer',
+      label: 'Customer WhatsApp updates',
+      ok: customerWhatsappConfigured() && customerTemplatesConfigured(),
+      detail: !customerWhatsappConfigured()
+        ? 'Set up WhatsApp above first, then customers can be messaged too.'
+        : customerTemplatesConfigured()
+          ? 'Customers get a WhatsApp confirmation when they order, and a message every time you move the order along.'
+          : 'Meta only lets us message a customer out of the blue through an approved template. Create the two templates in Meta Business Manager (the README has the exact text), then set WHATSAPP_CUSTOMER_TEMPLATE and WHATSAPP_STATUS_TEMPLATE. Until then customer messages only land if that person happened to message you in the last 24 hours.',
     },
     {
       id: 'email',

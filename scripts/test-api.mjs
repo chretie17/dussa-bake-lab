@@ -33,8 +33,10 @@ const call = async (handler, req) => {
 
 let failures = 0
 const check = (label, cond, extra = '') => {
-  console.log(`${cond ? 'PASS' : 'FAIL'}  ${label}${cond ? '' : ` :: ${extra}`}`)
-  if (!cond) failures += 1
+  // A thunk is allowed so a multi-line assertion reads well at the call site.
+  const ok = typeof cond === 'function' ? cond() : cond
+  console.log(`${ok ? 'PASS' : 'FAIL'}  ${label}${ok ? '' : ` :: ${extra}`}`)
+  if (!ok) failures += 1
 }
 
 // --- create ---------------------------------------------------------------
@@ -406,6 +408,15 @@ const {
   isAuthorisedSender,
   formatOrder,
   whatsappConfigured,
+  customerWhatsappConfigured,
+  customerTemplatesConfigured,
+  toInternational,
+  cleanParam,
+  formatCustomerConfirmation,
+  formatCustomerStatus,
+  sendCustomerOrderConfirmation,
+  sendCustomerStatusUpdate,
+  CUSTOMER_STATUS_LINES,
 } = await import('../api/_lib/whatsapp.js')
 const { default: waHandler } = await import('../api/whatsapp.js')
 
@@ -449,6 +460,124 @@ check('the WhatsApp message names the order', waText.includes('DBL-TESTA1'))
 check('it lists the items', waText.includes('2 × Signature Chocolate Drip'))
 check('it shows the total', waText.includes('RWF 84,000'))
 check('it tells the baker what to reply', /confirm DBL-TESTA1/.test(waText))
+
+// --- whatsapp: messages to the customer ------------------------------------
+check('0788722064 becomes 250788722064', toInternational('0788722064') === '250788722064')
+check('788722064 becomes 250788722064', toInternational('788722064') === '250788722064')
+check('250788722064 is left alone', toInternational('250788722064') === '250788722064')
+check('+250 788 722 064 is normalised', toInternational('+250 788 722 064') === '250788722064')
+check('an empty number gives an empty string', toInternational('') === '')
+
+check('newlines are stripped from template parameters', cleanParam('one\ntwo') === 'one two')
+check('tabs are stripped too', cleanParam('one\ttwo') === 'one two')
+check('runs of spaces are squashed', cleanParam('one    two') === 'one two')
+check('an empty parameter falls back', cleanParam('') === '—')
+
+const customerOrder = {
+  code: 'DBL-TESTA1',
+  status: 'confirmed',
+  name: 'Keza Uwase',
+  phone: '0788722064',
+  fulfilment: 'delivery',
+  date: '2026-09-01',
+  time: '13:00 – 15:00',
+  total: 84000,
+  depositDue: 33600,
+}
+
+const confirmText = formatCustomerConfirmation(customerOrder)
+check('the customer message greets them by first name', confirmText.startsWith('Hi Keza,'))
+check('it carries the order code', confirmText.includes('DBL-TESTA1'))
+check('it carries the total', confirmText.includes('RWF 84,000'))
+check('it mentions the deposit when there is one', confirmText.includes('RWF 33,600'))
+
+const statusText = formatCustomerStatus(customerOrder)
+check('the status message names the order', statusText.includes('DBL-TESTA1'))
+check('it uses the wording for that status', statusText.includes(CUSTOMER_STATUS_LINES.confirmed))
+check(
+  'every status line is safe to send as a template parameter',
+  Object.values(CUSTOMER_STATUS_LINES).every((line) => cleanParam(line) === line),
+)
+
+check('customer messaging stays off until it is configured', customerWhatsappConfigured() === false)
+const notConfigured = await sendCustomerOrderConfirmation(customerOrder)
+check('nothing is sent while it is off', notConfigured.sent === false)
+
+// From here on, stand in for the Graph API so nothing leaves the machine.
+const realFetch = globalThis.fetch
+let lastCall = null
+globalThis.fetch = async (url, options) => {
+  lastCall = { url, body: JSON.parse(options.body) }
+  return { ok: true, json: async () => ({ messages: [{ id: 'wamid.TEST' }] }) }
+}
+
+process.env.WHATSAPP_TOKEN = 'test-token'
+process.env.WHATSAPP_PHONE_ID = '1234567890'
+check('customer messaging switches on with a token and phone id', customerWhatsappConfigured())
+check('but the templates are still missing', customerTemplatesConfigured() === false)
+
+lastCall = null
+const plainFallback = await sendCustomerOrderConfirmation(customerOrder)
+check('without a template it still tries, as plain text', plainFallback.sent === true)
+check('and it really is plain text', lastCall?.body?.type === 'text')
+check(
+  'the plain text carries the whole message',
+  lastCall?.body?.text?.body?.includes('DBL-TESTA1'),
+)
+
+process.env.WHATSAPP_CUSTOMER_TEMPLATE = 'dussa_order_confirmation'
+process.env.WHATSAPP_STATUS_TEMPLATE = 'dussa_order_status'
+check('with both template names set, it is fully configured', customerTemplatesConfigured())
+
+lastCall = null
+const sentConfirmation = await sendCustomerOrderConfirmation(customerOrder)
+check('the confirmation is sent', sentConfirmation.sent === true)
+check('it goes to the customer, not the bakery', lastCall?.body?.to === '250788722064')
+check('it goes as a template', lastCall?.body?.type === 'template')
+check(
+  'it uses the confirmation template',
+  lastCall?.body?.template?.name === 'dussa_order_confirmation',
+)
+check(
+  'the confirmation fills all six parameters',
+  lastCall?.body?.template?.components?.[0]?.parameters?.length === 6,
+)
+check('the first parameter is the first name', () => {
+  const params = lastCall.body.template.components[0].parameters
+  return params[0].text === 'Keza' && params[1].text === 'DBL-TESTA1'
+})
+check('no parameter contains a newline', () =>
+  lastCall.body.template.components[0].parameters.every((p) => !/[\r\n\t]/.test(p.text)),
+)
+
+lastCall = null
+const sentStatus = await sendCustomerStatusUpdate({ ...customerOrder, status: 'ready' })
+check('a status update is sent', sentStatus.sent === true)
+check('it uses the status template', lastCall?.body?.template?.name === 'dussa_order_status')
+check('the status sentence is passed through', () => {
+  const params = lastCall.body.template.components[0].parameters
+  return params[2].text === CUSTOMER_STATUS_LINES.ready
+})
+
+lastCall = null
+const noCopy = await sendCustomerStatusUpdate({ ...customerOrder, status: 'new' })
+check('a "new" order does not message the customer twice', noCopy.sent === false)
+check('and nothing was sent for it', lastCall === null)
+
+lastCall = null
+const optedOut = await sendCustomerOrderConfirmation({ ...customerOrder, whatsappUpdates: false })
+check('a customer who opted out is not messaged', optedOut.sent === false && lastCall === null)
+
+lastCall = null
+const badPhone = await sendCustomerOrderConfirmation({ ...customerOrder, phone: '12345' })
+check('a number that is not a Rwandan mobile is skipped', badPhone.sent === false)
+check('and nothing is sent to it', lastCall === null)
+
+globalThis.fetch = realFetch
+delete process.env.WHATSAPP_TOKEN
+delete process.env.WHATSAPP_PHONE_ID
+delete process.env.WHATSAPP_CUSTOMER_TEMPLATE
+delete process.env.WHATSAPP_STATUS_TEMPLATE
 
 // webhook verification handshake
 process.env.WHATSAPP_VERIFY_TOKEN = 'verify-me'

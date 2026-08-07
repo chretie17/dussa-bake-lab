@@ -67,6 +67,7 @@ export default function OrderFlow() {
     occasion: '',
     notes: '',
     deposit: false,
+    whatsappUpdates: true,
   })
 
   usePageMeta({
@@ -624,6 +625,31 @@ export default function OrderFlow() {
                       </Field>
                     </div>
 
+                    <label className="mt-6 flex cursor-pointer items-start gap-3 rounded-2xl border border-caramel/25 bg-porcelain p-5 transition-colors">
+                      <input
+                        type="checkbox"
+                        checked={form.whatsappUpdates}
+                        onChange={(e) => update('whatsappUpdates', e.target.checked)}
+                        className="sr-only"
+                      />
+                      <span
+                        aria-hidden="true"
+                        className={classNames(
+                          'mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-colors',
+                          form.whatsappUpdates
+                            ? 'border-espresso bg-espresso text-cream'
+                            : 'border-caramel/50',
+                        )}
+                      >
+                        {form.whatsappUpdates && <Check size={13} strokeWidth={3} />}
+                      </span>
+                      <span className="text-[0.875rem] leading-relaxed text-cocoa/75">
+                        <strong className="text-espresso">Send me WhatsApp updates</strong> on this
+                        number — a confirmation now, then a message each time the order moves:
+                        confirmed, in the kitchen, ready. Untick if you would rather we only email.
+                      </span>
+                    </label>
+
                     {needsDeposit && (
                       <label
                         className={classNames(
@@ -693,6 +719,7 @@ export default function OrderFlow() {
                         rows={[
                           ['Name', form.name],
                           ['Phone', form.phone],
+                          ['WhatsApp updates', form.whatsappUpdates ? 'Yes' : 'No thanks'],
                           form.email ? ['Email', form.email] : null,
                           form.occasion ? ['Occasion', form.occasion] : null,
                           form.notes ? ['Notes', form.notes] : null,

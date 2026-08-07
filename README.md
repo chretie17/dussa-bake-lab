@@ -156,6 +156,7 @@ Copy `.env.example` for the full list. The ones that matter:
 | `ADMIN_KEY` | The password for `/admin`. **Set this before going live** — while unset, any value opens the dashboard, and the dashboard says so on screen. |
 | `RESEND_API_KEY` + `ORDER_NOTIFY_EMAIL` | Email alerts on new orders, plus confirmations and status updates to customers. Free account at [resend.com](https://resend.com). |
 | `WHATSAPP_TOKEN` + `WHATSAPP_PHONE_ID` + `WHATSAPP_TO` | Sends orders to your WhatsApp and lets you reply with commands. See the WhatsApp section above. |
+| `WHATSAPP_CUSTOMER_TEMPLATE` + `WHATSAPP_STATUS_TEMPLATE` | Names of the two approved templates that let customers be messaged their confirmation and status updates. See [Updates for the customer](#updates-for-the-customer-on-whatsapp). |
 | `ALLOWED_ORIGIN` | Optional. Locks the API to your own domain. |
 
 ---
@@ -178,8 +179,9 @@ cancel DBL-K2XMQ4A     called off
 help                   this list
 ```
 
-The customer gets the same status email they would if you had clicked the button
-in the dashboard.
+The customer gets the same update they would if you had clicked the button in the
+dashboard — the email, and a WhatsApp message on their own number. See
+[Updates for the customer](#updates-for-the-customer-on-whatsapp) below.
 
 ### Setting it up
 
@@ -209,6 +211,78 @@ your last message to it. Because you reply to these notifications, that window
 normally stays open on its own. If it does close, the send is refused and the log
 says so — send any message to your business number to reopen it, or set
 `WHATSAPP_TEMPLATE` to an approved template name to send through it.
+
+### Updates for the customer on WhatsApp
+
+The customer gets their own messages too, on the number they typed at checkout:
+
+- **the moment they order** — a confirmation with their order code, slot and total
+- **every time you move the order** — confirmed, in the kitchen, ready, done, cancelled
+
+It works whether you moved the order from the dashboard or by replying `confirm
+DBL-K2XMQ4A` on your phone. Both paths send the same message. There is a tickbox
+on the checkout page, on by default, so anyone who would rather not be messaged
+can say so; the dashboard records their choice with the order.
+
+**You have to create two templates first.** Meta will not let a business message
+someone who has not messaged it in the last 24 hours, and a customer who has just
+ordered on the website has never messaged you. The way through is a template Meta
+has approved in advance.
+
+Go to **WhatsApp Manager → Message templates → Create template**, pick category
+**Utility** (not Marketing — Utility is cheaper and approved faster), and paste
+these in exactly.
+
+**1. Name: `dussa_order_confirmation`**
+
+```
+Hi {{1}}, thank you — Dussa BakeLab has your order.
+
+Order code: {{2}}
+{{3}}: {{4}} at {{5}}
+Total: {{6}}
+
+We will message you here each time your order moves along. Nothing has been charged yet — we will arrange payment with you directly.
+```
+
+Sample values, for the boxes Meta asks for: `Keza`, `DBL-K2XMQ4A`, `Delivery`,
+`Sat, 22 Aug`, `14:00 – 16:00`, `RWF 68,000`.
+
+**2. Name: `dussa_order_status`**
+
+```
+Hi {{1}}, an update on your order {{2}}.
+
+{{3}}
+
+{{4}}: {{5}} at {{6}}
+
+Dussa BakeLab · Kigali
+```
+
+Sample values: `Keza`, `DBL-K2XMQ4A`, `Your order is confirmed and booked into
+the kitchen.`, `Delivery`, `Sat, 22 Aug`, `14:00 – 16:00`.
+
+Then set:
+
+```
+WHATSAPP_CUSTOMER_TEMPLATE=dussa_order_confirmation
+WHATSAPP_STATUS_TEMPLATE=dussa_order_status
+WHATSAPP_TEMPLATE_LANG=en
+```
+
+`WHATSAPP_TEMPLATE_LANG` has to match the language you picked when creating the
+templates, or Meta refuses the send with error 132001. If you chose "English
+(US)" the code is `en_US`, not `en`.
+
+Two things that will get a template rejected, worth knowing before you edit the
+wording: a body cannot start or end with a `{{n}}`, and two parameters cannot sit
+next to each other. Keep some words between them.
+
+Until the templates exist we still try to send, as plain text — which only lands
+for a customer who happens to have messaged you in the last 24 hours. Nothing
+breaks either way; the Setup tab in the dashboard tells you which of the two
+you're on, and the server log says which path each message took.
 
 ### Could customers order entirely inside WhatsApp?
 

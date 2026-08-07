@@ -1,19 +1,22 @@
 /**
  * WhatsApp Cloud API.
  *
- * Two jobs:
+ * Three jobs:
  *   • push every new order to the bakery's WhatsApp the moment it is placed
  *   • let the bakery reply with a short command to move an order along
+ *   • send the customer their own confirmation and every status change after it
  *
  * Set WHATSAPP_TOKEN, WHATSAPP_PHONE_ID and WHATSAPP_TO to switch it on. With
  * those unset nothing here runs and the rest of the site is unaffected.
  *
- * One rule worth knowing: Meta only lets you send a plain text message inside
- * 24 hours of the other person's last message. Because the bakery replies to
- * these notifications, that window normally stays open by itself. If it does
- * close, Meta rejects the send with error 131047 and we log exactly that, along
- * with what to do about it. Set WHATSAPP_TEMPLATE to an approved template name
- * to send through the window instead.
+ * One rule shapes all of this. Meta only lets you send a plain text message
+ * inside 24 hours of the other person's last message. The bakery keeps its own
+ * window open by replying to notifications, but a customer who has just ordered
+ * on the website has never messaged us, so their first message *must* go
+ * through a template Meta has approved. Set WHATSAPP_CUSTOMER_TEMPLATE and
+ * WHATSAPP_STATUS_TEMPLATE to those template names — README has the exact text
+ * to submit. Without them we still try plain text, which only lands for a
+ * customer who happens to have messaged the bakery recently.
  */
 
 const GRAPH = 'https://graph.facebook.com/v21.0'
@@ -22,6 +25,41 @@ export function whatsappConfigured() {
   return Boolean(
     process.env.WHATSAPP_TOKEN && process.env.WHATSAPP_PHONE_ID && process.env.WHATSAPP_TO,
   )
+}
+
+/** Messaging customers needs no WHATSAPP_TO — that number is the bakery's own. */
+export function customerWhatsappConfigured() {
+  return Boolean(process.env.WHATSAPP_TOKEN && process.env.WHATSAPP_PHONE_ID)
+}
+
+/** Are the approved customer templates in place, or are we on the fallback? */
+export function customerTemplatesConfigured() {
+  return Boolean(process.env.WHATSAPP_CUSTOMER_TEMPLATE && process.env.WHATSAPP_STATUS_TEMPLATE)
+}
+
+/**
+ * Local Rwandan formats to the 2507xxxxxxxx that the Cloud API expects:
+ * 0788722064, 788722064, 250788722064 and +250 788 722 064 all land the same.
+ */
+export function toInternational(phone) {
+  const digits = String(phone || '').replace(/[^\d]/g, '')
+  if (!digits) return ''
+  if (digits.startsWith('250')) return digits
+  if (digits.startsWith('0')) return `250${digits.slice(1)}`
+  return `250${digits}`
+}
+
+/**
+ * Meta rejects a template parameter containing a newline, a tab, or four or
+ * more spaces in a row. Everything we pass in comes from a customer-typed form,
+ * so squash all of that before it reaches the API.
+ */
+export function cleanParam(value, fallback = '—') {
+  const text = String(value ?? '')
+    .replace(/[\r\n\t]+/g, ' ')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
+  return (text || fallback).slice(0, 900)
 }
 
 function money(value) {
@@ -88,6 +126,26 @@ export async function sendWhatsApp(to, text) {
   return post({ to, type: 'text', text: { preview_url: false, body: text.slice(0, 4000) } })
 }
 
+/** Sends a named approved template with positional {{1}}, {{2}}… parameters. */
+export async function sendTemplate(to, name, params = []) {
+  return post({
+    to,
+    type: 'template',
+    template: {
+      name,
+      language: { code: process.env.WHATSAPP_TEMPLATE_LANG || 'en' },
+      components: params.length
+        ? [
+            {
+              type: 'body',
+              parameters: params.map((p) => ({ type: 'text', text: cleanParam(p) })),
+            },
+          ]
+        : [],
+    },
+  })
+}
+
 /* ------------------------------------------------------------------ */
 /* Messages                                                             */
 /* ------------------------------------------------------------------ */
@@ -131,6 +189,152 @@ export async function notifyOrderOnWhatsApp(order) {
     console.error('[whatsapp] could not reach the API:', error.message)
     return { sent: false, error: error.message }
   }
+}
+
+/* ------------------------------------------------------------------ */
+/* Messages to the customer                                             */
+/* ------------------------------------------------------------------ */
+
+/**
+ * One short sentence per status, written to read well on a phone. These are
+ * passed into the status template as {{3}}, so they must stay single-line.
+ */
+export const CUSTOMER_STATUS_LINES = {
+  confirmed: 'Your order is confirmed and booked into the kitchen. Nothing more is needed from you for now.',
+  baking: 'Your order is being baked and decorated today. We will message again once it is boxed.',
+  ready: 'Your order is finished, boxed and chilled. See you at your slot.',
+  completed: 'Your order is complete. Thank you for letting us bake for you — enjoy every slice.',
+  cancelled: 'Your order has been cancelled. If that was not expected, reply to this message and we will put it right.',
+}
+
+/** Statuses the customer hears about on WhatsApp. */
+export const CUSTOMER_NOTIFIABLE_STATUSES = Object.keys(CUSTOMER_STATUS_LINES)
+
+function firstName(order) {
+  return String(order.name || '').trim().split(/\s+/)[0] || 'there'
+}
+
+function fulfilmentWord(order) {
+  return order.fulfilment === 'delivery' ? 'Delivery' : 'Collection'
+}
+
+/**
+ * Decides whether we may message this customer at all, and on what number.
+ * Returns `{ ok: false, reason }` so callers can log a straight answer.
+ */
+function customerTarget(order) {
+  if (!customerWhatsappConfigured()) return { ok: false, reason: 'not configured' }
+  if (order?.whatsappUpdates === false) return { ok: false, reason: 'customer opted out' }
+
+  const to = toInternational(order?.phone)
+  if (!/^2507[2389]\d{7}$/.test(to)) {
+    return { ok: false, reason: `"${order?.phone || ''}" is not a Rwandan mobile number` }
+  }
+  return { ok: true, to }
+}
+
+/** What the customer reads when we fall back to a plain message. */
+export function formatCustomerConfirmation(order) {
+  return [
+    `Hi ${firstName(order)}, thank you — Dussa BakeLab has your order.`,
+    '',
+    `Order code: ${order.code}`,
+    `${fulfilmentWord(order)}: ${prettyDate(order.date)}${order.time ? `, ${order.time}` : ''}`,
+    `Total: ${money(order.total)}`,
+    order.depositDue ? `Deposit to confirm: ${money(order.depositDue)}` : null,
+    '',
+    'We will message you here each time your order moves along. Nothing has been charged yet — we will arrange payment with you directly.',
+  ]
+    .filter((l) => l !== null)
+    .join('\n')
+}
+
+export function formatCustomerStatus(order) {
+  const line = CUSTOMER_STATUS_LINES[order.status]
+  return [
+    `Hi ${firstName(order)} — an update on order ${order.code}.`,
+    '',
+    line,
+    order.status === 'cancelled'
+      ? null
+      : `${fulfilmentWord(order)}: ${prettyDate(order.date)}${order.time ? `, ${order.time}` : ''}`,
+    '',
+    'Dussa BakeLab · Kigali',
+  ]
+    .filter((l) => l !== null)
+    .join('\n')
+}
+
+async function sendToCustomer(order, { template, params, fallbackText, label }) {
+  const target = customerTarget(order)
+  if (!target.ok) {
+    console.log(`[whatsapp] no ${label} for ${order?.code}: ${target.reason}`)
+    return { sent: false, reason: target.reason }
+  }
+
+  try {
+    if (template) {
+      const result = await sendTemplate(target.to, template, params)
+      if (result.sent) return result
+      // A template that has not been approved yet should not silently lose the
+      // message — try plain text, which lands if the window happens to be open.
+      console.warn(`[whatsapp] template "${template}" failed, trying plain text instead`)
+    } else {
+      console.warn(
+        `[whatsapp] no customer template configured, so the ${label} goes as plain text — ` +
+          'it will only arrive if this customer messaged you in the last 24 hours.',
+      )
+    }
+    // Deliberately not sendWhatsApp(): that one falls back to the bakery's own
+    // WHATSAPP_TEMPLATE, which is the wrong message to put in front of a customer.
+    return await post({
+      to: target.to,
+      type: 'text',
+      text: { preview_url: false, body: fallbackText.slice(0, 4000) },
+    })
+  } catch (error) {
+    console.error(`[whatsapp] could not send the ${label}:`, error.message)
+    return { sent: false, error: error.message }
+  }
+}
+
+/** Confirms the order to the customer, the moment it is placed. */
+export async function sendCustomerOrderConfirmation(order) {
+  return sendToCustomer(order, {
+    label: 'order confirmation',
+    template: process.env.WHATSAPP_CUSTOMER_TEMPLATE || '',
+    params: [
+      firstName(order),
+      order.code,
+      fulfilmentWord(order),
+      prettyDate(order.date),
+      order.time || 'to be agreed',
+      money(order.total),
+    ],
+    fallbackText: formatCustomerConfirmation(order),
+  })
+}
+
+/** Tells the customer their order has moved on. */
+export async function sendCustomerStatusUpdate(order) {
+  const line = CUSTOMER_STATUS_LINES[order?.status]
+  if (!line) {
+    return { sent: false, reason: `no customer message for "${order?.status}"` }
+  }
+
+  return sendToCustomer(order, {
+    label: `${order.status} update`,
+    template: process.env.WHATSAPP_STATUS_TEMPLATE || '',
+    params: [
+      firstName(order),
+      order.code,
+      line,
+      fulfilmentWord(order),
+      prettyDate(order.date),
+      order.time || 'to be agreed',
+    ],
+    fallbackText: formatCustomerStatus(order),
+  })
 }
 
 /* ------------------------------------------------------------------ */

@@ -244,6 +244,15 @@ export default function OrdersPanel({ orders, onChangeStatus, busyCode }) {
                               {order.address && <Detail label="Address">{order.address}</Detail>}
                               {order.occasion && <Detail label="Occasion">{order.occasion}</Detail>}
                               {order.email && <Detail label="Email">{order.email}</Detail>}
+                              <Detail label="WhatsApp">
+                                {order.whatsappUpdates === false ? (
+                                  <span className="text-cocoa/55">
+                                    Opted out — do not send updates
+                                  </span>
+                                ) : (
+                                  'Gets updates automatically'
+                                )}
+                              </Detail>
                               <Detail label="Subtotal">{money(order.subtotal)}</Detail>
                               <Detail label="Delivery">
                                 {order.deliveryFee ? money(order.deliveryFee) : 'Free'}

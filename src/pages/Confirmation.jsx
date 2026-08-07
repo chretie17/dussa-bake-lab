@@ -157,6 +157,19 @@ export default function Confirmation() {
                 <h2 className="text-[1.6rem] text-espresso">What happens next</h2>
                 <OrderTimeline status={order.status || 'new'} className="mt-7" />
 
+                {order.whatsappUpdates !== false && (
+                  <div className="mt-9 rounded-2xl border border-caramel/22 bg-porcelain p-6">
+                    <h3 className="font-display text-[1.15rem] text-espresso">
+                      We will keep you posted on WhatsApp
+                    </h3>
+                    <p className="mt-2 text-[0.9rem] leading-relaxed text-cocoa/65">
+                      A confirmation is on its way to the number you gave us, and we will message
+                      you again each time your order moves — confirmed, in the kitchen, then boxed
+                      and ready. No need to check back here.
+                    </p>
+                  </div>
+                )}
+
                 <div className="mt-9 rounded-2xl border border-caramel/22 bg-porcelain p-6">
                   <h3 className="font-display text-[1.15rem] text-espresso">Paying for your order</h3>
                   <p className="mt-2 text-[0.9rem] leading-relaxed text-cocoa/65">

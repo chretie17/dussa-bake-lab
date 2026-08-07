@@ -1,5 +1,6 @@
 import { getOrder, saveOrder } from '../_lib/db.js'
 import { sendStatusUpdate } from '../_lib/notify.js'
+import { sendCustomerStatusUpdate } from '../_lib/whatsapp.js'
 import {
   applyCors,
   clean,
@@ -57,6 +58,7 @@ export default async function handler(req, res) {
         total: order.total,
         depositDue: order.depositDue,
         occasion: order.occasion,
+        whatsappUpdates: order.whatsappUpdates !== false,
       },
     })
   }
@@ -87,8 +89,11 @@ export default async function handler(req, res) {
       return sendJson(res, 500, { error: error.message || 'Could not update that order' })
     }
 
-    // Only on a real transition, so re-saving a note never re-emails anyone.
-    if (next.status !== order.status) sendStatusUpdate(next)
+    // Only on a real transition, so re-saving a note never re-messages anyone.
+    if (next.status !== order.status) {
+      sendStatusUpdate(next)
+      sendCustomerStatusUpdate(next)
+    }
 
     return sendJson(res, 200, { order: next })
   }
