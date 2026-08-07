@@ -28,7 +28,7 @@ export default function Hero() {
   return (
     <section
       ref={ref}
-      className="grain relative isolate flex min-h-[100svh] items-center overflow-hidden bg-deep pb-24 pt-32 text-on-deep md:pb-16"
+      className="grain relative isolate flex min-h-[100svh] items-center overflow-hidden bg-deep pb-16 pt-24 text-on-deep md:pb-16 md:pt-32"
     >
       {/* Warm light pooling behind the cake */}
       <div
@@ -41,7 +41,7 @@ export default function Hero() {
         className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-deep to-transparent"
       />
 
-      <div className="container-x relative z-10 grid w-full items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
+      <div className="container-x relative z-10 grid w-full items-center gap-10 md:gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
         {/* ---------------------------------------------------- copy */}
         <motion.div style={{ y: copyY, opacity: fade }} className="max-w-xl">
           <motion.p
@@ -54,7 +54,7 @@ export default function Hero() {
             {BRAND.city}, {BRAND.country} · est. {BRAND.founded}
           </motion.p>
 
-          <h1 className="mt-7 text-[clamp(2.6rem,7.2vw,4.9rem)] font-light leading-[1.02] tracking-[-0.03em]">
+          <h1 className="mt-5 text-[clamp(2.2rem,7.2vw,4.9rem)] font-light leading-[1.03] tracking-[-0.03em] md:mt-7">
             <motion.span
               className="block italic"
               initial="hidden"
@@ -140,10 +140,12 @@ export default function Hero() {
           </motion.div>
         </motion.div>
 
-        {/* ------------------------------------------------- artwork */}
+        {/* ------------------------------------------------- artwork
+            Ordered first on a phone. Below the copy it landed a full screen
+            down, so the hero opened on a wall of text with no cake in it. */}
         <motion.div
           style={{ y: cakeY, scale: cakeScale, opacity: fade }}
-          className="relative mx-auto w-full max-w-[34rem] lg:max-w-none"
+          className="relative order-first mx-auto w-full max-w-[19rem] sm:max-w-[24rem] md:max-w-[34rem] lg:order-none lg:max-w-none"
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.86, y: 40 }}
@@ -159,7 +161,7 @@ export default function Hero() {
             initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.9, delay: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute -right-1 top-2 h-24 w-24 md:h-32 md:w-32 lg:-right-4"
+            className="absolute -right-2 top-0 h-20 w-20 md:h-32 md:w-32 lg:-right-4"
           >
             <SealBadge className="h-full w-full" />
           </motion.div>
@@ -169,7 +171,7 @@ export default function Hero() {
             initial={{ opacity: 0, x: -30, y: 20 }}
             animate={{ opacity: 1, x: 0, y: 0 }}
             transition={{ duration: 1, delay: 1.05 }}
-            className="animate-drift absolute -left-2 bottom-6 h-24 w-24 md:h-32 md:w-32"
+            className="animate-drift absolute -left-2 bottom-6 hidden h-24 w-24 md:block md:h-32 md:w-32"
           >
             <CreationArt variant="cupcake" flavor="strawberry" seed="hero-cupcake" backdrop={false} className="h-full w-full drop-shadow-[0_18px_28px_rgba(0,0,0,0.4)]" />
           </motion.div>
@@ -177,7 +179,7 @@ export default function Hero() {
             initial={{ opacity: 0, x: 26, y: -16 }}
             animate={{ opacity: 1, x: 0, y: 0 }}
             transition={{ duration: 1, delay: 1.2 }}
-            className="animate-drift absolute -bottom-2 right-4 hidden h-24 w-24 [animation-delay:1.4s] sm:block md:h-28 md:w-28"
+            className="animate-drift absolute -bottom-2 right-4 hidden h-24 w-24 [animation-delay:1.4s] md:block md:h-28 md:w-28"
           >
             <CreationArt variant="macarons" flavor="berry" seed="hero-macaron" backdrop={false} className="h-full w-full drop-shadow-[0_18px_28px_rgba(0,0,0,0.4)]" />
           </motion.div>
