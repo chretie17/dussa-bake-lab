@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Mail, MapPin, Phone } from 'lucide-react'
 import { InstagramIcon, WhatsAppIcon } from './BrandIcons'
-import { LogoMark, Wordmark } from '../art/Logo'
+import { BrandLockup } from './BrandMark'
 import { NAV_LINKS } from '../data/site'
 import { useCatalog } from '../context/CatalogContext'
 import { whatsappEnquiryLink } from '../lib/orders'
@@ -35,8 +35,15 @@ export default function Footer() {
         <div className="mt-16 grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           <div>
             <div className="flex items-center gap-3">
-              <LogoMark className="h-12 w-12" tone="#FAF3EA" accent="#D4A574" />
-              <Wordmark tone="#FAF3EA" accent="#D4A574" className="text-[1rem]" />
+              <BrandLockup
+                markClass="h-12 w-12"
+                /* Theme tokens, not fixed cream: the footer is dark under the
+                   chocolate theme and light under the bright one, and a
+                   hardcoded cream mark disappeared on the latter. */
+                tone="var(--color-on-deep)"
+                accent="var(--color-accent)"
+                wordClass="text-[1rem]"
+              />
             </div>
             <p className="mt-5 max-w-xs text-[0.9rem] leading-relaxed text-on-deep/60">
               {brand.description}

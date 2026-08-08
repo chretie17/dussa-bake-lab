@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Menu, ShoppingBag, X, Phone } from 'lucide-react'
-import { LogoMark, Wordmark } from '../art/Logo'
+import { Wordmark } from '../art/Logo'
+import { BrandMark } from './BrandMark'
 import { NAV_LINKS, CONTACT } from '../data/site'
 import { useCart } from '../context/CartContext'
+import { useCatalog } from '../context/CatalogContext'
 import { useTheme } from '../context/ThemeContext'
 import ThemeToggle from './ThemeToggle'
 import { classNames } from '../lib/format'
@@ -14,6 +16,9 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const { count, openCart } = useCart()
+  const { brand } = useCatalog()
+  // A logo file that already spells the bakery out makes the typed name a repeat.
+  const showWordmark = !(brand?.logoUrl && brand?.logoHasName)
   const { isBright } = useTheme()
   const { pathname } = useLocation()
 
@@ -56,16 +61,18 @@ export default function Navbar() {
             className="group flex shrink-0 items-center gap-2.5"
             aria-label="Dussa BakeLab — home"
           >
-            <LogoMark
+            <BrandMark
               className="h-11 w-11 transition-transform duration-500 group-hover:rotate-[-6deg] md:h-12 md:w-12"
               tone={overHero ? heroInk : 'var(--color-espresso)'}
               accent={overHero ? heroAccent : 'var(--color-caramel)'}
             />
-            <Wordmark
-              className="hidden text-[0.9rem] sm:inline-flex"
-              tone={overHero ? heroInk : 'var(--color-espresso)'}
-              accent={overHero ? heroAccent : 'var(--color-caramel)'}
-            />
+            {showWordmark && (
+              <Wordmark
+                className="hidden text-[0.9rem] sm:inline-flex"
+                tone={overHero ? heroInk : 'var(--color-espresso)'}
+                accent={overHero ? heroAccent : 'var(--color-caramel)'}
+              />
+            )}
           </Link>
 
           <ul className="hidden items-center gap-1 lg:flex">

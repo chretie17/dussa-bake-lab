@@ -347,6 +347,24 @@ WhatsApp carries the conversation.** That is what is wired up here.
 
 ---
 
+## Using your own logo
+
+Open **Settings → Your logo** in the dashboard and drop the file in. It replaces
+the drawn monogram in the navbar, the footer, the dashboard sign-in and the
+browser tab. Leave it empty and the drawn one comes back.
+
+Tick **My logo already includes the name** when the file spells out "Dussa
+BakeLab", so the typed wordmark beside it is dropped rather than printed twice.
+
+What works best: a **square PNG or SVG with a transparent background**. The site
+has a light and a dark theme, so a logo sitting on a white square will show that
+square against the dark one — the drawn monogram recolours itself, an uploaded
+file cannot.
+
+The one thing this does not change is the social sharing image
+(`public/og-image.svg`), which is what appears when someone pastes a link into
+WhatsApp or Facebook. That is a file in the repo, not a setting.
+
 ## Adding your photos
 
 Open **Photos** in the dashboard and drag your pictures in. That is the whole

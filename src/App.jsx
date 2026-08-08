@@ -9,7 +9,7 @@ import Footer from './components/Footer'
 import CartDrawer from './components/CartDrawer'
 import FloatingActions from './components/FloatingActions'
 import ScrollToTop from './components/ScrollToTop'
-import { LogoMark } from './art/Logo'
+import { BrandMark } from './components/BrandMark'
 
 import Home from './pages/Home'
 
@@ -27,7 +27,7 @@ function PageLoader() {
   return (
     <div className="flex min-h-[70vh] items-center justify-center">
       <div className="flex flex-col items-center gap-4">
-        <LogoMark className="h-14 w-14 animate-drift" tone="#2A1810" accent="#B98A5E" />
+        <BrandMark className="h-14 w-14 animate-drift" tone="#2A1810" accent="#B98A5E" />
         <p className="eyebrow text-caramel">Warming the oven</p>
       </div>
     </div>

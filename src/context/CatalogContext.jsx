@@ -16,6 +16,8 @@ const FALLBACK = {
       city: BRAND.city,
       country: BRAND.country,
       founded: BRAND.founded,
+      logoUrl: BRAND.logoUrl,
+      logoHasName: BRAND.logoHasName,
     },
     contact: { ...CONTACT },
     hours: HOURS,
@@ -64,6 +66,26 @@ export function CatalogProvider({ children }) {
   useEffect(() => {
     refresh()
   }, [refresh])
+
+  /**
+   * The browser tab follows the uploaded logo. index.html ships the drawn
+   * favicon, so there is always one; this only replaces it once the bakery's
+   * own settings have loaded.
+   */
+  useEffect(() => {
+    const url = settings?.brand?.logoUrl
+    if (!url) return undefined
+
+    const link = document.querySelector("link[rel='icon']") || document.createElement('link')
+    const previous = link.getAttribute('href')
+    link.rel = 'icon'
+    link.href = url
+    if (!link.parentNode) document.head.appendChild(link)
+
+    return () => {
+      if (previous) link.setAttribute('href', previous)
+    }
+  }, [settings?.brand?.logoUrl])
 
   const value = useMemo(() => {
     const bySlug = new Map(products.map((p) => [p.slug, p]))

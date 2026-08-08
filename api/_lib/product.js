@@ -128,7 +128,16 @@ export function sanitiseSettings(input = {}, current = {}) {
 
   const cleanedBrand = {}
   for (const [key, value] of Object.entries(brand)) {
-    cleanedBrand[key] = typeof value === 'number' ? value : clean(value, 400)
+    if (typeof value === 'number' || typeof value === 'boolean') {
+      cleanedBrand[key] = value
+    } else {
+      cleanedBrand[key] = clean(value, 400)
+    }
+  }
+  // The logo has to be something a browser will actually load, and nothing that
+  // could smuggle a javascript: url into every page of the site.
+  if (cleanedBrand.logoUrl && !/^(\/|https?:\/\/|data:image\/)/i.test(cleanedBrand.logoUrl)) {
+    cleanedBrand.logoUrl = ''
   }
 
   const cleanedContact = {}

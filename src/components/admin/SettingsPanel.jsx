@@ -4,6 +4,7 @@ import { Field, TextArea, TextInput } from '../Field'
 import { Button } from '../ui'
 import OptionRows from './OptionRows'
 import GalleryEditor from './GalleryEditor'
+import ImagePicker from './ImagePicker'
 import { money } from '../../lib/format'
 
 /**
@@ -235,6 +236,36 @@ export default function SettingsPanel({ settings, onSave, onReset, saving, error
           onChange={(v) => setForm((f) => ({ ...f, gallery: v }))}
           adminKey={adminKey}
         />
+      </Card>
+
+      {/* --------------------------------------------- logo */}
+      <Card
+        title="Your logo"
+        note="Shown in the navbar, the footer and the browser tab. Leave it empty to keep the drawn monogram."
+      >
+        <ImagePicker
+          value={form.brand.logoUrl || ''}
+          onChange={(url) => setIn('brand', 'logoUrl', url)}
+          adminKey={adminKey}
+          alt="Your logo"
+        />
+
+        <label className="mt-4 flex cursor-pointer items-start gap-3">
+          <input
+            type="checkbox"
+            checked={Boolean(form.brand.logoHasName)}
+            onChange={(e) => setIn('brand', 'logoHasName', e.target.checked)}
+            className="mt-0.5 h-4 w-4 accent-espresso"
+          />
+          <span className="text-[0.85rem] leading-relaxed text-cocoa/70">
+            My logo already includes the name — don’t print “Dussa BakeLab” next to it.
+          </span>
+        </label>
+
+        <p className="mt-4 rounded-xl bg-cream/70 px-4 py-3 text-[0.8rem] leading-relaxed text-cocoa/65">
+          A square PNG or SVG with a transparent background works best — the site has a light and a
+          dark theme, and a logo baked onto a white square will show that square on the dark one.
+        </p>
       </Card>
 
       {/* --------------------------------------------- brand */}

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { AlertTriangle, CheckCircle2, Download, KeyRound, Loader2, LogOut, RefreshCw } from 'lucide-react'
-import { LogoMark } from '../art/Logo'
+import { BrandMark } from '../components/BrandMark'
 import { Button } from '../components/ui'
 import { TextInput } from '../components/Field'
 import OverviewPanel from '../components/admin/OverviewPanel'
@@ -286,7 +286,11 @@ export default function Admin() {
       <section className="grain flex min-h-[100svh] items-center justify-center bg-deep px-5 py-32 text-on-deep">
         <div className="w-full max-w-sm">
           <div className="text-center">
-            <LogoMark className="mx-auto h-14 w-14" tone="#FAF3EA" accent="#D4A574" />
+            <BrandMark
+              className="mx-auto h-14 w-14"
+              tone="var(--color-on-deep)"
+              accent="var(--color-accent)"
+            />
             <h1 className="mt-6 text-[1.9rem]">Kitchen dashboard</h1>
             <p className="mt-2 text-[0.9rem] text-on-deep/55">
               Sign in to manage orders, products and settings.

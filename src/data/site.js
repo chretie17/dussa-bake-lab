@@ -14,6 +14,13 @@ export const BRAND = {
   description:
     'At Dussa BakeLab we create handcrafted treats using the finest ingredients, perfect for every occasion worth celebrating.',
   founded: 2021,
+  /**
+   * Your own logo, uploaded in the dashboard. Empty means the drawn monogram
+   * is used. Set logoHasName when the file already includes "Dussa BakeLab",
+   * so the typed wordmark next to it is dropped rather than repeated.
+   */
+  logoUrl: '',
+  logoHasName: false,
 }
 
 export const CONTACT = {
