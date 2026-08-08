@@ -15,8 +15,26 @@ const TONE_CLASSES = {
   red: 'bg-red-100 text-red-800 border-red-200',
 }
 
+const PAYMENT_TONE = {
+  verified: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+  claimed: 'bg-amber-100 text-amber-800 border-amber-200',
+  unpaid: 'bg-stone-100 text-stone-600 border-stone-200',
+}
+
+const PAYMENT_LABEL = {
+  verified: 'Paid',
+  claimed: 'Says paid',
+  unpaid: 'Unpaid',
+}
+
 /** The kitchen queue: incoming orders, their details and their status. */
-export default function OrdersPanel({ orders, onChangeStatus, busyCode }) {
+export default function OrdersPanel({
+  orders,
+  onChangeStatus,
+  onChangePayment,
+  adminKey,
+  busyCode,
+}) {
   const [filter, setFilter] = useState('all')
   const [query, setQuery] = useState('')
   const [expanded, setExpanded] = useState(null)
@@ -159,6 +177,15 @@ export default function OrdersPanel({ orders, onChangeStatus, busyCode }) {
                     <span
                       className={classNames(
                         'shrink-0 rounded-full border px-3 py-1 text-[0.7rem] font-medium',
+                        PAYMENT_TONE[order.payment?.status] || PAYMENT_TONE.unpaid,
+                      )}
+                    >
+                      {PAYMENT_LABEL[order.payment?.status] || PAYMENT_LABEL.unpaid}
+                    </span>
+
+                    <span
+                      className={classNames(
+                        'shrink-0 rounded-full border px-3 py-1 text-[0.7rem] font-medium',
                         TONE_CLASSES[meta.tone] || TONE_CLASSES.gold,
                       )}
                     >
@@ -284,6 +311,13 @@ export default function OrdersPanel({ orders, onChangeStatus, busyCode }) {
                               </Button>
                             </div>
 
+                            <PaymentBlock
+                              order={order}
+                              adminKey={adminKey}
+                              busy={busyCode === order.code}
+                              onChangePayment={onChangePayment}
+                            />
+
                             <h3 className="eyebrow mt-7 text-cocoa/50">Move to</h3>
                             <div className="mt-3 flex flex-wrap gap-1.5">
                               {ORDER_STATUSES.map((s) => (
@@ -337,6 +371,112 @@ function FilterChip({ active, children, ...props }) {
     >
       {children}
     </button>
+  )
+}
+
+/**
+ * Money on one order.
+ *
+ * A customer saying "PAID" on WhatsApp lands here as a claim, with their
+ * screenshot if they sent one. Nothing moves until someone here has checked
+ * the Mobile Money statement and pressed the button.
+ */
+function PaymentBlock({ order, adminKey, busy, onChangePayment }) {
+  const payment = order.payment || { status: 'unpaid' }
+  const proof = payment.proofImageId
+    ? `/api/images/${payment.proofImageId}?key=${encodeURIComponent(adminKey || '')}`
+    : null
+
+  return (
+    <>
+      <h3 className="eyebrow mt-7 text-cocoa/50">Payment</h3>
+      <div
+        className={classNames(
+          'mt-3 rounded-2xl border p-4',
+          payment.status === 'verified'
+            ? 'border-emerald-200 bg-emerald-50/60'
+            : payment.status === 'claimed'
+              ? 'border-amber-200 bg-amber-50/70'
+              : 'border-caramel/20 bg-cream/50',
+        )}
+      >
+        <p className="text-[0.875rem] font-medium text-espresso">
+          {payment.status === 'verified'
+            ? `Verified${payment.verifiedAt ? ` on ${prettyDateTime(payment.verifiedAt)}` : ''}`
+            : payment.status === 'claimed'
+              ? `${order.name} says they paid${payment.claimedAt ? ` — ${prettyDateTime(payment.claimedAt)}` : ''}`
+              : 'Nothing received yet'}
+        </p>
+
+        {payment.status === 'claimed' && (
+          <p className="mt-1 text-[0.8rem] leading-relaxed text-cocoa/65">
+            Check {money(order.total)} against your Mobile Money statement before you verify. This
+            is only what the customer told us.
+          </p>
+        )}
+
+        {payment.reference && (
+          <p className="mt-3 rounded-xl border border-caramel/18 bg-porcelain p-3 text-[0.8rem] italic leading-relaxed text-cocoa/75">
+            “{payment.reference}”
+          </p>
+        )}
+
+        {proof ? (
+          <a
+            href={proof}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-3 block overflow-hidden rounded-xl border border-caramel/25 bg-porcelain"
+          >
+            <img
+              src={proof}
+              alt={`Payment screenshot for ${order.code}`}
+              className="max-h-72 w-full object-contain"
+            />
+            <span className="block px-3 py-2 text-[0.72rem] text-cocoa/55">
+              Screenshot from the customer — tap to open full size
+            </span>
+          </a>
+        ) : (
+          payment.status === 'claimed' && (
+            <p className="mt-3 text-[0.78rem] text-cocoa/55">No screenshot was attached.</p>
+          )
+        )}
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          {payment.status !== 'verified' && (
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => onChangePayment?.(order.code, 'verified')}
+              className="rounded-xl bg-emerald-600 px-4 py-2 text-[0.8rem] font-medium text-white transition-colors hover:bg-emerald-700 disabled:opacity-50"
+            >
+              Money received — verify
+            </button>
+          )}
+          {payment.status === 'claimed' && (
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => onChangePayment?.(order.code, 'unpaid')}
+              className="rounded-xl border border-caramel/35 px-4 py-2 text-[0.8rem] text-cocoa/70 transition-colors hover:border-espresso hover:text-espresso disabled:opacity-50"
+            >
+              Not there — reset
+            </button>
+          )}
+          {payment.status === 'verified' && (
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => onChangePayment?.(order.code, 'unpaid')}
+              className="rounded-xl border border-caramel/35 px-4 py-2 text-[0.8rem] text-cocoa/70 transition-colors hover:border-espresso hover:text-espresso disabled:opacity-50"
+            >
+              Undo
+            </button>
+          )}
+        </div>
+      </div>
+    </>
   )
 }
 

@@ -318,6 +318,54 @@ export async function sendStatusUpdate(order) {
   })
 }
 
+/**
+ * Tells the bakery a customer says they have paid.
+ *
+ * The screenshot is not attached — it sits behind the dashboard key rather
+ * than in an inbox — so this points at the order instead.
+ */
+export async function notifyPaymentClaim(order, { withProof, reference } = {}) {
+  const to = process.env.ORDER_NOTIFY_EMAIL
+  if (!to) return { sent: false, reason: 'ORDER_NOTIFY_EMAIL not set' }
+
+  const html = layout({
+    preheader: `${order.name} says they paid ${money(order.total)} for ${order.code}`,
+    heading: `${escapeHtml(order.name)} reports a payment`,
+    intro:
+      'A customer has messaged on WhatsApp to say they have paid. Nothing has moved — the order stays where it is until you verify the money has arrived.',
+    code: order.code,
+    bodyHtml: `
+      <div style="margin-top:22px;background:${BRAND.cream};border-radius:14px;padding:18px;font-size:14px;line-height:1.8;color:#6B5344;">
+        <strong style="color:${BRAND.ink};">Amount due</strong><br>
+        ${money(order.total)}${order.depositDue ? ` &nbsp;·&nbsp; deposit ${money(order.depositDue)}` : ''}<br><br>
+        <strong style="color:${BRAND.ink};">Customer</strong><br>
+        ${escapeHtml(order.name)}<br>${escapeHtml(order.phone)}
+      </div>
+      ${
+        reference
+          ? `<div style="margin-top:14px;border-left:3px solid ${BRAND.gold};padding:4px 0 4px 14px;font-size:14px;line-height:1.7;color:#6B5344;">
+              <strong style="color:${BRAND.ink};">Their message:</strong> ${escapeHtml(String(reference).slice(0, 300))}
+            </div>`
+          : ''
+      }
+      <div style="margin-top:18px;font-size:14px;line-height:1.7;color:#6B5344;">
+        ${
+          withProof
+            ? 'A screenshot came with it. Open the order in your dashboard to see it.'
+            : 'No screenshot was attached.'
+        }
+      </div>`,
+    footerNote:
+      'Check it against your Mobile Money statement. When the money is there, mark the payment verified in your dashboard — that confirms the order and tells the customer.',
+  })
+
+  return send({
+    to,
+    subject: `Payment reported — ${order.code} — ${money(order.total)}`,
+    html,
+  })
+}
+
 export function emailConfigured() {
   return Boolean(process.env.RESEND_API_KEY && process.env.ORDER_NOTIFY_EMAIL)
 }

@@ -236,17 +236,27 @@ these in exactly.
 **1. Name: `dussa_order_confirmation`**
 
 ```
-Hi {{1}}, thank you — Dussa BakeLab has your order.
+Hi {{1}}, thank you. Dussa BakeLab has received your order.
 
 Order code: {{2}}
 {{3}}: {{4}} at {{5}}
 Total: {{6}}
 
-We will message you here each time your order moves along. Nothing has been charged yet — we will arrange payment with you directly.
+Kindly make payment to MTN Mobile Money: {{7}}
+
+After paying, reply to this WhatsApp conversation with the word PAID and attach a screenshot of the payment confirmation.
+
+We will confirm your order once the payment has been verified.
 ```
 
 Sample values, for the boxes Meta asks for: `Keza`, `DBL-K2XMQ4A`, `Delivery`,
-`Sat, 22 Aug`, `14:00 – 16:00`, `RWF 68,000`.
+`Sat, 22 Aug`, `14:00 – 16:00`, `RWF 68,000`, `+250 788 722 064`.
+
+The MoMo number is `{{7}}` rather than typed into the template so you can change
+it in **Dashboard → Settings → Mobile Money number** without submitting a new
+template for approval. If you would rather have it fixed, type the number in
+place of `{{7}}` and drop the seventh sample value — everything else still
+works.
 
 **2. Name: `dussa_order_status`**
 
@@ -283,6 +293,39 @@ Until the templates exist we still try to send, as plain text — which only lan
 for a customer who happens to have messaged you in the last 24 hours. Nothing
 breaks either way; the Setup tab in the dashboard tells you which of the two
 you're on, and the server log says which path each message took.
+
+### Taking payment over WhatsApp
+
+The confirmation asks the customer to pay by Mobile Money and reply `PAID` with
+a screenshot. What happens then:
+
+1. Their reply reaches `/api/whatsapp`. We match their number to their newest
+   open order — no order, no action.
+2. If they attached a photo we download it from Meta and store it against that
+   order as proof.
+3. The order is marked **payment reported**. It does *not* move status. Anyone
+   can type "PAID", so nothing is taken on trust.
+4. You get a WhatsApp message and an email straight away, both saying which
+   order and how much.
+5. The website updates: the customer's tracking page says the payment is being
+   checked, and your dashboard shows the claim with the screenshot.
+6. You check your MoMo statement and press **Money received — verify** in the
+   dashboard. That confirms the order and sends the customer their confirmation
+   message. If the money is not there, press **Not there — reset** and the
+   claim clears so they can try again.
+
+"PAID" is not the only thing that works — `nishyuye`, `payé`, `payment sent`
+and `done` are all understood, and a bare screenshot with no words counts too.
+
+Payment screenshots are kept out of your media library and are **not** public
+like product photos are: they need your dashboard key, since they carry
+somebody's phone number and how much they paid.
+
+Nothing is charged automatically, and no card or MoMo API is involved — this is
+a record of a payment you confirm by eye. If you later want the money collected
+without you checking, MTN's MoMo API has a Request-to-Pay call that pushes a PIN
+prompt to the customer's phone and tells us when it succeeds; that would slot in
+where the verify button is now.
 
 ### Could customers order entirely inside WhatsApp?
 

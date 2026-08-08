@@ -539,8 +539,13 @@ check(
   lastCall?.body?.template?.name === 'dussa_order_confirmation',
 )
 check(
-  'the confirmation fills all six parameters',
-  lastCall?.body?.template?.components?.[0]?.parameters?.length === 6,
+  'the confirmation fills all seven parameters',
+  lastCall?.body?.template?.components?.[0]?.parameters?.length === 7,
+  String(lastCall?.body?.template?.components?.[0]?.parameters?.length),
+)
+check(
+  'the last parameter is the Mobile Money number',
+  /\d/.test(lastCall?.body?.template?.components?.[0]?.parameters?.[6]?.text || ''),
 )
 check('the first parameter is the first name', () => {
   const params = lastCall.body.template.components[0].parameters
@@ -579,6 +584,100 @@ delete process.env.WHATSAPP_PHONE_ID
 delete process.env.WHATSAPP_CUSTOMER_TEMPLATE
 delete process.env.WHATSAPP_STATUS_TEMPLATE
 
+// --- payments ---------------------------------------------------------------
+const {
+  looksLikePaymentClaim,
+  claimPayment,
+  sanitisePayment,
+  isProofId,
+  newProofId,
+  emptyPayment,
+} = await import('../api/_lib/payment.js')
+
+check('"PAID" is a payment claim', looksLikePaymentClaim('PAID'))
+check('lowercase and padded still counts', looksLikePaymentClaim('  paid  '))
+check('"I have paid" counts', looksLikePaymentClaim('I have paid'))
+check('"payment sent" counts', looksLikePaymentClaim('payment sent'))
+check('Kinyarwanda "nishyuye" counts', looksLikePaymentClaim('nishyuye'))
+check('French "j\'ai payé" counts', looksLikePaymentClaim("j'ai payé"))
+check('a plain hello is not a claim', looksLikePaymentClaim('hello') === false)
+check('asking the price is not a claim', looksLikePaymentClaim('how much is it?') === false)
+check('an empty message is not a claim', looksLikePaymentClaim('') === false)
+
+check('a new order starts unpaid', emptyPayment().status === 'unpaid')
+
+const claimed = claimPayment(emptyPayment(), { reference: 'PAID', proofImageId: 'payabc123.jpg' })
+check('a claim marks it claimed, not verified', claimed.status === 'claimed')
+check('it keeps what they said', claimed.reference === 'PAID')
+check('it keeps the screenshot', claimed.proofImageId === 'payabc123.jpg')
+check('it stamps the time', Boolean(claimed.claimedAt))
+
+const alreadyVerified = claimPayment({ status: 'verified' }, { reference: 'PAID again' })
+check(
+  'a later message cannot undo a verified payment',
+  alreadyVerified.status === 'verified' && alreadyVerified.reference === undefined,
+)
+
+const verifiedPayment = sanitisePayment('verified', claimed)
+check('an admin can verify a claim', verifiedPayment.status === 'verified')
+check('verifying stamps the time', Boolean(verifiedPayment.verifiedAt))
+check('verifying keeps the proof', verifiedPayment.proofImageId === 'payabc123.jpg')
+
+const reset = sanitisePayment('unpaid', verifiedPayment)
+check('resetting clears the claim', reset.status === 'unpaid')
+check('and clears the trail with it', !reset.proofImageId && !reset.claimedAt)
+
+check('an unknown payment status is ignored', sanitisePayment('rubbish', claimed).status === 'claimed')
+
+check('proof ids are recognised', isProofId('payabc123.jpg'))
+check('product photo ids are not', isProofId('a1b2c3d4.png') === false)
+check('a generated proof id is recognised', isProofId(newProofId('image/jpeg')))
+check('a generated proof id is a legal image id', /^[a-z0-9.]+$/i.test(newProofId('image/png')))
+check('two proof ids differ', newProofId('image/jpeg') !== newProofId('image/jpeg'))
+
+// The order API has to accept a payment and confirm the order with it.
+const payOrder = await call(ordersHandler, {
+  method: 'POST',
+  headers: {},
+  body: { ...payload, code: 'DBL-PAY001' },
+})
+check('an order is created for the payment test', payOrder.status === 201)
+check('it starts unpaid', payOrder.json?.order?.payment?.status === 'unpaid')
+
+const verifiedPatch = await call(orderHandler, {
+  method: 'PATCH',
+  headers: {},
+  query: { code: 'DBL-PAY001' },
+  body: { payment: 'verified' },
+})
+check('the admin can verify the payment', verifiedPatch.json?.order?.payment?.status === 'verified')
+check(
+  'verifying a new order confirms it',
+  verifiedPatch.json?.order?.status === 'confirmed',
+  JSON.stringify(verifiedPatch.json?.order?.status),
+)
+
+const publicView = await call(orderHandler, {
+  method: 'GET',
+  headers: {},
+  query: { code: 'DBL-PAY001' },
+})
+check('the tracker sees the payment status', publicView.json?.order?.payment?.status === 'verified')
+check(
+  'but never the screenshot or their message',
+  publicView.json?.order?.payment?.proofImageId === undefined &&
+    publicView.json?.order?.payment?.reference === undefined,
+)
+
+// A verified order must not be dragged backwards by verifying again.
+const reverify = await call(orderHandler, {
+  method: 'PATCH',
+  headers: {},
+  query: { code: 'DBL-PAY001' },
+  body: { payment: 'verified' },
+})
+check('re-verifying leaves the status alone', reverify.json?.order?.status === 'confirmed')
+
 // webhook verification handshake
 process.env.WHATSAPP_VERIFY_TOKEN = 'verify-me'
 const verified = mockRes()
@@ -594,6 +693,97 @@ await waHandler(
   refused,
 )
 check('a wrong verify token is refused', refused.statusCode === 403)
+
+// --- a customer reporting a payment, through the real webhook ---------------
+{
+  const { getOrder, getImage } = await import('../api/_lib/db.js')
+
+  process.env.WHATSAPP_TOKEN = 'test-token'
+  process.env.WHATSAPP_PHONE_ID = '1234567890'
+  // The bakery is a different number, so our customer is not an admin sender.
+  process.env.WHATSAPP_TO = '250799000111'
+
+  const sent = []
+  const savedFetch = globalThis.fetch
+  globalThis.fetch = async (url, options = {}) => {
+    const target = String(url)
+    if (target.endsWith('/messages')) {
+      sent.push(JSON.parse(options.body))
+      return { ok: true, json: async () => ({ messages: [{ id: 'wamid.X' }] }) }
+    }
+    if (target.endsWith('/MEDIA123')) {
+      return {
+        ok: true,
+        json: async () => ({ url: 'https://lookaside.test/file', mime_type: 'image/jpeg' }),
+      }
+    }
+    if (target.startsWith('https://lookaside.test/')) {
+      return { ok: true, arrayBuffer: async () => new Uint8Array([255, 216, 255, 0, 1, 2]).buffer }
+    }
+    return { ok: false, status: 404, json: async () => ({}) }
+  }
+
+  const webhook = (message) => ({
+    method: 'POST',
+    headers: {},
+    body: { entry: [{ changes: [{ value: { messages: [message] } }] }] },
+  })
+
+  await call(ordersHandler, {
+    method: 'POST',
+    headers: {},
+    body: { ...payload, code: 'DBL-PAY777', phone: '0788722064' },
+  })
+
+  // 1 — a plain "PAID" with no screenshot.
+  const textRes = mockRes()
+  await waHandler(
+    webhook({ from: '250788722064', type: 'text', text: { body: 'PAID' } }),
+    textRes,
+  )
+  const afterText = await getOrder('DBL-PAY777')
+  check('a customer PAID reply is recorded', afterText?.payment?.status === 'claimed')
+  check('their words are kept', afterText?.payment?.reference === 'PAID')
+  check('but the order itself does not move', afterText?.status === 'new')
+  check('the customer is thanked', sent.some((m) => m.to === '250788722064'))
+  check('and the bakery is told', sent.some((m) => m.to === '250799000111'))
+
+  // 2 — then the screenshot.
+  sent.length = 0
+  const imageRes = mockRes()
+  await waHandler(
+    webhook({ from: '250788722064', type: 'image', image: { id: 'MEDIA123' } }),
+    imageRes,
+  )
+  const afterImage = await getOrder('DBL-PAY777')
+  check('a screenshot is attached to the order', Boolean(afterImage?.payment?.proofImageId))
+  check('it is stored under a proof id', isProofId(afterImage?.payment?.proofImageId || ''))
+  const stored = await getImage(afterImage?.payment?.proofImageId)
+  check('the image bytes really were saved', stored?.data?.length === 6)
+  check('the order still has not moved on its own', afterImage?.status === 'new')
+
+  // 3 — a stranger's number matches no order and changes nothing.
+  sent.length = 0
+  const strangerRes = mockRes()
+  await waHandler(webhook({ from: '250733222111', type: 'text', text: { body: 'PAID' } }), strangerRes)
+  check('an unknown number is answered, not ignored', sent.length === 1)
+  check('and it is told we cannot match it', /order code/i.test(sent[0]?.text?.body || ''))
+
+  // 4 — small talk from a customer is left alone.
+  sent.length = 0
+  const chatRes = mockRes()
+  await waHandler(
+    webhook({ from: '250788722064', type: 'text', text: { body: 'hello, are you open?' } }),
+    chatRes,
+  )
+  check('small talk gets no automated reply', sent.length === 0)
+
+  globalThis.fetch = savedFetch
+  delete process.env.WHATSAPP_TOKEN
+  delete process.env.WHATSAPP_PHONE_ID
+}
+
+process.env.WHATSAPP_TO = '250788722064'
 
 const badSig = mockRes()
 process.env.WHATSAPP_APP_SECRET = 'app-secret'

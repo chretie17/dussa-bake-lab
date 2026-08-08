@@ -186,7 +186,20 @@ export default function SettingsPanel({ settings, onSave, onReset, saving, error
             />
           </Field>
 
-          <Field label="Location" htmlFor="s-loc" className="sm:col-span-2">
+          <Field
+            label="Mobile Money number"
+            htmlFor="s-momo"
+            hint="customers are asked to pay this"
+          >
+            <TextInput
+              id="s-momo"
+              value={form.contact.momoNumber || ''}
+              onChange={(e) => setIn('contact', 'momoNumber', e.target.value)}
+              placeholder="+250 788 722 064"
+            />
+          </Field>
+
+          <Field label="Location" htmlFor="s-loc">
             <TextInput
               id="s-loc"
               value={form.contact.location || ''}

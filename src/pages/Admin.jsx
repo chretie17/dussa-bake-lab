@@ -161,6 +161,26 @@ export default function Admin() {
     }
   }
 
+  /**
+   * Verifying a payment is the one action that touches money, so it goes
+   * straight to the server and the list is refreshed from the response rather
+   * than guessed at — the API also moves a new order to confirmed.
+   */
+  const changePayment = async (code, status) => {
+    setBusyCode(code)
+    try {
+      const updated = await patchOrder(code, { payment: status }, adminKey)
+      if (updated) {
+        setOrders((current) => current.map((o) => (o.code === code ? { ...o, ...updated } : o)))
+      }
+    } catch (err) {
+      setError(err.message || 'Could not update that payment.')
+      load(adminKey, { silent: true })
+    } finally {
+      setBusyCode('')
+    }
+  }
+
   const exportCsv = () => {
     const blob = new Blob([ordersToCsv(orders)], { type: 'text/csv;charset=utf-8' })
     const url = URL.createObjectURL(blob)
@@ -401,7 +421,13 @@ export default function Admin() {
           )}
 
           {tab === 'orders' && (
-            <OrdersPanel orders={orders} onChangeStatus={changeStatus} busyCode={busyCode} />
+            <OrdersPanel
+              orders={orders}
+              onChangeStatus={changeStatus}
+              onChangePayment={changePayment}
+              adminKey={adminKey}
+              busyCode={busyCode}
+            />
           )}
 
           {tab === 'products' && (
@@ -572,14 +598,18 @@ function SetupPanel({ health, storage, secured }) {
 
         <TemplateBlock
           name="dussa_order_confirmation"
-          body={`Hi {{1}}, thank you — Dussa BakeLab has your order.
+          body={`Hi {{1}}, thank you. Dussa BakeLab has received your order.
 
 Order code: {{2}}
 {{3}}: {{4}} at {{5}}
 Total: {{6}}
 
-We will message you here each time your order moves along. Nothing has been charged yet — we will arrange payment with you directly.`}
-          samples="Keza · DBL-K2XMQ4A · Delivery · Sat, 22 Aug · 14:00 – 16:00 · RWF 68,000"
+Kindly make payment to MTN Mobile Money: {{7}}
+
+After paying, reply to this WhatsApp conversation with the word PAID and attach a screenshot of the payment confirmation.
+
+We will confirm your order once the payment has been verified.`}
+          samples="Keza · DBL-K2XMQ4A · Delivery · Sat, 22 Aug · 14:00 – 16:00 · RWF 68,000 · +250 788 722 064"
         />
 
         <TemplateBlock
@@ -595,6 +625,13 @@ Dussa BakeLab · Kigali`}
         />
 
         <p className="mt-5 text-[0.9rem] leading-relaxed text-cocoa/65">
+          The Mobile Money number is <Code>{'{{7}}'}</Code> rather than typed in, so you can change
+          it under Settings without submitting a new template for approval. When a customer replies{' '}
+          <Code>PAID</Code> — with or without a screenshot — the order shows it here for you to
+          check and verify. It never moves on its own.
+        </p>
+
+        <p className="mt-4 text-[0.9rem] leading-relaxed text-cocoa/65">
           Once both are approved, add <Code>WHATSAPP_CUSTOMER_TEMPLATE</Code> and{' '}
           <Code>WHATSAPP_STATUS_TEMPLATE</Code> with those two names, plus{' '}
           <Code>WHATSAPP_TEMPLATE_LANG</Code> matching the language you picked — <Code>en</Code> for

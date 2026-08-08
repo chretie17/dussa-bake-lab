@@ -171,11 +171,34 @@ export default function Confirmation() {
                 )}
 
                 <div className="mt-9 rounded-2xl border border-caramel/22 bg-porcelain p-6">
-                  <h3 className="font-display text-[1.15rem] text-espresso">Paying for your order</h3>
+                  <h3 className="font-display text-[1.15rem] text-espresso">
+                    {order.payment?.status === 'verified'
+                      ? 'Payment received'
+                      : order.payment?.status === 'claimed'
+                        ? 'Checking your payment'
+                        : 'Paying for your order'}
+                  </h3>
                   <p className="mt-2 text-[0.9rem] leading-relaxed text-cocoa/65">
-                    Nothing has been charged. We will confirm the price and take payment by{' '}
-                    {FULFILMENT.payments.slice(0, 3).join(', ')} or cash on collection.
-                    {order.depositDue > 0 && (
+                    {order.payment?.status === 'verified' ? (
+                      <>
+                        Your payment has been checked and received. Nothing more is needed from you
+                        — we will take it from here.
+                      </>
+                    ) : order.payment?.status === 'claimed' ? (
+                      <>
+                        Thank you — we have your payment note and someone at the bakery is checking
+                        it against our Mobile Money statement. You will get a WhatsApp message the
+                        moment it is verified.
+                      </>
+                    ) : (
+                      <>
+                        We have sent the payment details to your WhatsApp. Pay by{' '}
+                        {FULFILMENT.payments.slice(0, 3).join(', ')} or cash on collection, then
+                        reply <strong className="text-espresso">PAID</strong> on WhatsApp with a
+                        screenshot and we will confirm your order.
+                      </>
+                    )}
+                    {order.depositDue > 0 && order.payment?.status !== 'verified' && (
                       <>
                         {' '}
                         This order is confirmed with a {FULFILMENT.depositPercent}% deposit of{' '}

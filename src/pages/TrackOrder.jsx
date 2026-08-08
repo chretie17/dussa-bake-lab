@@ -9,7 +9,7 @@ import { Button, Pill } from '../components/ui'
 import { TextInput } from '../components/Field'
 import { CONTACT } from '../data/site'
 import { fetchOrder, statusMeta, whatsappEnquiryLink } from '../lib/orders'
-import { money, prettyDate, prettyDateTime, relativeDay } from '../lib/format'
+import { classNames, money, prettyDate, prettyDateTime, relativeDay } from '../lib/format'
 import usePageMeta from '../lib/usePageMeta'
 
 export default function TrackOrder() {
@@ -151,6 +151,30 @@ export default function TrackOrder() {
                         <> · updated {prettyDateTime(order.updatedAt)}</>
                       )}
                     </p>
+
+                    <div
+                      className={classNames(
+                        'mt-5 rounded-2xl border p-4 text-[0.85rem] leading-relaxed',
+                        order.payment?.status === 'verified'
+                          ? 'border-emerald-200 bg-emerald-50/70 text-emerald-900'
+                          : order.payment?.status === 'claimed'
+                            ? 'border-amber-200 bg-amber-50/70 text-amber-900'
+                            : 'border-caramel/22 bg-cream/60 text-cocoa/70',
+                      )}
+                    >
+                      <strong className="block">
+                        {order.payment?.status === 'verified'
+                          ? 'Payment received'
+                          : order.payment?.status === 'claimed'
+                            ? 'Payment reported — being checked'
+                            : 'Awaiting payment'}
+                      </strong>
+                      {order.payment?.status === 'verified'
+                        ? 'Thank you. Nothing more is needed from you.'
+                        : order.payment?.status === 'claimed'
+                          ? 'We have your note and are matching it against our Mobile Money statement. You will hear from us on WhatsApp.'
+                          : 'The payment details are on your WhatsApp. Reply PAID with a screenshot once you have sent it.'}
+                    </div>
                   </div>
 
                   <div>

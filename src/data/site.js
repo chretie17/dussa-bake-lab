@@ -23,6 +23,8 @@ export const CONTACT = {
   instagram: 'dussa_bakelab',
   instagramUrl: 'https://www.instagram.com/dussa_bakelab',
   email: 'orders@dussabakelab.com',
+  /** Where customers send Mobile Money. Shown in the WhatsApp order confirmation. */
+  momoNumber: '+250 788 722 064',
   location: 'Kigali, Rwanda',
   mapQuery: 'Kigali, Rwanda',
 }

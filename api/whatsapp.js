@@ -1,15 +1,20 @@
 import crypto from 'node:crypto'
-import { getOrder, listOrders, saveOrder } from './_lib/db.js'
-import { sendStatusUpdate } from './_lib/notify.js'
+import { getOrder, listOrders, saveImage, saveOrder } from './_lib/db.js'
+import { notifyPaymentClaim, sendStatusUpdate } from './_lib/notify.js'
+import { claimPayment, looksLikePaymentClaim, newProofId } from './_lib/payment.js'
 import {
   HELP_TEXT,
+  fetchMedia,
   isAuthorisedSender,
+  notifyPaymentOnWhatsApp,
   parseCommand,
   sendCustomerStatusUpdate,
+  sendPaymentAcknowledgement,
   sendWhatsApp,
   summariseList,
   summariseOrder,
-  whatsappConfigured,
+  toInternational,
+  customerWhatsappConfigured,
 } from './_lib/whatsapp.js'
 
 /**
@@ -86,6 +91,101 @@ async function handleCommand(text, from) {
   return `✅ ${order.code} is now *${command.status}*.\n\n${summariseOrder(next)}`
 }
 
+/* ------------------------------------------------------------------ */
+/* Customers                                                            */
+/* ------------------------------------------------------------------ */
+
+/** The order a customer's message is about: their newest one still in play. */
+async function orderForCustomer(from) {
+  const sender = toInternational(from)
+  if (!sender) return null
+
+  const orders = await listOrders(300)
+  return (
+    orders
+      .filter((o) => toInternational(o.phone) === sender)
+      .filter((o) => !['cancelled', 'completed'].includes(o.status))
+      .sort((a, b) => String(b.createdAt || '').localeCompare(String(a.createdAt || '')))[0] || null
+  )
+}
+
+/**
+ * A customer telling us they have paid.
+ *
+ * This records a claim and nothing more. Anyone can type "PAID", so the order
+ * itself does not move until the bakery has looked at the money and verified
+ * it — from the dashboard, or by replying `confirm DBL-XXXXXXX`.
+ */
+async function handlePaymentClaim(message, order) {
+  const isImage = message.type === 'image'
+  const reference =
+    message.type === 'text' ? message.text?.body : message.image?.caption || 'Sent a screenshot'
+
+  let proofImageId = order.payment?.proofImageId || null
+
+  if (isImage && message.image?.id) {
+    const media = await fetchMedia(message.image.id)
+    if (media) {
+      const id = newProofId(media.mime)
+      try {
+        await saveImage({
+          id,
+          filename: `payment-${order.code}`,
+          alt: `Payment proof for ${order.code}`,
+          mime: media.mime,
+          bytes: media.bytes,
+          width: 0,
+          height: 0,
+          data: media.data,
+        })
+        proofImageId = id
+      } catch (error) {
+        console.error('[whatsapp] could not store the payment screenshot:', error.message)
+      }
+    }
+  }
+
+  const next = {
+    ...order,
+    payment: claimPayment(order.payment, { reference, proofImageId }),
+    updatedAt: new Date().toISOString(),
+  }
+  await saveOrder(next)
+
+  // The bakery hears about it both ways; neither is allowed to hold up the reply.
+  notifyPaymentOnWhatsApp(next, { withProof: Boolean(proofImageId), reference })
+  notifyPaymentClaim(next, { withProof: Boolean(proofImageId), reference })
+
+  console.log(
+    `[whatsapp] ${order.code}: payment reported by the customer${proofImageId ? ' with a screenshot' : ''}`,
+  )
+  return next
+}
+
+/**
+ * Anything sent by someone who is not the bakery. We only act on payment
+ * messages — replying to every "hello" with a menu would be worse than silence,
+ * and the bakery sees the conversation in WhatsApp either way.
+ */
+async function handleCustomerMessage(message, from) {
+  const text = message.type === 'text' ? message.text?.body : message.image?.caption
+  const isImage = message.type === 'image'
+
+  if (!isImage && !looksLikePaymentClaim(text)) return null
+
+  const order = await orderForCustomer(from)
+  if (!order) {
+    // Only worth answering if they were clearly talking about money.
+    return isImage || looksLikePaymentClaim(text)
+      ? 'Thank you. We could not find an open order under this number, so we cannot match this payment yet — please reply with your order code (it looks like DBL-K2XMQ4A) and we will sort it out.'
+      : null
+  }
+
+  const next = await handlePaymentClaim(message, order)
+  await sendPaymentAcknowledgement(next, Boolean(next.payment?.proofImageId))
+  return null // the acknowledgement above is the reply
+}
+
 export default async function handler(req, res) {
   /* ------------------------------------------------------- verify */
   if (req.method === 'GET') {
@@ -121,7 +221,10 @@ export default async function handler(req, res) {
   // do the work afterwards.
   res.status(200).send('ok')
 
-  if (!whatsappConfigured()) return
+  // Token and phone id are enough to read what came in. WHATSAPP_TO only
+  // decides who gets *told*, and a missing one must not make us drop a
+  // customer's payment message on the floor.
+  if (!customerWhatsappConfigured()) return
 
   let body = {}
   try {
@@ -137,15 +240,18 @@ export default async function handler(req, res) {
       []
 
     for (const message of messages) {
-      if (message.type !== 'text') continue
+      if (message.type !== 'text' && message.type !== 'image') continue
 
       const from = message.from
-      if (!isAuthorisedSender(from)) {
-        console.log(`[whatsapp] ignoring a message from ${from} (not an admin number)`)
-        continue
-      }
 
-      const reply = await handleCommand(message.text?.body, from)
+      // The bakery drives the dashboard by message; everyone else can only
+      // report a payment against their own order.
+      const reply = isAuthorisedSender(from)
+        ? message.type === 'text'
+          ? await handleCommand(message.text?.body, from)
+          : null
+        : await handleCustomerMessage(message, from)
+
       if (reply) await sendWhatsApp(from, reply)
     }
   } catch (error) {

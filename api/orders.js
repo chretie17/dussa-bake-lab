@@ -1,6 +1,7 @@
 import { listOrders, saveOrder, storageMode } from './_lib/db.js'
 import { notifyNewOrder, sendCustomerConfirmation } from './_lib/notify.js'
 import { notifyOrderOnWhatsApp, sendCustomerOrderConfirmation } from './_lib/whatsapp.js'
+import { emptyPayment } from './_lib/payment.js'
 import {
   applyCors,
   adminConfigured,
@@ -100,6 +101,7 @@ export default async function handler(req, res) {
       // Opt-out, not opt-in: anything but an explicit false means we may send
       // WhatsApp updates to the number they just gave us.
       whatsappUpdates: body.whatsappUpdates !== false,
+      payment: emptyPayment(),
     }
 
     try {

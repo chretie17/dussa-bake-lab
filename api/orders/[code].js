@@ -1,6 +1,7 @@
 import { getOrder, saveOrder } from '../_lib/db.js'
 import { sendStatusUpdate } from '../_lib/notify.js'
 import { sendCustomerStatusUpdate } from '../_lib/whatsapp.js'
+import { sanitisePayment } from '../_lib/payment.js'
 import {
   applyCors,
   clean,
@@ -59,6 +60,8 @@ export default async function handler(req, res) {
         depositDue: order.depositDue,
         occasion: order.occasion,
         whatsappUpdates: order.whatsappUpdates !== false,
+        // Status only — never the screenshot or the customer's own message.
+        payment: { status: order.payment?.status || 'unpaid' },
       },
     })
   }
@@ -81,6 +84,15 @@ export default async function handler(req, res) {
 
     if (typeof body.kitchenNote === 'string') {
       next.kitchenNote = clean(body.kitchenNote, 800)
+    }
+
+    if (body.payment !== undefined) {
+      next.payment = sanitisePayment(body.payment, order.payment)
+      // Verifying the money is what actually confirms an order, so save the
+      // baker a second click — but never drag an order backwards.
+      if (next.payment.status === 'verified' && next.status === 'new') {
+        next.status = 'confirmed'
+      }
     }
 
     try {

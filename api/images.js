@@ -1,5 +1,6 @@
 import { countImages, deleteImage, listImages, saveImage, storageMode } from './_lib/db.js'
 import { applyCors, clean, isAdmin, sendJson } from './_lib/http.js'
+import { isProofId } from './_lib/payment.js'
 
 /** What a browser can safely display, and what we are willing to store. */
 const ALLOWED = {
@@ -28,7 +29,9 @@ export default async function handler(req, res) {
   /* ------------------------------------------------------------ list */
   if (req.method === 'GET') {
     try {
-      const images = await listImages(300)
+      // Payment screenshots live in the same table but are not media the
+      // bakery picks from — they belong to their order, not the library.
+      const images = (await listImages(400)).filter((img) => !isProofId(img.id))
       return sendJson(res, 200, { images, count: images.length, storage: storageMode() })
     } catch (error) {
       return sendJson(res, 500, { error: error.message || 'Could not load your images' })

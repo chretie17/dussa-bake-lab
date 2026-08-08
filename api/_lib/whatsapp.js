@@ -126,6 +126,44 @@ export async function sendWhatsApp(to, text) {
   return post({ to, type: 'text', text: { preview_url: false, body: text.slice(0, 4000) } })
 }
 
+/**
+ * Downloads a photo a customer sent us — a payment screenshot.
+ *
+ * Two steps: the media id resolves to a short-lived URL, and that URL needs
+ * the same bearer token to fetch. Returns { mime, data } or null.
+ */
+export async function fetchMedia(mediaId) {
+  if (!customerWhatsappConfigured() || !mediaId) return null
+  const auth = { Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}` }
+
+  try {
+    const lookup = await fetch(`${GRAPH}/${mediaId}`, { headers: auth })
+    if (!lookup.ok) {
+      console.error('[whatsapp] could not resolve media', mediaId, lookup.status)
+      return null
+    }
+    const meta = await lookup.json()
+    if (!meta?.url) return null
+
+    const file = await fetch(meta.url, { headers: auth })
+    if (!file.ok) {
+      console.error('[whatsapp] could not download media', mediaId, file.status)
+      return null
+    }
+
+    const data = Buffer.from(await file.arrayBuffer())
+    // Screenshots are phone-sized; anything much larger is not one.
+    if (data.length > 6 * 1024 * 1024) {
+      console.warn('[whatsapp] ignoring a', data.length, 'byte attachment')
+      return null
+    }
+    return { mime: meta.mime_type || 'image/jpeg', data, bytes: data.length }
+  } catch (error) {
+    console.error('[whatsapp] media download failed:', error.message)
+    return null
+  }
+}
+
 /** Sends a named approved template with positional {{1}}, {{2}}… parameters. */
 export async function sendTemplate(to, name, params = []) {
   return post({
@@ -233,20 +271,55 @@ function customerTarget(order) {
   return { ok: true, to }
 }
 
+/**
+ * The number customers pay into. Settings first so it can be changed from the
+ * dashboard, then an env override, then the bakery's own line.
+ */
+export async function paymentNumber() {
+  try {
+    const { getSetting } = await import('./db.js')
+    const { SETTINGS_KEY } = await import('./seed.js')
+    const settings = await getSetting(SETTINGS_KEY)
+    const stored = settings?.contact?.momoNumber
+    if (stored) return String(stored)
+  } catch {
+    /* no database yet — the fallbacks below still give a usable number */
+  }
+  return process.env.MOMO_NUMBER || '+250 788 722 064'
+}
+
 /** What the customer reads when we fall back to a plain message. */
-export function formatCustomerConfirmation(order) {
+export function formatCustomerConfirmation(order, momo) {
   return [
-    `Hi ${firstName(order)}, thank you — Dussa BakeLab has your order.`,
+    `Hi ${firstName(order)}, thank you. Dussa BakeLab has received your order.`,
     '',
     `Order code: ${order.code}`,
     `${fulfilmentWord(order)}: ${prettyDate(order.date)}${order.time ? `, ${order.time}` : ''}`,
     `Total: ${money(order.total)}`,
     order.depositDue ? `Deposit to confirm: ${money(order.depositDue)}` : null,
     '',
-    'We will message you here each time your order moves along. Nothing has been charged yet — we will arrange payment with you directly.',
+    'Kindly make payment to:',
+    `MTN Mobile Money: ${momo}`,
+    '',
+    'After paying, reply to this WhatsApp conversation with "PAID" and attach a screenshot of the payment confirmation.',
+    '',
+    'We will confirm your order once the payment has been verified.',
   ]
     .filter((l) => l !== null)
     .join('\n')
+}
+
+/** Acknowledges a customer telling us they have paid. */
+export function formatPaymentAcknowledgement(order, withProof) {
+  return [
+    `Thank you ${firstName(order)} — we have your payment note for order ${order.code}.`,
+    '',
+    withProof
+      ? 'We have the screenshot and someone at the bakery is checking it now.'
+      : 'If you have a screenshot of the confirmation, send it here and it will speed things up.',
+    '',
+    'You will get a message from us the moment it is verified.',
+  ].join('\n')
 }
 
 export function formatCustomerStatus(order) {
@@ -298,8 +371,9 @@ async function sendToCustomer(order, { template, params, fallbackText, label }) 
   }
 }
 
-/** Confirms the order to the customer, the moment it is placed. */
+/** Confirms the order to the customer, with how to pay for it. */
 export async function sendCustomerOrderConfirmation(order) {
+  const momo = await paymentNumber()
   return sendToCustomer(order, {
     label: 'order confirmation',
     template: process.env.WHATSAPP_CUSTOMER_TEMPLATE || '',
@@ -310,9 +384,53 @@ export async function sendCustomerOrderConfirmation(order) {
       prettyDate(order.date),
       order.time || 'to be agreed',
       money(order.total),
+      momo,
     ],
-    fallbackText: formatCustomerConfirmation(order),
+    fallbackText: formatCustomerConfirmation(order, momo),
   })
+}
+
+/** Tells the customer we have their "PAID" message. Always plain text — it is
+ *  a reply inside an open 24-hour window, so no template is needed. */
+export async function sendPaymentAcknowledgement(order, withProof) {
+  const target = customerTarget(order)
+  if (!target.ok) return { sent: false, reason: target.reason }
+  try {
+    return await post({
+      to: target.to,
+      type: 'text',
+      text: { preview_url: false, body: formatPaymentAcknowledgement(order, withProof) },
+    })
+  } catch (error) {
+    console.error('[whatsapp] could not acknowledge the payment:', error.message)
+    return { sent: false, error: error.message }
+  }
+}
+
+/** Tells the bakery a customer says they have paid. */
+export async function notifyPaymentOnWhatsApp(order, { withProof, reference } = {}) {
+  if (!whatsappConfigured()) return { sent: false, reason: 'not configured' }
+  const lines = [
+    `💰 *Payment reported — ${order.code}*`,
+    '',
+    `${order.name} · ${order.phone}`,
+    `Amount due: ${money(order.total)}`,
+    order.depositDue ? `Deposit: ${money(order.depositDue)}` : null,
+    `${fulfilmentWord(order)}: ${prettyDate(order.date)} ${order.time || ''}`,
+    '',
+    reference ? `They said: "${String(reference).slice(0, 200)}"` : null,
+    withProof
+      ? '📎 A screenshot came with it — open the order in your dashboard to see it.'
+      : '⚠️ No screenshot attached.',
+    '',
+    `Check it against your MoMo statement, then reply *confirm ${order.code}* once the money is in.`,
+  ]
+  try {
+    return await sendWhatsApp(process.env.WHATSAPP_TO, lines.filter((l) => l !== null).join('\n'))
+  } catch (error) {
+    console.error('[whatsapp] could not reach the API:', error.message)
+    return { sent: false, error: error.message }
+  }
 }
 
 /** Tells the customer their order has moved on. */
