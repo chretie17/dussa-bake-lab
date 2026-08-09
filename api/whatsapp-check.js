@@ -30,27 +30,33 @@ const ADVICE = {
   130429: 'You are sending faster than your tier allows. Wait and try again.',
 }
 
-/** What each template is expected to take, and in what order. */
+/** What each approved template takes, and in what order. */
 const EXPECTED = {
   customer: {
     env: 'WHATSAPP_CUSTOMER_TEMPLATE',
-    count: 7,
-    order: 'name, order code, Delivery/Collection, date, time, total, Mobile Money number',
-    sample: ['Keza', 'DBL-CHECK1', 'Delivery', 'Sat, 22 Aug', '14:00 - 16:00', 'RWF 68,000', '+250 788 722 064'],
+    languageEnv: 'WHATSAPP_CUSTOMER_TEMPLATE_LANG',
+    defaultLanguage: 'en_US',
+    count: 6,
+    order: 'name, order code, Delivery/Collection, date, time, total',
+    sample: ['Keza', 'DBL-CHECK1', 'Delivery', 'Sat, 22 Aug', '14:00 - 16:00', 'RWF 68,000'],
   },
   status: {
     env: 'WHATSAPP_STATUS_TEMPLATE',
-    count: 6,
-    order: 'name, order code, status sentence, Delivery/Collection, date, time',
+    languageEnv: 'WHATSAPP_STATUS_TEMPLATE_LANG',
+    defaultLanguage: 'en',
+    count: 4,
+    order: 'name, order code, status sentence, order details',
     sample: [
       'Keza',
       'DBL-CHECK1',
       'Your order is confirmed and booked into the kitchen.',
-      'Delivery',
-      'Sat, 22 Aug',
-      '14:00 - 16:00',
+      'Delivery, Sat, 22 Aug, 14:00 - 16:00',
     ],
   },
+}
+
+function templateLanguage(want) {
+  return process.env[want.languageEnv] || want.defaultLanguage
 }
 
 async function graph(path, token) {
@@ -74,7 +80,6 @@ async function diagnose() {
   const token = process.env.WHATSAPP_TOKEN
   const phoneId = process.env.WHATSAPP_PHONE_ID
   const wabaId = process.env.WHATSAPP_WABA_ID
-  const lang = process.env.WHATSAPP_TEMPLATE_LANG || 'en'
   const checks = []
 
   const missing = [
@@ -154,6 +159,7 @@ async function diagnose() {
       const all = list.body?.data || []
       for (const [key, want] of Object.entries(EXPECTED)) {
         const name = process.env[want.env]
+        const lang = templateLanguage(want)
         if (!name) {
           checks.push({
             id: `template-${key}`,
@@ -183,7 +189,7 @@ async function diagnose() {
             ok: false,
             detail: `Exists, but not in language "${lang}" — it is ${matches
               .map((t) => `"${t.language}"`)
-              .join(', ')}. Set WHATSAPP_TEMPLATE_LANG to match exactly; "en" and "en_US" are different templates to Meta.`,
+              .join(', ')}. Set ${want.languageEnv} to match exactly.`,
           })
           continue
         }
@@ -200,7 +206,7 @@ async function diagnose() {
             ? `Status is ${byLang.status}, not APPROVED, so Meta will not send it.`
             : rightCount
               ? `Approved, language "${byLang.language}", takes ${found} parameters — matches what we send (${want.order}).`
-              : `Approved, but its body uses ${found} parameters and we send ${want.count}. Meta rejects the whole message when those differ. Either edit the template body to use {{1}}–{{${want.count}}} in this order — ${want.order} — or tell me the wording you want and I will change the code to match.`,
+              : `Approved, but its body uses ${found} parameters and we send ${want.count}. Meta rejects the whole message when those differ. The approved template should use {{1}}–{{${want.count}}} in this order — ${want.order}.`,
         })
       }
     }
@@ -230,7 +236,7 @@ async function testSend(to, which) {
           type: 'template',
           template: {
             name,
-            language: { code: process.env.WHATSAPP_TEMPLATE_LANG || 'en' },
+            language: { code: templateLanguage(want) },
             components: [
               {
                 type: 'body',
@@ -261,7 +267,7 @@ async function testSend(to, which) {
       ok: true,
       to: number,
       messageId: body?.messages?.[0]?.id || '',
-      note: 'Meta accepted it. If it still does not appear on the phone, the number is almost certainly not on the allowed list of your test number — a test number can only message recipients you have added under API Setup.',
+      note: 'Meta accepted it. If it still does not appear on the phone, check the message delivery status in Meta/Webhooks.',
     }
   }
 
