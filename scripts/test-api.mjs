@@ -555,6 +555,32 @@ check('no parameter contains a newline', () =>
   lastCall.body.template.components[0].parameters.every((p) => !/[\r\n\t]/.test(p.text)),
 )
 
+// A wrong parameter count is the likeliest setup mistake, so the log has to
+// say so in words rather than print a number.
+{
+  const realWarn = console.error
+  const lines = []
+  console.error = (...args) => lines.push(args.join(' '))
+  globalThis.fetch = async () => ({
+    ok: false,
+    status: 400,
+    json: async () => ({ error: { code: 132000, message: 'number of parameters does not match' } }),
+  })
+  await sendCustomerOrderConfirmation(customerOrder)
+  console.error = realWarn
+  check(
+    'a parameter-count rejection is explained, not just numbered',
+    lines.some((l) => /expects a different number of/.test(l) && /7/.test(l)),
+    lines.join(' | ').slice(0, 200),
+  )
+}
+
+// Back to the stub that succeeds.
+globalThis.fetch = async (url, options) => {
+  lastCall = { url, body: JSON.parse(options.body) }
+  return { ok: true, json: async () => ({ messages: [{ id: 'wamid.TEST' }] }) }
+}
+
 lastCall = null
 const sentStatus = await sendCustomerStatusUpdate({ ...customerOrder, status: 'ready' })
 check('a status update is sent', sentStatus.sent === true)

@@ -77,6 +77,40 @@ function prettyDate(value) {
 /* Sending                                                              */
 /* ------------------------------------------------------------------ */
 
+/**
+ * Meta's rejections in plain language.
+ *
+ * These are the ones that actually happen when a template is set up, and every
+ * one of them looks identical in the logs otherwise: a number and a shrug. The
+ * count mismatch in particular is easy to hit, because editing the wording of
+ * an approved template is what changes how many {{n}} it expects.
+ */
+const SEND_ERRORS = {
+  131047:
+    'The 24-hour window is closed, so a plain message was refused. Send any WhatsApp ' +
+    'message to your business number to reopen it, or set a template name.',
+  132000:
+    'The template expects a different number of {{n}} parameters than we sent. ' +
+    'The order confirmation sends 7 (name, code, delivery/collection, date, time, ' +
+    'total, MoMo number) and the status update sends 6 (name, code, status sentence, ' +
+    'delivery/collection, date, time). Count the {{n}} in the approved template body ' +
+    'and make them match, in that order.',
+  132001:
+    'No approved template with that name and language. Check WHATSAPP_CUSTOMER_TEMPLATE ' +
+    'and WHATSAPP_STATUS_TEMPLATE against WhatsApp Manager, and that ' +
+    'WHATSAPP_TEMPLATE_LANG matches the language you picked — "en" for English, ' +
+    '"en_US" for English (US). They are not interchangeable.',
+  132005:
+    'The template was rejected because a parameter had a newline, a tab, or four or ' +
+    'more spaces in a row. Something got through cleanParam — worth logging what.',
+  132012:
+    'A parameter did not match the format the template expects. Usually a currency or ' +
+    'date placeholder that was set up as a typed parameter rather than plain text.',
+  131026:
+    'That number cannot receive WhatsApp messages — no account, or not reachable.',
+  190: 'The access token has expired or been revoked. Generate a new WHATSAPP_TOKEN.',
+}
+
 async function post(payload) {
   const res = await fetch(`${GRAPH}/${process.env.WHATSAPP_PHONE_ID}/messages`, {
     method: 'POST',
@@ -91,12 +125,10 @@ async function post(payload) {
 
   if (!res.ok) {
     const code = body?.error?.code
-    if (code === 131047) {
-      console.error(
-        '[whatsapp] The 24-hour window is closed, so a plain message was refused. ' +
-          'Send any WhatsApp message to your business number to reopen it, or set ' +
-          'WHATSAPP_TEMPLATE to an approved template name.',
-      )
+    const advice = SEND_ERRORS[code]
+    if (advice) {
+      console.error(`[whatsapp] ${advice}`)
+      console.error('[whatsapp] Meta said:', JSON.stringify(body?.error || body))
     } else {
       console.error('[whatsapp] send failed:', res.status, JSON.stringify(body?.error || body))
     }

@@ -66,7 +66,7 @@ export default async function handler(req, res) {
       detail: !customerWhatsappConfigured()
         ? 'Set up WhatsApp above first, then customers can be messaged too.'
         : customerTemplatesConfigured()
-          ? 'Customers get a WhatsApp confirmation when they order, and a message every time you move the order along.'
+          ? `Customers get a WhatsApp confirmation when they order, and a message every time you move the order along. Using "${process.env.WHATSAPP_CUSTOMER_TEMPLATE}" (7 parameters) and "${process.env.WHATSAPP_STATUS_TEMPLATE}" (6 parameters), in language "${process.env.WHATSAPP_TEMPLATE_LANG || 'en'}". These have to match your approved templates exactly.`
           : 'Meta only lets us message a customer out of the blue through an approved template. Create the two templates in Meta Business Manager (the README has the exact text), then set WHATSAPP_CUSTOMER_TEMPLATE and WHATSAPP_STATUS_TEMPLATE. Until then customer messages only land if that person happened to message you in the last 24 hours.',
     },
     {
