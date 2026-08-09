@@ -8,6 +8,7 @@ import OrdersPanel from '../components/admin/OrdersPanel'
 import MediaPanel from '../components/admin/MediaPanel'
 import ProductsPanel from '../components/admin/ProductsPanel'
 import SettingsPanel from '../components/admin/SettingsPanel'
+import WhatsAppDoctor from '../components/admin/WhatsAppDoctor'
 import { useCatalog } from '../context/CatalogContext'
 import {
   clearAdminKey,
@@ -474,7 +475,14 @@ export default function Admin() {
             </div>
           )}
 
-          {tab === 'setup' && <SetupPanel health={health} storage={storage} secured={secured} />}
+          {tab === 'setup' && (
+            <SetupPanel
+              health={health}
+              storage={storage}
+              secured={secured}
+              adminKey={adminKey}
+            />
+          )}
         </div>
       </div>
     </section>
@@ -485,7 +493,7 @@ export default function Admin() {
 /* Setup                                                                */
 /* ------------------------------------------------------------------ */
 
-function SetupPanel({ health, storage, secured }) {
+function SetupPanel({ health, storage, secured, adminKey }) {
   const checks = health?.checks || [
     {
       id: 'database',
@@ -553,6 +561,8 @@ function SetupPanel({ health, storage, secured }) {
           </Step>
         </ol>
       </div>
+
+      <WhatsAppDoctor adminKey={adminKey} />
 
       <div className="rounded-[1.5rem] border border-caramel/22 bg-porcelain p-6">
         <h3 className="font-display text-[1.2rem] text-espresso">Orders on WhatsApp</h3>

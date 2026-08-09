@@ -307,3 +307,17 @@ export async function updateSettings(settings, adminKey) {
 export async function fetchHealth() {
   return request('/api/health')
 }
+
+/** Asks Meta directly whether WhatsApp is really working. */
+export async function checkWhatsApp(adminKey) {
+  return request('/api/whatsapp-check', { headers: { 'x-admin-key': adminKey || '' } })
+}
+
+/** Sends one real message so the failure, if any, is Meta's own words. */
+export async function sendWhatsAppTest(to, template, adminKey) {
+  return request('/api/whatsapp-check', {
+    method: 'POST',
+    headers: { 'x-admin-key': adminKey || '' },
+    body: JSON.stringify({ to, template }),
+  })
+}

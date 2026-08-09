@@ -809,6 +809,161 @@ check('a wrong verify token is refused', refused.statusCode === 403)
   delete process.env.WHATSAPP_PHONE_ID
 }
 
+// --- the WhatsApp doctor ----------------------------------------------------
+{
+  const { default: checkHandler } = await import('../api/whatsapp-check.js')
+  const savedFetch = globalThis.fetch
+
+  const denied = await call(checkHandler, { method: 'GET', headers: {} })
+  check('the doctor is open while no admin key is set', denied.status === 200)
+
+  process.env.ADMIN_KEY = 'secret-key'
+  const locked = await call(checkHandler, { method: 'GET', headers: {} })
+  check('the doctor needs the admin key once one is set', locked.status === 401)
+  delete process.env.ADMIN_KEY
+
+  // Nothing configured at all.
+  delete process.env.WHATSAPP_TOKEN
+  delete process.env.WHATSAPP_PHONE_ID
+  delete process.env.WHATSAPP_TO
+  const bare = await call(checkHandler, { method: 'GET', headers: {} })
+  check('it names the missing settings', () => {
+    const env = bare.json.checks.find((c) => c.id === 'env')
+    return env && env.ok === false && /WHATSAPP_TOKEN/.test(env.detail)
+  })
+  check('and does not offer a test send', bare.json.canTest === false)
+
+  process.env.WHATSAPP_TOKEN = 'expired'
+  process.env.WHATSAPP_PHONE_ID = '123456'
+  process.env.WHATSAPP_TO = '250788722064'
+  process.env.WHATSAPP_WABA_ID = 'waba1'
+  process.env.WHATSAPP_CUSTOMER_TEMPLATE = 'dussa_order_confirmation'
+  process.env.WHATSAPP_STATUS_TEMPLATE = 'dussa_order_status'
+  process.env.WHATSAPP_TEMPLATE_LANG = 'en'
+
+  // An expired token is the most common cause, so it must be called out by name.
+  globalThis.fetch = async () => ({
+    ok: false,
+    status: 401,
+    json: async () => ({ error: { code: 190, message: 'Session has expired' } }),
+  })
+  const expired = await call(checkHandler, { method: 'GET', headers: {} })
+  check('an expired token is diagnosed as such', () => {
+    const t = expired.json.checks.find((c) => c.id === 'token')
+    return t && t.ok === false && /expires 24 hours|permanent/i.test(t.detail)
+  })
+
+  /* A healthy account: the confirmation template has the right 7 parameters,
+     the status one has been reworded down to 4. */
+  const templates = {
+    data: [
+      {
+        name: 'dussa_order_confirmation',
+        language: 'en',
+        status: 'APPROVED',
+        components: [
+          {
+            type: 'BODY',
+            text: 'Hi {{1}}, order {{2}}. {{3}}: {{4}} at {{5}}. Total {{6}}. Pay {{7}}.',
+          },
+        ],
+      },
+      {
+        name: 'dussa_order_status',
+        language: 'en',
+        status: 'APPROVED',
+        components: [{ type: 'BODY', text: 'Hi {{1}}, order {{2}} is {{3}} on {{4}}.' }],
+      },
+    ],
+  }
+
+  globalThis.fetch = async (url) => {
+    if (String(url).includes('message_templates')) {
+      return { ok: true, status: 200, json: async () => templates }
+    }
+    return {
+      ok: true,
+      status: 200,
+      json: async () => ({ display_phone_number: '+250 788 722 064', verified_name: 'Dussa' }),
+    }
+  }
+
+  const healthy = await call(checkHandler, { method: 'GET', headers: {} })
+  check('a live token passes', () => {
+    const t = healthy.json.checks.find((c) => c.id === 'token')
+    return t?.ok === true
+  })
+  check('the sending number is reported back', () =>
+    /250 788 722 064/.test(healthy.json.checks.find((c) => c.id === 'number')?.detail || ''),
+  )
+  check('a template with the right parameter count passes', () => {
+    const t = healthy.json.checks.find((c) => c.id === 'template-customer')
+    return t?.ok === true && /7 parameters/.test(t.detail)
+  })
+  check('a reworded template with too few parameters is caught', () => {
+    const t = healthy.json.checks.find((c) => c.id === 'template-status')
+    return t?.ok === false && /uses 4 parameters and we send 6/.test(t.detail)
+  })
+
+  // A language mismatch is the other classic.
+  process.env.WHATSAPP_TEMPLATE_LANG = 'en_US'
+  const wrongLang = await call(checkHandler, { method: 'GET', headers: {} })
+  check('a language mismatch is spelled out', () => {
+    const t = wrongLang.json.checks.find((c) => c.id === 'template-customer')
+    return t?.ok === false && /not in language "en_US"/.test(t.detail)
+  })
+  process.env.WHATSAPP_TEMPLATE_LANG = 'en'
+
+  /* ------------------------------------------------------- test send */
+  let sentBody = null
+  globalThis.fetch = async (url, options) => {
+    sentBody = JSON.parse(options.body)
+    return { ok: true, status: 200, json: async () => ({ messages: [{ id: 'wamid.OK' }] }) }
+  }
+  const good = await call(checkHandler, {
+    method: 'POST',
+    headers: {},
+    body: { to: '0788722064', template: 'customer' },
+  })
+  check('a test send reports success', good.json.ok === true)
+  check('it goes to the normalised number', sentBody?.to === '250788722064')
+  check('it uses the configured template', sentBody?.template?.name === 'dussa_order_confirmation')
+  check(
+    'with the full set of sample parameters',
+    sentBody?.template?.components?.[0]?.parameters?.length === 7,
+  )
+
+  const badNumber = await call(checkHandler, {
+    method: 'POST',
+    headers: {},
+    body: { to: '12345', template: 'customer' },
+  })
+  check('a bad number is refused before sending', badNumber.json.ok === false)
+
+  // The whole point: Meta's rejection comes back in words.
+  globalThis.fetch = async () => ({
+    ok: false,
+    status: 400,
+    json: async () => ({
+      error: { code: 131030, message: 'Recipient phone number not in allowed list' },
+    }),
+  })
+  const blocked = await call(checkHandler, {
+    method: 'POST',
+    headers: {},
+    body: { to: '0788722064', template: '' },
+  })
+  check('a rejection carries Meta\'s own message', /allowed list/.test(blocked.json.error || ''))
+  check('and our explanation of it', /test number can only message/.test(blocked.json.advice || ''))
+
+  globalThis.fetch = savedFetch
+  delete process.env.WHATSAPP_TOKEN
+  delete process.env.WHATSAPP_PHONE_ID
+  delete process.env.WHATSAPP_WABA_ID
+  delete process.env.WHATSAPP_CUSTOMER_TEMPLATE
+  delete process.env.WHATSAPP_STATUS_TEMPLATE
+}
+
 process.env.WHATSAPP_TO = '250788722064'
 
 const badSig = mockRes()

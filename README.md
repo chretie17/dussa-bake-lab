@@ -294,6 +294,40 @@ for a customer who happens to have messaged you in the last 24 hours. Nothing
 breaks either way; the Setup tab in the dashboard tells you which of the two
 you're on, and the server log says which path each message took.
 
+### When WhatsApp is not delivering
+
+Open **Dashboard → Setup → Why is WhatsApp not delivering?** and press **Run the
+checks**. Everything it reports comes from Meta, not from us: whether the token
+is still alive, what the sending number is, and — if `WHATSAPP_WABA_ID` is set —
+whether each template exists under that exact name and language and takes the
+number of `{{n}}` the site actually sends.
+
+Underneath it there is a **test send**. Put in your own number, pick which
+message, press Send. Either Meta accepts it or you get the rejection in Meta's
+own words with an explanation. That is usually the fastest way to the answer.
+
+In rough order of likelihood, when "everything is set" but nothing arrives:
+
+1. **The token expired.** The token on the app dashboard is temporary and dies
+   24 hours after it is generated. This catches almost everyone once. Fix it
+   properly: Business Settings → Users → System users → add a system user, give
+   it the WhatsApp Business Messaging permission, generate a token with no
+   expiry, and put that in `WHATSAPP_TOKEN`.
+2. **The recipient is not on the allowed list.** A Meta *test* number can only
+   message numbers you have added under API Setup. Real business numbers have no
+   such limit.
+3. **A variable was added but not deployed.** Vercel only picks up environment
+   variables on a new deployment — adding one to a running project changes
+   nothing until you redeploy.
+4. **Language mismatch.** `en` and `en_US` are different templates to Meta.
+   `WHATSAPP_TEMPLATE_LANG` has to match exactly what the template was created
+   with.
+5. **Parameter count mismatch.** If the template wording was edited, the number
+   of `{{n}}` may no longer match. The confirmation sends 7 and the status update
+   sends 6; the check names both.
+6. **No payment method on the Meta account.** Template messages are billed, and
+   sends fail once the free allowance runs out.
+
 ### Taking payment over WhatsApp
 
 The confirmation asks the customer to pay by Mobile Money and reply `PAID` with
