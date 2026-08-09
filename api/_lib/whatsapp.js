@@ -91,15 +91,14 @@ const SEND_ERRORS = {
     'message to your business number to reopen it, or set a template name.',
   132000:
     'The template expects a different number of {{n}} parameters than we sent. ' +
-    'The order confirmation sends 7 (name, code, delivery/collection, date, time, ' +
-    'total, MoMo number) and the status update sends 6 (name, code, status sentence, ' +
-    'delivery/collection, date, time). Count the {{n}} in the approved template body ' +
-    'and make them match, in that order.',
+    'The order confirmation sends 6 (name, code, delivery/collection, date, time, total) ' +
+    'and the status update sends 4 (name, code, status sentence, order details). ' +
+    'Count the {{n}} in the approved template body and make them match, in that order.',
   132001:
     'No approved template with that name and language. Check WHATSAPP_CUSTOMER_TEMPLATE ' +
-    'and WHATSAPP_STATUS_TEMPLATE against WhatsApp Manager, and that ' +
-    'WHATSAPP_TEMPLATE_LANG matches the language you picked — "en" for English, ' +
-    '"en_US" for English (US). They are not interchangeable.',
+    'and WHATSAPP_STATUS_TEMPLATE against WhatsApp Manager, plus ' +
+    'WHATSAPP_CUSTOMER_TEMPLATE_LANG and WHATSAPP_STATUS_TEMPLATE_LANG. ' +
+    'For these templates the defaults are "en_US" for the confirmation and "en" for status.',
   132005:
     'The template was rejected because a parameter had a newline, a tab, or four or ' +
     'more spaces in a row. Something got through cleanParam — worth logging what.',
@@ -197,13 +196,13 @@ export async function fetchMedia(mediaId) {
 }
 
 /** Sends a named approved template with positional {{1}}, {{2}}… parameters. */
-export async function sendTemplate(to, name, params = []) {
+export async function sendTemplate(to, name, params = [], language = 'en') {
   return post({
     to,
     type: 'template',
     template: {
       name,
-      language: { code: process.env.WHATSAPP_TEMPLATE_LANG || 'en' },
+      language: { code: language },
       components: params.length
         ? [
             {
@@ -288,6 +287,10 @@ function fulfilmentWord(order) {
   return order.fulfilment === 'delivery' ? 'Delivery' : 'Collection'
 }
 
+function orderDetails(order) {
+  return `${fulfilmentWord(order)}, ${prettyDate(order.date)}, ${order.time || 'to be agreed'}`
+}
+
 /**
  * Decides whether we may message this customer at all, and on what number.
  * Returns `{ ok: false, reason }` so callers can log a straight answer.
@@ -370,7 +373,7 @@ export function formatCustomerStatus(order) {
     .join('\n')
 }
 
-async function sendToCustomer(order, { template, params, fallbackText, label }) {
+async function sendToCustomer(order, { template, params, fallbackText, label, language }) {
   const target = customerTarget(order)
   if (!target.ok) {
     console.log(`[whatsapp] no ${label} for ${order?.code}: ${target.reason}`)
@@ -379,7 +382,7 @@ async function sendToCustomer(order, { template, params, fallbackText, label }) 
 
   try {
     if (template) {
-      const result = await sendTemplate(target.to, template, params)
+      const result = await sendTemplate(target.to, template, params, language)
       if (result.sent) return result
       // A template that has not been approved yet should not silently lose the
       // message — try plain text, which lands if the window happens to be open.
@@ -409,6 +412,7 @@ export async function sendCustomerOrderConfirmation(order) {
   return sendToCustomer(order, {
     label: 'order confirmation',
     template: process.env.WHATSAPP_CUSTOMER_TEMPLATE || '',
+    language: process.env.WHATSAPP_CUSTOMER_TEMPLATE_LANG || 'en_US',
     params: [
       firstName(order),
       order.code,
@@ -416,7 +420,6 @@ export async function sendCustomerOrderConfirmation(order) {
       prettyDate(order.date),
       order.time || 'to be agreed',
       money(order.total),
-      momo,
     ],
     fallbackText: formatCustomerConfirmation(order, momo),
   })
@@ -475,14 +478,8 @@ export async function sendCustomerStatusUpdate(order) {
   return sendToCustomer(order, {
     label: `${order.status} update`,
     template: process.env.WHATSAPP_STATUS_TEMPLATE || '',
-    params: [
-      firstName(order),
-      order.code,
-      line,
-      fulfilmentWord(order),
-      prettyDate(order.date),
-      order.time || 'to be agreed',
-    ],
+    language: process.env.WHATSAPP_STATUS_TEMPLATE_LANG || 'en',
+    params: [firstName(order), order.code, line, orderDetails(order)],
     fallbackText: formatCustomerStatus(order),
   })
 }
