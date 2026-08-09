@@ -98,7 +98,7 @@ const SEND_ERRORS = {
     'No approved template with that name and language. Check WHATSAPP_CUSTOMER_TEMPLATE ' +
     'and WHATSAPP_STATUS_TEMPLATE against WhatsApp Manager, plus ' +
     'WHATSAPP_CUSTOMER_TEMPLATE_LANG and WHATSAPP_STATUS_TEMPLATE_LANG. ' +
-    'For these templates the defaults are "en_US" for the confirmation and "en" for status.',
+    'Both Dussa BakeLab templates use Meta language code "en".',
   132005:
     'The template was rejected because a parameter had a newline, a tab, or four or ' +
     'more spaces in a row. Something got through cleanParam — worth logging what.',
@@ -412,7 +412,7 @@ export async function sendCustomerOrderConfirmation(order) {
   return sendToCustomer(order, {
     label: 'order confirmation',
     template: process.env.WHATSAPP_CUSTOMER_TEMPLATE || '',
-    language: process.env.WHATSAPP_CUSTOMER_TEMPLATE_LANG || 'en_US',
+    language: process.env.WHATSAPP_CUSTOMER_TEMPLATE_LANG || 'en',
     params: [
       firstName(order),
       order.code,
