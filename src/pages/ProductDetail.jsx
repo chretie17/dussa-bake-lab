@@ -163,10 +163,15 @@ export default function ProductDetail() {
               </AnimatePresence>
 
               <div className="absolute left-6 top-6 flex flex-col gap-2">
-                {product.bestseller && <Pill tone="dark">Bestseller</Pill>}
+                {product.bestseller && <Pill tone="dark">Featured</Pill>}
                 {product.customBrief && <Pill tone="gold">Bespoke</Pill>}
               </div>
             </motion.div>
+            {!product.photo && (
+              <p className="mt-3 text-center text-[0.78rem] text-cocoa/55">
+                Example photo for inspiration. Your cake will be made to your order.
+              </p>
+            )}
 
             <div className="mt-4 grid grid-cols-3 gap-3">
               <div className="rounded-2xl border border-caramel/20 bg-porcelain p-4 text-center">
