@@ -3,22 +3,20 @@ import { photoFor } from '../data/photography'
 import { classNames } from '../lib/format'
 
 /**
- * Show a real photograph instead of the old generated SVG artwork.
- * Uploaded bakery photos take priority over the example photography.
+ * Real photography throughout the shop. Owner-uploaded photos always take priority.
+ * Example photos are only temporary visual references, not Dussa's own products.
  */
 export default function CreationImage({
   photo, art = 'dripCake', flavorArt = 'chocolate', alt = '',
   className = '', imgClassName = '', seed = '', loading = 'lazy',
 }) {
-  const [failedSource, setFailedSource] = useState('')
+  const [status, setStatus] = useState('original')
   const fallback = photoFor({ seed, art, flavorArt })
-  const original = photo || fallback
-  const src = failedSource === original && photo ? fallback : original
-  const broken = failedSource === fallback
+  const source = status === 'original' && photo ? photo : fallback
 
-  useEffect(() => setFailedSource(''), [photo, seed, art, flavorArt])
+  useEffect(() => setStatus('original'), [photo, seed, art, flavorArt])
 
-  if (broken) return (
+  if (status === 'missing') return (
     <div role="img" aria-label={alt || 'Bakery photograph unavailable'} className={classNames('flex aspect-square h-full w-full items-center justify-center bg-blush px-5 text-center text-sm text-cocoa/60', className)}>
       Photograph coming soon
     </div>
@@ -26,11 +24,11 @@ export default function CreationImage({
 
   return (
     <img
-      src={src}
+      src={source}
       alt={alt}
       loading={loading}
       decoding="async"
-      onError={() => setFailedSource(src)}
+      onError={() => setStatus(status === 'original' && photo && photo !== fallback ? 'fallback' : 'missing')}
       className={classNames('block aspect-square h-full w-full object-cover', className, imgClassName)}
     />
   )
