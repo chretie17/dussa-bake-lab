@@ -14,9 +14,9 @@ export default function CategoryShowcase() {
       <div className="container-x">
         <SectionHeading
           align="center"
-          eyebrow="Our delicious creations"
+          eyebrow="Something for everyone"
           title="What we make"
-          lead="Everything is made to order in small batches. Pick something to start from and we will adjust it with you."
+          lead="A birthday cake, a box of cupcakes, or just a treat for yourself. Take a look and tell us what you fancy."
         />
         <Flourish className="mt-8" />
 
