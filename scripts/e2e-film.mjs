@@ -23,6 +23,12 @@ const FAKE_PLAYER = `<!doctype html><html><head><style>
     if (d.event === 'command' && d.func === 'pauseVideo') parent.postMessage(JSON.stringify({event:'onStateChange',info:2}), '*')
     if (d.event === 'command' && d.func === 'playVideo') parent.postMessage(JSON.stringify({event:'onStateChange',info:1}), '*')
   })
+  // A tap inside the player starts it, which is the only thing that works
+  // once a phone has refused autoplay.
+  addEventListener('click', () => {
+    window.__tapped = true
+    parent.postMessage(JSON.stringify({event:'onStateChange',info:1}), '*')
+  })
 </script></body></html>`
 
 const STILL = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1000"><defs>
@@ -147,9 +153,14 @@ for (const [label, viewport] of [
   await page.close()
 }
 
-/* A phone starts on the still and never loads the player unless asked. */
+/* Phones play the film too, in the band above the copy. */
 {
-  const page = await browser.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: 2 })
+  const page = await browser.newPage({
+    viewport: { width: 390, height: 844 },
+    deviceScaleFactor: 2,
+    isMobile: true,
+    hasTouch: true,
+  })
   let playerRequested = false
   await page.route('https://www.youtube-nocookie.com/**', (route) => {
     playerRequested = true
@@ -157,31 +168,74 @@ for (const [label, viewport] of [
   })
   await page.route('https://images.unsplash.com/**', serveStill)
   await page.goto('http://127.0.0.1:5173/', { waitUntil: 'domcontentloaded' })
-  await page.waitForTimeout(4000)
-  check('phone: the player is not downloaded on arrival', playerRequested === false)
-  check(
-    'phone: the film control offers to play',
-    await page.getByRole('button', { name: 'Play the background film' }).isVisible(),
-  )
-  await page.screenshot({ path: OUT ? `${OUT}/film-phone-still.png` : undefined })
+  await page.waitForTimeout(4500)
 
-  await page.getByRole('button', { name: 'Play the background film' }).click()
-  await page.waitForTimeout(4000)
-  check('phone: tapping play loads the film', playerRequested === true)
+  check('phone: the film starts by itself', playerRequested === true)
   const g = await scanForBars(page)
   check('phone: it fades in once playing', Number(g.opacity) > 0.95, g.opacity)
   check(
-    'phone: the picture covers its band',
+    'phone: the picture covers its band with no bars',
     g.picture.top <= g.layer.top && g.picture.bottom >= g.layer.bottom,
     JSON.stringify(g),
+  )
+
+  const control = page.getByRole('button', { name: 'Pause the background film' })
+  check('phone: a pause control is on the film', await control.isVisible())
+  const box = await control.boundingBox()
+  const copyTop = await page.evaluate(
+    () => document.querySelector('#home-hero-title').closest('div').getBoundingClientRect().top,
+  )
+  check(
+    'phone: the control sits on the film, above the copy',
+    box && box.y + box.height <= copyTop + 1,
+    JSON.stringify({ box, copyTop }),
+  )
+  const cta = await page.getByRole('link', { name: /Order your cake/ }).boundingBox()
+  check(
+    'phone: Order your cake is on screen on arrival',
+    cta && cta.y + cta.height <= 844,
+    JSON.stringify(cta),
+  )
+  check(
+    'phone: the menu is a quiet link, not a second pill',
+    await page.getByRole('link', { name: 'Explore the menu' }).isVisible(),
   )
   await page.screenshot({ path: OUT ? `${OUT}/film-phone-playing.png` : undefined })
   await page.close()
 }
 
-/* A player that refuses autoplay must leave the still up, not a black box. */
+/* Save-data on a phone keeps the still and does not stream anything. */
 {
-  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
+  const page = await browser.newPage({ viewport: { width: 390, height: 844 }, isMobile: true })
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'connection', {
+      value: { saveData: true, effectiveType: '4g' },
+      configurable: true,
+    })
+  })
+  let playerRequested = false
+  await page.route('https://www.youtube-nocookie.com/**', (route) => {
+    playerRequested = true
+    route.fulfill({ status: 200, contentType: 'text/html', body: FAKE_PLAYER })
+  })
+  await page.route('https://images.unsplash.com/**', serveStill)
+  await page.goto('http://127.0.0.1:5173/', { waitUntil: 'domcontentloaded' })
+  await page.waitForTimeout(3500)
+  check('save-data: nothing is streamed', playerRequested === false)
+  check(
+    'save-data: a play control is offered instead',
+    await page.getByRole('button', { name: 'Play the background film' }).isVisible(),
+  )
+  await page.close()
+}
+
+/* Autoplay refused (Low Power Mode, in-app browsers): the tap must reach the
+   player itself, because a tap on our own button cannot start it. */
+for (const [label, viewport, mobile] of [
+  ['phone', { width: 390, height: 844 }, true],
+  ['desktop', { width: 1440, height: 900 }, false],
+]) {
+  const page = await browser.newPage({ viewport, isMobile: mobile, hasTouch: mobile })
   const refusing = FAKE_PLAYER.replace("info:1}), '*'), ", "info:5}), '*'), ")
   await page.route('https://www.youtube-nocookie.com/**', (route) =>
     route.fulfill({ status: 200, contentType: 'text/html', body: refusing }),
@@ -189,13 +243,44 @@ for (const [label, viewport] of [
   await page.route('https://images.unsplash.com/**', serveStill)
   await page.goto('http://127.0.0.1:5173/', { waitUntil: 'domcontentloaded' })
   await page.waitForSelector('iframe.hero-film-frame', { state: 'attached', timeout: 8000 })
-  await page.waitForTimeout(11000)
+  await page.waitForTimeout(3000)
+  const before = await scanForBars(page)
+  check(`refused ${label}: nothing is revealed while we wait`, Number(before.opacity) < 0.05, before.opacity)
+
+  await page.waitForTimeout(6500)
   const g = await scanForBars(page)
-  check('refused autoplay: the black player never shows', Number(g.opacity) < 0.05, g.opacity)
+  check(`refused ${label}: the player is shown so it can be tapped`, Number(g.opacity) > 0.95, g.opacity)
   check(
-    'refused autoplay: the button falls back to Play',
-    await page.getByRole('button', { name: 'Play the background film' }).isVisible(),
+    `refused ${label}: a hint says to tap the film`,
+    (await page.getByText('Tap the film to play').filter({ visible: true }).count()) === 1,
   )
+
+  // Somewhere on the film clear of the copy, the topmost element must be the
+  // player — otherwise the copy column or a shade swallows the tap.
+  const spot = await page.evaluate(() => {
+    const layer = document.querySelector('.hero-film-layer').getBoundingClientRect()
+    const copy = document.querySelector('#home-hero-title').closest('div').getBoundingClientRect()
+    const x = Math.round(layer.left + layer.width * (window.innerWidth < 768 ? 0.5 : 0.78))
+    const y = Math.round(
+      window.innerWidth < 768 ? layer.top + (copy.top - layer.top) * 0.55 : layer.top + layer.height * 0.5,
+    )
+    const hit = document.elementFromPoint(x, y)
+    return { x, y, hit: hit?.tagName, cls: hit?.className?.toString?.() || '' }
+  })
+  check(
+    `refused ${label}: a tap on the film reaches the player`,
+    spot.hit === 'IFRAME',
+    JSON.stringify(spot),
+  )
+
+  if (mobile) await page.touchscreen.tap(spot.x, spot.y)
+  else await page.mouse.click(spot.x, spot.y)
+  await page.waitForTimeout(1500)
+  check(
+    `refused ${label}: the tap starts the film and the normal control returns`,
+    await page.getByRole('button', { name: 'Pause the background film' }).isVisible(),
+  )
+  await page.screenshot({ path: OUT ? `${OUT}/film-refused-${label}.png` : undefined })
   await page.close()
 }
 

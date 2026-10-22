@@ -33,37 +33,40 @@ function embedUrl() {
   return `${PLAYER_ORIGIN}/embed/${VIDEO_ID}?${params}`
 }
 
-/** Should the film start by itself on this visit? */
+/**
+ * Should the film start by itself on this visit? On every screen size —
+ * phones included — unless the visitor has asked for less motion or less
+ * data, or is on a connection too slow to stream it.
+ */
 function canAutoplay(reducedMotion) {
   if (reducedMotion) return false
   const connection = navigator.connection
   if (connection?.saveData || /2g/.test(connection?.effectiveType || '')) return false
-  // Phones start on the still. A streamed background costs real data on a
-  // Rwandan mobile plan and takes longest exactly where patience is shortest;
-  // the button below plays it for anyone who wants it.
-  return window.matchMedia('(min-width: 768px)').matches
+  return true
 }
 
 /**
  * The homepage film.
  *
- * Two things the first version got wrong, and why this one is built as it is:
- *
  * The footage is cinemascope, about 2.39:1, sitting inside YouTube's 16:9
- * player with black bars above and below. Sizing the *player* to cover the
- * hero leaves those bars on screen. The CSS (.hero-film-frame) sizes it so the
- * *picture* covers the hero, which pushes the bars — and YouTube's own title
- * strip and logo with them — outside the frame.
+ * player with black bars above and below. The CSS (.hero-film-frame) sizes the
+ * player so its *picture* covers the frame, which pushes the bars — and
+ * YouTube's own title strip and logo with them — outside it.
  *
- * And YouTube's iframe "loads" long before anything plays, so revealing it on
- * load showed a black player and a spinner first. The still is shown straight
- * away, the player is only fetched once the page has settled, and it is faded
- * in when YouTube itself reports PLAYING. Between loops, when paused, or when
- * scrolled away it fades back to the still rather than showing YouTube's
- * pause or end screens.
+ * YouTube's iframe "loads" long before anything plays, so the still is shown
+ * first, the player is fetched once the page has settled, and it is faded in
+ * only when YouTube itself reports PLAYING. Between loops, when paused, or
+ * when scrolled away it fades back to the still.
  *
- * Renders its controls through `children`, so the hero can place them in its
- * own layout instead of floating them over the film.
+ * When a phone refuses to autoplay — iPhone Low Power Mode, Android data
+ * saver, the Instagram and Facebook in-app browsers — a button on *our* page
+ * cannot start it either: the tap happens outside YouTube's frame, and the
+ * browser only lets a tap inside the frame start playback. So in that case the
+ * player itself is shown and made tappable, with a hint, and the first tap on
+ * it starts the film.
+ *
+ * Renders its controls through `children({ controls, compact })`, so the hero
+ * can place them in its own layout.
  */
 export default function HeroCake({ children }) {
   const reducedMotion = useReducedMotion()
@@ -73,13 +76,21 @@ export default function HeroCake({ children }) {
   const [mounted, setMounted] = useState(false)
   const [wanted, setWanted] = useState(false)
   const [showing, setShowing] = useState(false)
+  const [needsTap, setNeedsTap] = useState(false)
 
   const talking = useRef(false) // the player has answered us at least once
   const everPlayed = useRef(false)
+  const lastState = useRef(null)
   const userPaused = useRef(false)
   const timers = useRef([])
 
   const src = useMemo(() => (mounted ? embedUrl() : ''), [mounted])
+
+  // Read inside the message handler without re-subscribing it.
+  const needsTapRef = useRef(false)
+  useEffect(() => {
+    needsTapRef.current = needsTap
+  }, [needsTap])
 
   const later = (fn, ms) => {
     timers.current.push(window.setTimeout(fn, ms))
@@ -105,10 +116,10 @@ export default function HeroCake({ children }) {
       setMounted(true)
     }
     if ('requestIdleCallback' in window) {
-      const id = window.requestIdleCallback(begin, { timeout: 2000 })
+      const id = window.requestIdleCallback(begin, { timeout: 1500 })
       return () => window.cancelIdleCallback(id)
     }
-    const id = window.setTimeout(begin, 900)
+    const id = window.setTimeout(begin, 700)
     return () => window.clearTimeout(id)
   }, [reducedMotion])
 
@@ -128,19 +139,34 @@ export default function HeroCake({ children }) {
       }
       talking.current = true
 
-      const state =
-        data?.event === 'onStateChange' ? data.info : data?.info?.playerState
+      const state = data?.event === 'onStateChange' ? data.info : data?.info?.playerState
       if (typeof state !== 'number') return
+      lastState.current = state
 
-      if (state === PLAYING) everPlayed.current = true
+      if (state === PLAYING) {
+        everPlayed.current = true
+        setNeedsTap(false)
+        setWanted(true)
+        userPaused.current = false
+      }
       // Mid-film buffering holds the last frame, which is fine to keep on
-      // screen. Anything else — ended, paused, cued — goes back to the still.
-      setShowing((current) => (state === PLAYING ? true : state === BUFFERING ? current : false))
+      // screen. Anything else — ended, paused, cued — goes back to the still,
+      // except while we are waiting for a tap, when the player must stay put.
+      setShowing((current) =>
+        state === PLAYING ? true : state === BUFFERING ? current : current && needsTapRef.current,
+      )
     }
 
     window.addEventListener('message', onMessage)
     return () => window.removeEventListener('message', onMessage)
   }, [mounted])
+
+  /** Autoplay was refused: show the player and let a tap reach it. */
+  const askForTap = useCallback(() => {
+    setNeedsTap(true)
+    setShowing(true)
+    setWanted(false)
+  }, [])
 
   const onFrameLoad = () => {
     // The player's API is not always ready the instant its page loads, so ask
@@ -156,16 +182,24 @@ export default function HeroCake({ children }) {
     ask()
 
     // A player that never answers at all (an extension eating postMessage, a
-    // changed API) should not mean a film that never appears: trust autoplay.
+    // changed API) should not mean a film that never appears: show it, and
+    // let it be tapped in case it is sitting there unplayed.
     later(() => {
-      if (!talking.current && !userPaused.current) setShowing(true)
+      if (!talking.current && !userPaused.current) askForTap()
     }, 6000)
 
-    // One that answers but never reaches PLAYING was refused autoplay. Stay on
-    // the still and let the button say Play.
-    later(() => {
-      if (talking.current && !everPlayed.current && !userPaused.current) setWanted(false)
-    }, 9000)
+    // One that answers but has not reached PLAYING by now was refused
+    // autoplay — unless it is still buffering on a slow connection, in which
+    // case keep waiting a while longer before deciding.
+    const decide = (attempt) => {
+      if (!talking.current || everPlayed.current || userPaused.current) return
+      if (lastState.current === BUFFERING && attempt < 5) {
+        later(() => decide(attempt + 1), 3000)
+        return
+      }
+      askForTap()
+    }
+    later(() => decide(0), 7000)
   }
 
   /* ----------------------------------- pause when scrolled out of view */
@@ -176,7 +210,7 @@ export default function HeroCake({ children }) {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!talking.current || userPaused.current) return
+        if (!talking.current || userPaused.current || !everPlayed.current) return
         send({ event: 'command', func: entry.isIntersecting ? 'playVideo' : 'pauseVideo', args: [] })
       },
       { threshold: 0.15 },
@@ -205,21 +239,27 @@ export default function HeroCake({ children }) {
     }
   }
 
-  const controls = (
+  const label = wanted ? 'Pause the background film' : 'Play the background film'
+  const icon = wanted ? (
+    <Pause size={12} strokeWidth={2.2} aria-hidden="true" />
+  ) : (
+    <Play size={12} strokeWidth={2.2} className="translate-x-px" aria-hidden="true" />
+  )
+
+  /* Full control, for the hero's baseline row on larger screens. */
+  const controls = needsTap ? (
+    <p className="text-[0.7rem] uppercase tracking-[0.18em] text-white/70">Tap the film to play</p>
+  ) : (
     <div className="flex items-center gap-4 text-[0.7rem] uppercase tracking-[0.18em] text-white/70">
       <button
         type="button"
         onClick={toggle}
         aria-pressed={wanted}
-        aria-label={wanted ? 'Pause the background film' : 'Play the background film'}
+        aria-label={label}
         className="group inline-flex items-center gap-2.5 transition-colors hover:text-white focus-visible:rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
       >
         <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/35 transition-colors group-hover:border-white/70">
-          {wanted ? (
-            <Pause size={12} strokeWidth={2.2} aria-hidden="true" />
-          ) : (
-            <Play size={12} strokeWidth={2.2} className="translate-x-px" aria-hidden="true" />
-          )}
+          {icon}
         </span>
         {wanted ? 'Pause film' : 'Play film'}
       </button>
@@ -227,7 +267,7 @@ export default function HeroCake({ children }) {
         href={VIDEO_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="hidden items-center gap-1 text-white/45 transition-colors hover:text-white/80 sm:inline-flex"
+        className="inline-flex items-center gap-1 text-white/45 transition-colors hover:text-white/80"
       >
         Film via YouTube
         <ArrowUpRight size={12} aria-hidden="true" />
@@ -235,17 +275,33 @@ export default function HeroCake({ children }) {
     </div>
   )
 
+  /* A single round button for the corner of the film on a phone. */
+  const compact = needsTap ? (
+    <span className="pointer-events-none inline-flex items-center gap-2 rounded-full bg-black/40 px-3.5 py-2 text-[0.68rem] uppercase tracking-[0.16em] text-white/90 backdrop-blur-md">
+      <Play size={11} strokeWidth={2.4} aria-hidden="true" />
+      Tap the film to play
+    </span>
+  ) : (
+    <button
+      type="button"
+      onClick={toggle}
+      aria-pressed={wanted}
+      aria-label={label}
+      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/30 bg-black/25 text-white backdrop-blur-md transition-colors active:bg-black/45 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+    >
+      {icon}
+    </button>
+  )
+
   return (
     <>
-      <div
-        className="pointer-events-none absolute inset-0 z-0 overflow-hidden bg-[#1a0e09]"
-        aria-hidden="true"
-      >
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden bg-[#1a0e09]">
         <img
           src={HERO_PHOTO.src}
           srcSet={HERO_PHOTO.srcSet}
           sizes="100vw"
           alt=""
+          aria-hidden="true"
           loading="eager"
           fetchPriority="high"
           decoding="async"
@@ -256,19 +312,22 @@ export default function HeroCake({ children }) {
           {mounted && (
             <iframe
               ref={frameRef}
-              title="Background film"
+              title="Background film: baking at Dussa BakeLab"
               src={src}
-              tabIndex={-1}
+              // Out of the tab order while it is decoration; reachable when it
+              // is the only way to start the film.
+              tabIndex={needsTap ? 0 : -1}
+              aria-hidden={needsTap ? undefined : 'true'}
               allow="autoplay; encrypted-media"
               referrerPolicy="strict-origin-when-cross-origin"
               onLoad={onFrameLoad}
-              className={`hero-film-frame ${showing ? 'is-showing' : ''}`}
+              className={`hero-film-frame ${showing ? 'is-showing' : ''} ${needsTap ? 'is-tappable' : ''}`}
             />
           )}
         </div>
       </div>
 
-      {typeof children === 'function' ? children(controls) : children}
+      {typeof children === 'function' ? children({ controls, compact, needsTap }) : children}
     </>
   )
 }

@@ -356,14 +356,19 @@ input[type='time']::-webkit-calendar-picker-indicator {
   opacity: 1;
 }
 
+/* Autoplay was refused, so the player itself has to take the tap. */
+.hero-film-frame.is-tappable {
+  pointer-events: auto;
+}
+
 /* On a phone the film sits in the upper part of the hero and melts into
    the still below it, where the headline is. Full-height, a 2.39:1 film
    would have to be blown up five times over to fill a portrait screen. */
 @media (max-width: 767px) {
   .hero-film-layer {
-    bottom: 38%;
-    -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent);
-    mask-image: linear-gradient(to bottom, #000 62%, transparent);
+    bottom: 34%;
+    -webkit-mask-image: linear-gradient(to bottom, #000 58%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 58%, transparent 100%);
   }
 }
 
