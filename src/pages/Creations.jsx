@@ -14,7 +14,6 @@ const SORTS = [
   { id: 'featured', label: 'Featured' },
   { id: 'price-asc', label: 'Price: low to high' },
   { id: 'price-desc', label: 'Price: high to low' },
-  { id: 'rating', label: 'Top rated' },
   { id: 'fastest', label: 'Ready soonest' },
 ]
 
@@ -70,9 +69,6 @@ export default function Creations() {
       case 'price-desc':
         list.sort((a, b) => fromPrice(b) - fromPrice(a))
         break
-      case 'rating':
-        list.sort((a, b) => (b.rating || 0) - (a.rating || 0))
-        break
       case 'fastest':
         list.sort((a, b) => a.leadDays - b.leadDays)
         break
@@ -97,7 +93,7 @@ export default function Creations() {
       <PageHeader
         eyebrow="The full menu"
         title="Our creations"
-        lead="Everything here is made to order. Pick a size, a flavour and a finish, and we take it from there."
+        lead="Find something you like, pick a size and flavour, and tell us when you need it. Photos are examples, not pictures of Dussa orders."
         crumbs={[{ label: 'Creations' }]}
       >
         <div className="mt-8 flex flex-wrap gap-2">
