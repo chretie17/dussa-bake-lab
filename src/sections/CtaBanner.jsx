@@ -41,8 +41,8 @@ export default function CtaBanner() {
                 <span className="italic text-gradient-gold">take it from there</span>
               </h2>
               <p className="mx-auto mt-5 max-w-lg text-[1.0625rem] leading-relaxed text-on-deep/65">
-                Two minutes to book. We come back to you with a price, and after that it is our
-                problem until it reaches your table.
+                Share your date and what you are looking for. We will help you work out the size,
+                flavour and details before you order.
               </p>
 
               <div className="mt-9 flex flex-wrap justify-center gap-3">
