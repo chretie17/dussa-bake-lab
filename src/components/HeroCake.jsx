@@ -55,7 +55,7 @@ export default function HeroCake() {
         )}
       </div>
 
-      <div className="absolute bottom-5 right-5 z-20 flex items-center gap-2 text-white sm:bottom-8 sm:right-8">
+      <div className="absolute bottom-5 left-5 z-20 flex items-center gap-2 text-white sm:bottom-8 sm:left-auto sm:right-8">
         <a
           href={VIDEO_URL}
           target="_blank"
