@@ -26,22 +26,10 @@ export const PROCESS = [
 ]
 
 export const VALUES = [
-  {
-    title: 'The finest ingredients',
-    body: 'Real chocolate, real butter, proper vanilla, and fruit from Kimironko market. No compound chocolate, no shortcuts.',
-  },
-  {
-    title: 'Baked to order',
-    body: 'Nothing sits in a display case going stale. Every order has a bake day, as close to yours as is safe.',
-  },
-  {
-    title: 'Designed with you',
-    body: 'Custom work starts with a conversation and a sketch. You see the design before we build it.',
-  },
-  {
-    title: 'On time, every time',
-    body: 'A cake that turns up late has failed, however good it tastes. We agree a time and we keep it.',
-  },
+  { title: 'Baked for your order', body: 'We make cakes and treats for your chosen date, rather than asking you to choose from a display case.' },
+  { title: 'Flavours you love', body: 'Chocolate, vanilla, red velvet or something a little different. Tell us what sounds good.' },
+  { title: 'A personal touch', body: 'Choose a message, colours or a design idea. We can talk through the details together.' },
+  { title: 'Made to share', body: 'From a little treat for two to a cake for a room full of people, we want everyone to get a slice.' },
 ]
 
 export const TESTIMONIALS = [
@@ -119,10 +107,10 @@ export const FAQS = [
 ]
 
 export const STATS = [
-  { value: '4,000+', label: 'celebrations baked for' },
-  { value: '4.9★', label: 'average customer rating' },
-  { value: '48h', label: 'standard turnaround' },
-  { value: '100%', label: 'made to order, never frozen' },
+  { value: 'Cakes', label: 'for celebrations' },
+  { value: 'Cupcakes', label: 'for sharing' },
+  { value: 'Cookies', label: 'for a little treat' },
+  { value: 'Custom', label: 'made your way' },
 ]
 
 /** Decorative strip on the home page — a "shelf" of what came out today. */
@@ -140,8 +128,8 @@ export const GALLERY = [
 ]
 
 export const MARQUEE_WORDS = [
-  'Fresh quality',
-  'Made with love',
+  'Good cake',
+  'Made to share',
   'Kigali, Rwanda',
   'Baked to order',
   'Belgian chocolate',
