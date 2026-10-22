@@ -481,17 +481,14 @@ export default function ProductDetail() {
                   <div className="space-y-3">
                     <p>{product.description}</p>
                     <p>
-                      Made to order in small batches, never frozen. Yours is baked as close to
-                      your date as we can safely manage, and boxed properly before it leaves us.
+                      Your order is prepared for your chosen date. Tell us if you have a favourite flavour, colour or finishing touch in mind.
                     </p>
                   </div>
                 )}
                 {tab === 'ingredients' && (
                   <div className="space-y-3">
                     <p>
-                      Real chocolate, real butter, free-range eggs, proper vanilla, and fruit
-                      bought fresh at the market. No compound chocolate, no cake mixes, no
-                      preservatives.
+                      Ingredients vary depending on your choice of flavour, filling and decorations. Ask us for the full ingredient details before ordering.
                     </p>
                     <p>
                       <strong className="font-medium text-espresso">Allergens:</strong> contains
