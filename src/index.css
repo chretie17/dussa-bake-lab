@@ -318,3 +318,33 @@ input[type='time']::-webkit-calendar-picker-indicator {
   filter: sepia(0.6) saturate(2.2) hue-rotate(340deg);
   cursor: pointer;
 }
+
+
+/* ---------------------------------------------------------------
+   Cinematic homepage film
+   The full-width desktop player fills its container like a cover
+   image. On narrow screens it fills the upper part of the hero,
+   so the headline sits over a legible, gently darkened backdrop.
+---------------------------------------------------------------- */
+.hero-cinema-iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, 177.778svh);
+  height: max(100%, 56.25vw);
+  transform: translate(-50%, -50%);
+  border: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .hero-cinema-player {
+    height: 57svh;
+  }
+
+  .hero-cinema-iframe {
+    width: max(100%, 101.334svh);
+    height: 57svh;
+    top: 50%;
+  }
+}
