@@ -1,46 +1,37 @@
-import { useState } from 'react'
-import CreationArt from '../art/CreationArt'
+import { useEffect, useState } from 'react'
+import { photoFor } from '../data/photography'
 import { classNames } from '../lib/format'
 
 /**
- * Renders a product's photograph when one is configured, and falls back to the
- * illustrated artwork otherwise — including when a photo 404s, so a missing
- * file never leaves a broken image on the page.
+ * Show a real photograph instead of the old generated SVG artwork.
+ * Uploaded bakery photos take priority over the example photography.
  */
 export default function CreationImage({
-  photo,
-  art = 'dripCake',
-  flavorArt = 'chocolate',
-  alt = '',
-  className = '',
-  imgClassName = '',
-  seed,
-  backdrop = true,
-  loading = 'lazy',
+  photo, art = 'dripCake', flavorArt = 'chocolate', alt = '',
+  className = '', imgClassName = '', seed = '', loading = 'lazy',
 }) {
-  const [failed, setFailed] = useState(false)
+  const [failedSource, setFailedSource] = useState('')
+  const fallback = photoFor({ seed, art, flavorArt })
+  const original = photo || fallback
+  const src = failedSource === original && photo ? fallback : original
+  const broken = failedSource === fallback
 
-  if (photo && !failed) {
-    return (
-      <img
-        src={photo}
-        alt={alt}
-        loading={loading}
-        decoding="async"
-        onError={() => setFailed(true)}
-        className={classNames('h-full w-full object-cover', className, imgClassName)}
-      />
-    )
-  }
+  useEffect(() => setFailedSource(''), [photo, seed, art, flavorArt])
+
+  if (broken) return (
+    <div role="img" aria-label={alt || 'Bakery photograph unavailable'} className={classNames('flex aspect-square h-full w-full items-center justify-center bg-blush px-5 text-center text-sm text-cocoa/60', className)}>
+      Photograph coming soon
+    </div>
+  )
 
   return (
-    <CreationArt
-      variant={art}
-      flavor={flavorArt}
-      seed={seed}
-      backdrop={backdrop}
-      title={alt || undefined}
-      className={classNames('h-full w-full', className)}
+    <img
+      src={src}
+      alt={alt}
+      loading={loading}
+      decoding="async"
+      onError={() => setFailedSource(src)}
+      className={classNames('block aspect-square h-full w-full object-cover', className, imgClassName)}
     />
   )
 }
