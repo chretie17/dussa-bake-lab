@@ -13,8 +13,8 @@ export default function Bestsellers() {
         <div className="flex flex-wrap items-end justify-between gap-8">
           <SectionHeading
             eyebrow="Most requested"
-            title="The ones people come back for"
-            lead="The six that leave the kitchen most often. All of them can be changed to suit you."
+            title="A few favourites to start with"
+            lead="Not sure where to start? Have a look at these cakes and treats, then choose what sounds good to you."
             className="max-w-xl"
           />
           <Button to="/creations" variant="outline" className="shrink-0">
