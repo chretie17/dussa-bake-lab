@@ -1,4 +1,5 @@
 import { InstagramIcon } from '../components/BrandIcons'
+import CreationImage from '../components/CreationImage'
 import { GALLERY_PHOTOS } from '../data/photography'
 import { useCatalog } from '../context/CatalogContext'
 import { Eyebrow } from '../components/ui'
@@ -26,7 +27,7 @@ export default function GalleryStrip() {
           {row.map((item, i) => (
             <figure key={i} className="group mx-2.5 w-40 shrink-0 md:w-52" aria-hidden={i >= items.length}>
               <div className="overflow-hidden rounded-2xl border border-on-deep/12 bg-deep-2/45 p-2 transition-all duration-500 group-hover:border-accent/50">
-                <img src={item.url} alt={item.caption || 'Cake and bakery inspiration'} loading="lazy" decoding="async" className="aspect-square w-full rounded-xl object-cover transition-transform duration-500 group-hover:scale-105" />
+                <CreationImage photo={item.url} alt={item.caption || 'Cake and bakery inspiration'} className="w-full rounded-xl transition-transform duration-500 group-hover:scale-105" />
               </div>
               {item.caption && <figcaption className="mt-3 text-center text-[0.75rem] uppercase tracking-[0.08em] text-on-deep/55">{item.caption}</figcaption>}
             </figure>
