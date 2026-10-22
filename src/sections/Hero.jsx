@@ -73,7 +73,7 @@ export default function Hero() {
                 className="transition-transform duration-300 group-hover:translate-x-1"
               />
             </Button>
-            <Button to="/creations" variant="outlineLight" size="lg">
+            <Button to="/creations" variant="outlineLight" size="lg" className="!border-white/45 !text-white hover:!bg-white/15">
               Explore the menu
             </Button>
           </motion.div>
