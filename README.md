@@ -503,13 +503,14 @@ The storefront displays real, licensed Unsplash photographs in place of the old 
 
 ### Homepage cake video
 
-The homepage now features the requested video **[watch the source on YouTube](https://www.youtube.com/watch?v=HTXB6flODww)** as a cinematic background. This is an official privacy-enhanced YouTube iframe embed, not a downloaded or re-hosted copy. It is credited as third-party video inspiration rather than footage made by Dussa BakeLab.
+The homepage film is **[this video on YouTube](https://www.youtube.com/watch?v=HTXB6flODww)**, played through YouTube's official privacy-enhanced embed — not downloaded or re-hosted. It is credited as third-party footage, not film made by Dussa BakeLab. All of it lives in `src/components/HeroCake.jsx`, with the sizing in `src/index.css` under "Homepage film".
 
-- Muted autoplay, looping, and inline playback where browsers allow it
-- Full-bleed desktop backdrop; visually balanced upper-screen film treatment on narrow phones
-- A readable gradient overlay, natural headline, and existing order/menu actions above the background
-- Original chocolate cake photo displayed immediately and as fallback for slow networks, disabled autoplay, reduced-motion settings, or data-saving preferences
-- Manual Play/Pause and an attribution link to the original YouTube page
-- YouTube branding, advertisements, or restrictions can still appear because the footage is embedded from YouTube
+**Why it fills the screen.** The footage is cinemascope, about 2.39:1, and YouTube plays it inside a 16:9 player with black bars above and below. Sizing the *player* to cover the hero leaves those bars on screen, which is what the first version did. The film layer is a CSS size container, and the player is made wide enough that its *picture* covers the layer — so the bars, YouTube's title strip and its logo all land outside the frame. If the video is ever swapped for one with a different shape, change `239cqh` in that rule (2.39 × 100): `178cqh` for ordinary 16:9 footage.
 
-The background could eventually be replaced with an original licensed Dussa BakeLab video for a cleaner, fully controllable presentation.
+**Why it feels fast.** The cake photo is preloaded in `index.html` and painted first, at a size matched to the screen. The YouTube player is only fetched once the page has settled, and it stays invisible until YouTube itself reports that the film is playing — so there is no black player or spinner, ever. Between loops, when paused, or when scrolled out of view it fades back to the photo rather than showing YouTube's pause or end screens, and it stops streaming while off screen.
+
+**On phones** it starts on the photo, slowly drifting, with a *Play film* button. A streamed background costs real mobile data and is slowest where people are least patient. Autoplay is also skipped for reduced-motion and data-saver settings, and if a browser refuses autoplay the photo simply stays.
+
+`npm run test:film` checks all of this against a stand-in player that letterboxes the same way YouTube does: no black rows at desktop, short-laptop, ultrawide, tablet and phone sizes, no reveal before playback, and the pause, resume and refused-autoplay paths.
+
+For the cleanest result, replace it with Dussa's own footage: a short (10–20 s) muted MP4, compressed to a few megabytes and played from the site itself, starts faster than any embed and has no third-party branding at all.

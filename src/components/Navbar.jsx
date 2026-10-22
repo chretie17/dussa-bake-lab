@@ -7,7 +7,6 @@ import { BrandMark } from './BrandMark'
 import { NAV_LINKS, CONTACT } from '../data/site'
 import { useCart } from '../context/CartContext'
 import { useCatalog } from '../context/CatalogContext'
-import { useTheme } from '../context/ThemeContext'
 import ThemeToggle from './ThemeToggle'
 import { classNames } from '../lib/format'
 import { Button } from './ui'
@@ -19,13 +18,16 @@ export default function Navbar() {
   const { brand } = useCatalog()
   // A logo file that already spells the bakery out makes the typed name a repeat.
   const showWordmark = !(brand?.logoUrl && brand?.logoHasName)
-  const { isBright } = useTheme()
   const { pathname } = useLocation()
 
-  /** Over the hero the bar is transparent; its ink follows the theme. */
+  /**
+   * Over the hero the bar is transparent. The hero is a dark film in both
+   * themes, so its ink is always light there — following the theme instead
+   * put dark brown links on dark footage under the bright theme.
+   */
   const overHero = pathname === '/' && !scrolled
-  const heroInk = isBright ? '#2F1C11' : '#FAF3EA'
-  const heroAccent = isBright ? '#A0692F' : '#D4A574'
+  const heroInk = '#FAF3EA'
+  const heroAccent = '#E9C08F'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -84,9 +86,9 @@ export default function Navbar() {
                     classNames(
                       'relative rounded-full px-4 py-2.5 text-[0.875rem] font-medium transition-colors duration-300',
                       overHero
-                        ? 'text-on-deep/80 hover:text-on-deep'
+                        ? 'text-white/80 hover:text-white'
                         : 'text-cocoa/75 hover:text-espresso',
-                      isActive && (overHero ? 'text-on-deep' : 'text-espresso'),
+                      isActive && (overHero ? 'text-white' : 'text-espresso'),
                     )
                   }
                 >
@@ -98,7 +100,7 @@ export default function Navbar() {
                           layoutId="nav-active"
                           className={classNames(
                             'absolute inset-x-3 -bottom-0.5 h-px',
-                            overHero ? 'bg-accent' : 'bg-caramel',
+                            overHero ? 'bg-[#E9C08F]' : 'bg-caramel',
                           )}
                           transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                         />
@@ -115,7 +117,7 @@ export default function Navbar() {
               href={CONTACT.phoneHref}
               className={classNames(
                 'hidden items-center gap-2 rounded-full px-3 py-2 text-[0.8125rem] font-medium transition-colors xl:inline-flex',
-                overHero ? 'text-on-deep/75 hover:text-on-deep' : 'text-cocoa/70 hover:text-espresso',
+                overHero ? 'text-white/75 hover:text-white' : 'text-cocoa/70 hover:text-espresso',
               )}
             >
               <Phone size={15} strokeWidth={1.8} />
@@ -130,7 +132,7 @@ export default function Navbar() {
               className={classNames(
                 'relative flex h-11 w-11 items-center justify-center rounded-full border transition-all duration-300',
                 overHero
-                  ? 'border-on-deep/25 text-on-deep hover:bg-on-deep/10'
+                  ? 'border-white/30 text-white hover:bg-white/10'
                   : 'border-caramel/30 text-espresso hover:border-caramel hover:bg-blush/60',
               )}
               aria-label={`Open order basket, ${count} item${count === 1 ? '' : 's'}`}
@@ -165,7 +167,7 @@ export default function Navbar() {
               className={classNames(
                 'flex h-11 w-11 items-center justify-center rounded-full border transition-colors lg:hidden',
                 overHero
-                  ? 'border-on-deep/25 text-on-deep hover:bg-on-deep/10'
+                  ? 'border-white/30 text-white hover:bg-white/10'
                   : 'border-caramel/30 text-espresso hover:bg-blush/60',
               )}
               aria-label="Open menu"

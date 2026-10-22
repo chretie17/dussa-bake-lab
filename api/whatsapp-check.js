@@ -35,7 +35,9 @@ const EXPECTED = {
   customer: {
     env: 'WHATSAPP_CUSTOMER_TEMPLATE',
     languageEnv: 'WHATSAPP_CUSTOMER_TEMPLATE_LANG',
-    defaultLanguage: 'en_US',
+    // Must match the sender's default in _lib/whatsapp.js, or this panel
+    // reports a language mismatch for sends that actually work.
+    defaultLanguage: 'en',
     count: 6,
     order: 'name, order code, Delivery/Collection, date, time, total',
     sample: ['Keza', 'DBL-CHECK1', 'Delivery', 'Sat, 22 Aug', '14:00 - 16:00', 'RWF 68,000'],

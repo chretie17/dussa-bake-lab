@@ -32,6 +32,21 @@
     />
     <meta name="twitter:image" content="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&amp;fit=crop&amp;w=1200&amp;h=630&amp;q=82" />
 
+    <!-- The hero still is the first thing painted; fetch it alongside the CSS
+         instead of after the JavaScript has run. Same srcset as Hero renders,
+         so the browser reuses it rather than downloading twice. -->
+    <link rel="preconnect" href="https://images.unsplash.com" />
+    <link
+      rel="preload"
+      as="image"
+      fetchpriority="high"
+      imagesrcset="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&amp;fit=crop&amp;w=800&amp;q=82 800w, https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&amp;fit=crop&amp;w=1400&amp;q=82 1400w, https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&amp;fit=crop&amp;w=2000&amp;q=82 2000w"
+      imagesizes="100vw"
+    />
+    <!-- The homepage film's player, warmed up so it starts sooner once asked for. -->
+    <link rel="preconnect" href="https://www.youtube-nocookie.com" />
+    <link rel="dns-prefetch" href="https://i.ytimg.com" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

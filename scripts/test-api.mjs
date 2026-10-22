@@ -539,13 +539,13 @@ check(
   lastCall?.body?.template?.name === 'dussa_order_confirmation',
 )
 check(
-  'the confirmation fills all seven parameters',
-  lastCall?.body?.template?.components?.[0]?.parameters?.length === 7,
+  'the confirmation fills all six parameters of the approved template',
+  lastCall?.body?.template?.components?.[0]?.parameters?.length === 6,
   String(lastCall?.body?.template?.components?.[0]?.parameters?.length),
 )
 check(
-  'the last parameter is the Mobile Money number',
-  /\d/.test(lastCall?.body?.template?.components?.[0]?.parameters?.[6]?.text || ''),
+  'the last parameter is the total',
+  /^RWF /.test(lastCall?.body?.template?.components?.[0]?.parameters?.[5]?.text || ''),
 )
 check('the first parameter is the first name', () => {
   const params = lastCall.body.template.components[0].parameters
@@ -570,7 +570,7 @@ check('no parameter contains a newline', () =>
   console.error = realWarn
   check(
     'a parameter-count rejection is explained, not just numbered',
-    lines.some((l) => /expects a different number of/.test(l) && /7/.test(l)),
+    lines.some((l) => /expects a different number of/.test(l) && /sends 6/.test(l)),
     lines.join(' | ').slice(0, 200),
   )
 }
@@ -864,7 +864,7 @@ check('a wrong verify token is refused', refused.statusCode === 403)
         components: [
           {
             type: 'BODY',
-            text: 'Hi {{1}}, order {{2}}. {{3}}: {{4}} at {{5}}. Total {{6}}. Pay {{7}}.',
+            text: 'Hi {{1}}, order {{2}}. {{3}}: {{4}} at {{5}}. Total {{6}}.',
           },
         ],
       },
@@ -872,7 +872,7 @@ check('a wrong verify token is refused', refused.statusCode === 403)
         name: 'dussa_order_status',
         language: 'en',
         status: 'APPROVED',
-        components: [{ type: 'BODY', text: 'Hi {{1}}, order {{2}} is {{3}} on {{4}}.' }],
+        components: [{ type: 'BODY', text: 'Hi {{1}}, order {{2}} is {{3}}.' }],
       },
     ],
   }
@@ -898,21 +898,21 @@ check('a wrong verify token is refused', refused.statusCode === 403)
   )
   check('a template with the right parameter count passes', () => {
     const t = healthy.json.checks.find((c) => c.id === 'template-customer')
-    return t?.ok === true && /7 parameters/.test(t.detail)
+    return t?.ok === true && /6 parameters/.test(t.detail)
   })
   check('a reworded template with too few parameters is caught', () => {
     const t = healthy.json.checks.find((c) => c.id === 'template-status')
-    return t?.ok === false && /uses 4 parameters and we send 6/.test(t.detail)
+    return t?.ok === false && /uses 3 parameters and we send 4/.test(t.detail)
   })
 
   // A language mismatch is the other classic.
-  process.env.WHATSAPP_TEMPLATE_LANG = 'en_US'
+  process.env.WHATSAPP_CUSTOMER_TEMPLATE_LANG = 'en_US'
   const wrongLang = await call(checkHandler, { method: 'GET', headers: {} })
   check('a language mismatch is spelled out', () => {
     const t = wrongLang.json.checks.find((c) => c.id === 'template-customer')
     return t?.ok === false && /not in language "en_US"/.test(t.detail)
   })
-  process.env.WHATSAPP_TEMPLATE_LANG = 'en'
+  delete process.env.WHATSAPP_CUSTOMER_TEMPLATE_LANG
 
   /* ------------------------------------------------------- test send */
   let sentBody = null
@@ -930,7 +930,7 @@ check('a wrong verify token is refused', refused.statusCode === 403)
   check('it uses the configured template', sentBody?.template?.name === 'dussa_order_confirmation')
   check(
     'with the full set of sample parameters',
-    sentBody?.template?.components?.[0]?.parameters?.length === 7,
+    sentBody?.template?.components?.[0]?.parameters?.length === 6,
   )
 
   const badNumber = await call(checkHandler, {

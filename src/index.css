@@ -319,32 +319,73 @@ input[type='time']::-webkit-calendar-picker-indicator {
   cursor: pointer;
 }
 
-
 /* ---------------------------------------------------------------
-   Cinematic homepage film
-   The full-width desktop player fills its container like a cover
-   image. On narrow screens it fills the upper part of the hero,
-   so the headline sits over a legible, gently darkened backdrop.
+   Homepage film
+
+   The footage is cinemascope (about 2.39:1) inside YouTube's 16:9
+   player, so YouTube draws black bars above and below it. Covering
+   the hero with the *player* leaves those bars on screen; this covers
+   it with the *picture* instead. The layer is a size container, so
+   the player is made wide enough that its picture height (width ÷
+   2.39) is at least the layer's height, and at least as wide as the
+   layer. The bars, YouTube's title strip and its logo all end up
+   outside the frame. 4% extra so a rounding pixel never shows.
 ---------------------------------------------------------------- */
-.hero-cinema-iframe {
+.hero-film-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container-type: size;
+}
+
+.hero-film-frame {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: max(100%, 177.778svh);
-  height: max(100%, 56.25vw);
+  width: calc(max(100cqw, 239cqh) * 1.04);
+  height: auto;
+  aspect-ratio: 16 / 9;
   transform: translate(-50%, -50%);
   border: 0;
   pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@media (max-width: 767px) {
-  .hero-cinema-player {
-    height: 57svh;
-  }
+.hero-film-frame.is-showing {
+  opacity: 1;
+}
 
-  .hero-cinema-iframe {
-    width: max(100%, 101.334svh);
-    height: 57svh;
-    top: 50%;
+/* On a phone the film sits in the upper part of the hero and melts into
+   the still below it, where the headline is. Full-height, a 2.39:1 film
+   would have to be blown up five times over to fill a portrait screen. */
+@media (max-width: 767px) {
+  .hero-film-layer {
+    bottom: 38%;
+    -webkit-mask-image: linear-gradient(to bottom, #000 62%, transparent);
+    mask-image: linear-gradient(to bottom, #000 62%, transparent);
+  }
+}
+
+/* The still drifts very slowly, so the hero is alive before the film
+   arrives and on every visit where it never does. */
+.hero-still {
+  transform-origin: 60% 40%;
+  animation: hero-drift 32s ease-in-out infinite alternate;
+}
+
+@keyframes hero-drift {
+  from {
+    transform: scale(1.04);
+  }
+  to {
+    transform: scale(1.12) translate3d(-1.2%, 0.8%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-still {
+    animation: none;
+    transform: scale(1.04);
   }
 }

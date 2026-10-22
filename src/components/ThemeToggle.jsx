@@ -22,7 +22,7 @@ export default function ThemeToggle({ className = '', onDark = false }) {
       className={classNames(
         'relative flex h-11 w-[5.1rem] shrink-0 items-center rounded-full border p-1 transition-colors duration-400',
         onDark
-          ? 'border-on-deep/25 bg-on-deep/10 hover:border-on-deep/45'
+          ? 'border-white/30 bg-white/10 hover:border-white/50'
           : 'border-caramel/30 bg-blush/45 hover:border-caramel',
         className,
       )}
@@ -51,7 +51,7 @@ export default function ThemeToggle({ className = '', onDark = false }) {
         className={classNames(
           'pointer-events-none absolute inset-y-0 flex items-center text-[0.58rem] font-semibold uppercase tracking-[0.12em] transition-colors duration-300',
           bright ? 'right-3' : 'left-3',
-          onDark ? 'text-on-deep/40' : 'text-cocoa/40',
+          onDark ? 'text-white/55' : 'text-cocoa/40',
         )}
       >
         {bright ? 'Dark' : 'Lite'}

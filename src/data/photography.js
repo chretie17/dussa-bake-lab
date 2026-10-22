@@ -22,6 +22,17 @@ export const PHOTOS = {
   cheesecake: image('photo-1533134242443-d4fd215305ad'),
 }
 
+/**
+ * The hero still, in three widths. It is the first thing painted and it stays
+ * up while the film loads, so a phone gets 800px and a wide desktop 2000px
+ * rather than everyone downloading one size that is too big or too soft.
+ */
+const HERO_ID = 'photo-1578985545062-69928b1d9587'
+export const HERO_PHOTO = {
+  src: image(HERO_ID, 1400),
+  srcSet: [800, 1400, 2000].map((w) => `${image(HERO_ID, w)} ${w}w`).join(', '),
+}
+
 const PRODUCT_PHOTOS = {
   'signature-chocolate-drip': PHOTOS.chocolate,
   'velvet-celebration-cake': PHOTOS.birthday,

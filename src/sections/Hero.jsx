@@ -8,94 +8,103 @@ export default function Hero() {
   const reduceMotion = useReducedMotion()
 
   const entrance = (delay = 0) => ({
-    initial: reduceMotion ? false : { opacity: 0, y: 22 },
+    initial: reduceMotion ? false : { opacity: 0, y: 18 },
     animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.85, delay, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 1, delay, ease: [0.22, 1, 0.36, 1] },
   })
 
   return (
     <section
       aria-labelledby="home-hero-title"
-      className="relative isolate min-h-[100svh] overflow-hidden bg-[#21120c] text-white"
+      className="relative isolate min-h-[100svh] overflow-hidden bg-[#1a0e09] text-white"
     >
-      {/* Moving bakery footage fills the hero. A cake photograph loads first. */}
-      <HeroCake />
+      <HeroCake>
+        {(filmControls) => (
+          <>
+            {/* Shade, in three layers: the top so the navbar reads over moving
+                footage, the reading side so the headline does, and a soft
+                vignette so the frame feels lit rather than cropped. */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 top-0 z-[1] h-44 bg-gradient-to-b from-[#120905]/70 to-transparent"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-transparent via-[#120905]/60 to-[#120905]/95 md:bg-gradient-to-r md:from-[#120905]/88 md:via-[#120905]/50 md:to-[#120905]/5"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_70%_45%,transparent_35%,rgba(10,5,3,0.55)_100%)]"
+            />
 
-      {/* A gentle vignette preserves legibility without hiding the motion. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-b from-[#180d08]/15 via-[#180d08]/55 to-[#180d08]/95 lg:bg-gradient-to-r lg:from-[#180d08]/95 lg:via-[#180d08]/70 lg:to-[#180d08]/25"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_75%_17%,transparent_12%,rgba(14,7,4,0.30)_100%)]"
-      />
+            <div className="container-x relative z-10 flex min-h-[100svh] flex-col justify-end pb-10 pt-[min(46svh,420px)] md:justify-center md:pb-12 md:pt-32">
+              <div className="max-w-[44rem]">
+                <motion.p
+                  {...entrance(0.1)}
+                  className="eyebrow mb-6 flex items-center gap-3 text-[#e9c08f] md:mb-8"
+                >
+                  <span aria-hidden="true" className="h-px w-10 bg-[#e9c08f]/70" />
+                  {BRAND.city}, {BRAND.country} · Est. {BRAND.founded}
+                </motion.p>
 
-      <div className="container-x relative z-10 flex min-h-[100svh] flex-col justify-end pb-36 pt-[min(43svh,410px)] sm:pb-32 md:pb-36 lg:min-h-[min(900px,100svh)] lg:justify-center lg:pt-44">
-        <div className="max-w-[740px]">
-          <motion.p
-            {...entrance(0.12)}
-            className="eyebrow mb-7 flex items-center gap-3 text-[#f3c996]"
-          >
-            <span aria-hidden="true" className="h-px w-10 bg-[#f3c996]/80" />
-            {BRAND.city}, {BRAND.country} · Est. {BRAND.founded}
-          </motion.p>
+                <h1
+                  id="home-hero-title"
+                  className="font-display text-[clamp(2.6rem,7.2vw,6rem)] font-light leading-[1.04] tracking-[-0.025em] text-white [text-shadow:0_2px_30px_rgba(0,0,0,0.35)]"
+                >
+                  <motion.span {...entrance(0.22)} className="block italic">
+                    Bring the people.
+                  </motion.span>
+                  <motion.span {...entrance(0.38)} className="block">
+                    We’ll bring the <span className="italic text-[#e9c08f]">cake.</span>
+                  </motion.span>
+                </h1>
 
-          <h1
-            id="home-hero-title"
-            className="font-display text-[clamp(2.8rem,8vw,6.6rem)] font-normal leading-[1.05] tracking-[-0.045em] text-white [text-shadow:0_4px_40px_rgba(0,0,0,0.25)]"
-          >
-            <motion.span {...entrance(0.25)} className="block italic">
-              Bring the people.
-            </motion.span>
-            <motion.span {...entrance(0.43)} className="mt-1 block">
-              We'll bring the <span className="italic text-[#edc18b]">cake.</span>
-            </motion.span>
-          </h1>
+                <motion.p
+                  {...entrance(0.6)}
+                  className="mt-7 max-w-[30rem] text-[clamp(1rem,1.6vw,1.125rem)] leading-[1.7] text-white/80 md:mt-8"
+                >
+                  Birthday coming up? Planning a wedding? Or just craving something sweet? Tell us
+                  what you have in mind. We bake to order here in Kigali.
+                </motion.p>
 
-          <motion.p
-            {...entrance(0.68)}
-            className="mt-8 max-w-lg text-[clamp(1rem,2.1vw,1.2rem)] leading-relaxed text-white/85"
-          >
-            Birthday coming up? Planning a wedding? Or just craving something sweet?
-            Tell us what you have in mind. We bake to order here in Kigali.
-          </motion.p>
+                <motion.div {...entrance(0.75)} className="mt-9 flex flex-wrap items-center gap-3">
+                  <Button to="/order" variant="gold" size="lg" sheen>
+                    Order your cake
+                    <ArrowRight
+                      size={17}
+                      strokeWidth={2}
+                      className="transition-transform duration-300 group-hover:translate-x-1"
+                    />
+                  </Button>
+                  <Button
+                    to="/creations"
+                    variant="outlineLight"
+                    size="lg"
+                    className="!border-white/40 !text-white hover:!bg-white/10"
+                  >
+                    Explore the menu
+                  </Button>
+                </motion.div>
+              </div>
 
-          <motion.div
-            {...entrance(0.83)}
-            className="mt-9 flex flex-wrap items-center gap-3"
-          >
-            <Button to="/order" variant="gold" size="lg" sheen>
-              Order your cake
-              <ArrowRight
-                size={17}
-                strokeWidth={2}
-                className="transition-transform duration-300 group-hover:translate-x-1"
-              />
-            </Button>
-            <Button to="/creations" variant="outlineLight" size="lg" className="!border-white/45 !text-white hover:!bg-white/15">
-              Explore the menu
-            </Button>
-          </motion.div>
-
-          <motion.div
-            {...entrance(1.02)}
-            className="mt-11 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/20 pt-5 text-[0.75rem] uppercase tracking-[0.16em] text-white/75"
-          >
-            <span>Cakes & cupcakes</span>
-            <span aria-hidden="true" className="h-1 w-1 rounded-full bg-[#edc18b]" />
-            <span>Made to order in Kigali</span>
-          </motion.div>
-        </div>
-      </div>
-
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute bottom-8 left-8 z-10 hidden items-center gap-3 text-[0.65rem] uppercase tracking-[0.2em] text-white/65 lg:flex"
-      >
-        <span className="h-10 w-px bg-gradient-to-t from-white/80 to-transparent" />
-        Scroll to discover
-      </div>
+              {/* One quiet baseline across the bottom: what we make on the
+                  left, the film's own control on the right — part of the
+                  layout, not chips floating over the footage. */}
+              <motion.div
+                {...entrance(0.95)}
+                className="mt-12 flex flex-wrap items-center justify-between gap-x-8 gap-y-4 border-t border-white/15 pt-5 md:mt-16"
+              >
+                <div className="flex flex-col gap-2 text-[0.7rem] uppercase tracking-[0.18em] text-white/65 sm:flex-row sm:items-center sm:gap-5">
+                  <span>Cakes & cupcakes</span>
+                  <span aria-hidden="true" className="hidden h-1 w-1 rounded-full bg-[#e9c08f] sm:block" />
+                  <span>Made to order in Kigali</span>
+                </div>
+                {filmControls}
+              </motion.div>
+            </div>
+          </>
+        )}
+      </HeroCake>
     </section>
   )
 }
