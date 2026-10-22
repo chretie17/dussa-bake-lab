@@ -32,7 +32,7 @@ export default function ProductCard({ product, index = 0, className = '' }) {
           </div>
 
           <div className="absolute left-4 top-4 flex flex-col items-start gap-2">
-            {product.bestseller && <Pill tone="dark">Bestseller</Pill>}
+            {product.bestseller && <Pill tone="dark">Featured</Pill>}
           </div>
 
           <div className="absolute right-4 top-4">
