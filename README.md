@@ -499,3 +499,8 @@ scripts/e2e-admin.mjs Browser test of the dashboard
 ### Bakery photography and copy (2026 update)
 
 The storefront displays real, licensed Unsplash photographs in place of the old SVG cake drawings and 3D hero. **These are example photos, not verified photographs of Dussa BakeLab orders.** Image mappings and credits guidance live in `src/data/photography.js` (photo license: https://unsplash.com/license). Owner-uploaded product and gallery photos always take priority. Use photographs of actual Dussa products before presenting the menu or gallery as the bakery's own work. Default testimonial sections and unsupported review/celebration figures have been removed from the homepage. Confirm menu details, prices, hours, delivery policies and claims with the owner before publishing.
+
+
+### Homepage cake video
+
+The homepage hero uses the official YouTube embed for **[Gold Chocolate Drip Cake Decorating Tutorial](https://www.youtube.com/watch?v=629N793GIIY)** by Rosie's Dessert Spot. This is third-party cake-decorating inspiration, **not footage of the Dussa BakeLab kitchen**. The creator is credited over the video and linked to the original upload. The embed autoplays muted and loops using YouTube's standard iframe player parameters; YouTube may show its own overlays or ads. A Pause/Play control stops the embed entirely when paused. Visitors with reduced-motion preferences or a data-saver connection see the existing cake photo by default and can opt in. The original hero photograph also acts as the loading poster; the order flow is unchanged. Replace this inspiration embed with Dussa's own professionally filmed footage when available.
