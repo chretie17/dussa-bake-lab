@@ -13,22 +13,22 @@ const PRINCIPLES = [
   {
     icon: Leaf,
     title: 'Real ingredients only',
-    body: 'Real chocolate, butter, free-range eggs, proper vanilla, fruit from the market. No compound chocolate, no packet mixes, no preservatives.',
+    body: 'We pay attention to the taste as much as the decoration. If you have ingredient questions, just ask.',
   },
   {
     icon: Timer,
     title: 'Made close to your date',
-    body: 'Nothing frozen, nothing sitting in a case. Your order has a bake day, as near your event as is safe.',
+    body: 'Tell us the date you have in mind and we will help you plan when to order.',
   },
   {
     icon: HeartHandshake,
     title: 'Designed with you',
-    body: 'For custom work you see a sketch and a fixed price before we start. No surprises at the door.',
+    body: 'Bring us your ideas or a reference photo and we can work through the design together.',
   },
   {
     icon: Award,
     title: 'Finished by hand',
-    body: 'Every rosette, drip and piped letter is done by hand here. It is also why no two come out identical.',
+    body: 'From the colours to the message on top, small details make a cake feel personal.',
   },
 ]
 
@@ -75,7 +75,7 @@ export default function About() {
 
           <div>
             <SectionHeading
-              eyebrow={`Baked in ${BRAND.city} since ${BRAND.founded}`}
+              eyebrow={`From our kitchen in ${BRAND.city}`}
               title="We believe a cake should taste as good as it looks"
               lead="The best part of a celebration is gathering everyone around the table. We like making the cake that brings them there."
             />
