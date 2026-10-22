@@ -10,8 +10,22 @@ const VIDEO_URL = `https://www.youtube.com/watch?v=${VIDEO_ID}`
 const PLAYER_ORIGIN = 'https://www.youtube-nocookie.com'
 
 /* YouTube player states, as reported over postMessage. */
+const ENDED = 0
 const PLAYING = 1
 const BUFFERING = 3
+
+/*
+ * The part of the film we loop, in seconds. This is Ira Bakes' marketing film
+ * (shot by Säynevirta Photography) and from about 38s it carries a large
+ * "IRA BAKES" logo — another bakery's brand, which must never play on Dussa's
+ * homepage. So each loop stops at FILM_END, fades back to the still, and
+ * rewinds to FILM_START: the flour falling through the sieve, which also
+ * frames well on a phone. The source opens on a wider shot that a phone
+ * crops to bare wall.
+ */
+const FILM_START = 3.5
+const FILM_END = 37
+const FADE_OUT_AT = FILM_END - 1.8 // the fade takes 1.6s; finish it before the cut
 
 function embedUrl() {
   const params = new URLSearchParams({
@@ -22,6 +36,9 @@ function embedUrl() {
     loop: '1',
     playlist: VIDEO_ID,
     rel: '0',
+    // Belt and braces for the loop window enforced below.
+    start: String(Math.floor(FILM_START)),
+    end: String(FILM_END),
     disablekb: '1',
     fs: '0',
     iv_load_policy: '3',
@@ -81,6 +98,7 @@ export default function HeroCake({ children }) {
   const talking = useRef(false) // the player has answered us at least once
   const everPlayed = useRef(false)
   const lastState = useRef(null)
+  const rewinding = useRef(false)
   const userPaused = useRef(false)
   const timers = useRef([])
 
@@ -139,9 +157,38 @@ export default function HeroCake({ children }) {
       }
       talking.current = true
 
+      // Keep the loop inside the window: fade out before FILM_END, rewind at it.
+      const time = data?.info?.currentTime
+      if (typeof time === 'number') {
+        if (time >= FILM_END - 0.25 && !rewinding.current) {
+          rewinding.current = true
+          setShowing(false)
+          send({ event: 'command', func: 'seekTo', args: [FILM_START, true] })
+          // Never leave the flag set: a player that stops reporting the time
+          // would otherwise keep the film hidden for good.
+          later(() => {
+            if (!rewinding.current) return
+            rewinding.current = false
+            if (lastState.current === PLAYING) setShowing(true)
+          }, 1500)
+        } else if (time >= FADE_OUT_AT && !needsTapRef.current) {
+          setShowing(false)
+        } else if (rewinding.current && time < FADE_OUT_AT - 1) {
+          rewinding.current = false
+          if (lastState.current === PLAYING) setShowing(true)
+        }
+      }
+
       const state = data?.event === 'onStateChange' ? data.info : data?.info?.playerState
       if (typeof state !== 'number') return
       lastState.current = state
+
+      // If the player stops at its own end marker instead, restart the window
+      // ourselves rather than relying on YouTube's loop to respect it.
+      if (state === ENDED && !userPaused.current) {
+        send({ event: 'command', func: 'seekTo', args: [FILM_START, true] })
+        send({ event: 'command', func: 'playVideo', args: [] })
+      }
 
       if (state === PLAYING) {
         everPlayed.current = true
@@ -152,14 +199,17 @@ export default function HeroCake({ children }) {
       // Mid-film buffering holds the last frame, which is fine to keep on
       // screen. Anything else — ended, paused, cued — goes back to the still,
       // except while we are waiting for a tap, when the player must stay put.
-      setShowing((current) =>
-        state === PLAYING ? true : state === BUFFERING ? current : current && needsTapRef.current,
-      )
+      if (state === BUFFERING) rewinding.current = false
+      setShowing((current) => {
+        if (state === PLAYING) return !rewinding.current
+        if (state === BUFFERING) return current
+        return current && needsTapRef.current
+      })
     }
 
     window.addEventListener('message', onMessage)
     return () => window.removeEventListener('message', onMessage)
-  }, [mounted])
+  }, [mounted, send])
 
   /** Autoplay was refused: show the player and let a tap reach it. */
   const askForTap = useCallback(() => {

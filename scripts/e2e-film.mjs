@@ -284,6 +284,86 @@ for (const [label, viewport, mobile] of [
   await page.close()
 }
 
+/* The loop must cut before the source's closing "IRA BAKES" logo (~38s).
+   This player reports a clock that runs from 33s, and honours seekTo. */
+{
+  const CLOCK_PLAYER = `<!doctype html><html><head><style>
+    html,body{margin:0;height:100%;background:#000}
+    #pic{position:absolute;inset:0;margin:auto;background:#2ecc71;width:100vw;height:calc(100vw / 2.35);max-height:100vh}
+  </style></head><body><div id="pic"></div><script>
+    window.__t = 33; window.__seeks = []; window.__plays = 0; let running = false
+    const say = (o) => parent.postMessage(JSON.stringify(o), '*')
+    addEventListener('message', (e) => {
+      let d; try { d = JSON.parse(e.data) } catch { return }
+      if (d.event === 'listening' && !running) {
+        running = true
+        setTimeout(() => say({event:'onStateChange',info:1}), 200)
+        setInterval(() => {
+          window.__t = Math.round((window.__t + 0.25) * 100) / 100
+          if (window.__t >= ${'${END_MODE ? 37 : 99}'}) { say({event:'onStateChange',info:0}); return }
+          // The end-marker variant reports no clock, so only its own ENDED can trigger the loop.
+          say({event:'infoDelivery',info: ${'${END_MODE ? 37 : 99}'} === 37 ? {} : {currentTime: window.__t}})
+        }, 120)
+      }
+      if (d.event === 'command' && d.func === 'seekTo') {
+        window.__seeks.push({ to: d.args[0], at: window.__t })
+        window.__t = d.args[0]
+        say({event:'onStateChange',info:3})
+        setTimeout(() => say({event:'onStateChange',info:1}), 150)
+      }
+      if (d.event === 'command' && d.func === 'playVideo') window.__plays += 1
+    })
+  </script></body></html>`
+
+  for (const END_MODE of [false, true]) {
+    const label = END_MODE ? 'film end (player stops itself)' : 'film end'
+    const page = await browser.newPage({ viewport: { width: 1440, height: 900 } })
+    const body = CLOCK_PLAYER.replaceAll('${END_MODE ? 37 : 99}', END_MODE ? '37' : '99')
+    await page.route('https://www.youtube-nocookie.com/**', (route) =>
+      route.fulfill({ status: 200, contentType: 'text/html', body }),
+    )
+    await page.route('https://images.unsplash.com/**', serveStill)
+    await page.goto('http://127.0.0.1:5173/', { waitUntil: 'domcontentloaded' })
+    await page.waitForSelector('iframe.hero-film-frame', { state: 'attached', timeout: 8000 })
+    const frameHandle = await page.$('iframe.hero-film-frame')
+    const frame = await frameHandle.contentFrame()
+
+    let fadedBeforeCut = false
+    let maxShownTime = 0
+    for (let i = 0; i < 90; i += 1) {
+      await page.waitForTimeout(50)
+      const t = await frame.evaluate(() => window.__t).catch(() => 0)
+      const op = Number(await page.$eval('iframe.hero-film-frame', (el) => getComputedStyle(el).opacity))
+      if (op > 0.5 && t > 30) maxShownTime = Math.max(maxShownTime, t)
+      if (t >= 36 && t < 37.5 && op < 0.6) fadedBeforeCut = true
+      const seeks = await frame.evaluate(() => window.__seeks.length).catch(() => 0)
+      if (seeks > 0 && t < 10) break
+    }
+    const seeks = await frame.evaluate(() => window.__seeks)
+    check(`${label}: it rewinds to the flour shot`, seeks.length >= 1 && seeks[0].to === 3.5, JSON.stringify(seeks))
+    check(
+      `${label}: the rewind happens before the logo at 38s`,
+      seeks.length >= 1 && seeks[0].at < 37.6,
+      JSON.stringify(seeks),
+    )
+    if (!END_MODE) {
+      check(
+        `${label}: the film is never fully on screen past 36s`,
+        maxShownTime < 36.4,
+        String(maxShownTime),
+      )
+    }
+    if (!END_MODE) check(`${label}: it fades to the still before the cut`, fadedBeforeCut)
+    if (END_MODE) {
+      check(`${label}: playback is restarted`, (await frame.evaluate(() => window.__plays)) >= 1)
+    }
+    await page.waitForTimeout(2200)
+    const back = Number(await page.$eval('iframe.hero-film-frame', (el) => getComputedStyle(el).opacity))
+    check(`${label}: the film fades back in from the top of the loop`, back > 0.95, String(back))
+    await page.close()
+  }
+}
+
 await browser.close()
 console.log(failures === 0 ? '\nAll film checks passed.' : `\n${failures} film check(s) failed.`)
 process.exit(failures ? 1 : 0)
