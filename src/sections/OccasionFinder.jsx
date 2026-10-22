@@ -25,7 +25,7 @@ export default function OccasionFinder() {
           align="center"
           eyebrow="Occasion finder"
           title="What are we celebrating?"
-          lead="Tell us the occasion and we will point you at what tends to work for it."
+          lead="Birthday, wedding, or a little surprise? Choose the occasion and have a look at some ideas."
         />
 
         <div className="mt-11 flex flex-wrap justify-center gap-2.5">
