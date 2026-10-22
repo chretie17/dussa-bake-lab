@@ -56,11 +56,12 @@ function embedUrl() {
  * data, or is on a connection too slow to stream it.
  */
 function canAutoplay(reducedMotion) {
-  if (reducedMotion) return false
-  const connection = navigator.connection
-  if (connection?.saveData || /2g/.test(connection?.effectiveType || '')) return false
-  return true
+  // Always try, on every connection. Only a visitor who has asked their
+  // device for less motion is left on the still.
+  return !reducedMotion
 }
+
+const isPhone = () => window.matchMedia('(max-width: 767px)').matches
 
 /**
  * The homepage film.
@@ -213,6 +214,12 @@ export default function HeroCake({ children }) {
 
   /** Autoplay was refused: show the player and let a tap reach it. */
   const askForTap = useCallback(() => {
+    // Phones have no film controls at all, so a refused phone simply stays
+    // on the moving still rather than showing YouTube's play button.
+    if (isPhone()) {
+      setShowing(false)
+      return
+    }
     setNeedsTap(true)
     setShowing(true)
     setWanted(false)

@@ -5,10 +5,6 @@ import HeroCake from '../components/HeroCake'
 import { Button } from '../components/ui'
 import { BRAND } from '../data/site'
 
-/* Where the copy starts on a phone — keep in step with the copy column's
-   pt-[min(48svh,440px)]. The film fills the band above it, and the
-   phone-sized film control sits just above this line. */
-const PHONE_COPY_TOP = 'min(48svh, 440px)'
 
 export default function Hero() {
   const reduceMotion = useReducedMotion()
@@ -25,7 +21,7 @@ export default function Hero() {
       className="relative isolate min-h-[100svh] overflow-hidden bg-[#1a0e09] text-white"
     >
       <HeroCake>
-        {({ controls, compact }) => (
+        {({ controls }) => (
           <>
             {/* Shade, in three layers: the top so the navbar reads over moving
                 footage, the reading side so the headline does, and a soft
@@ -42,14 +38,6 @@ export default function Hero() {
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 z-[1] bg-[radial-gradient(ellipse_at_70%_40%,transparent_35%,rgba(10,5,3,0.5)_100%)]"
             />
-
-            {/* Phone: the film's control, in the corner of the film itself. */}
-            <div
-              className="absolute right-5 z-20 md:hidden"
-              style={{ top: `calc(${PHONE_COPY_TOP} - 3.75rem)` }}
-            >
-              {compact}
-            </div>
 
             {/* The copy column spans the whole hero, so it lets taps through to
                 the film behind it; only its actual content takes them. */}
