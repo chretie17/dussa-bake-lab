@@ -503,4 +503,13 @@ The storefront displays real, licensed Unsplash photographs in place of the old 
 
 ### Homepage cake video
 
-The homepage hero uses the official YouTube embed for **[Gold Chocolate Drip Cake Decorating Tutorial](https://www.youtube.com/watch?v=629N793GIIY)** by Rosie's Dessert Spot. This is third-party cake-decorating inspiration, **not footage of the Dussa BakeLab kitchen**. The creator is credited over the video and linked to the original upload. The embed autoplays muted and loops using YouTube's standard iframe player parameters; YouTube may show its own overlays or ads. A Pause/Play control stops the embed entirely when paused. Visitors with reduced-motion preferences or a data-saver connection see the existing cake photo by default and can opt in. The original hero photograph also acts as the loading poster; the order flow is unchanged. Replace this inspiration embed with Dussa's own professionally filmed footage when available.
+The homepage now features the requested video **[watch the source on YouTube](https://www.youtube.com/watch?v=HTXB6flODww)** as a cinematic background. This is an official privacy-enhanced YouTube iframe embed, not a downloaded or re-hosted copy. It is credited as third-party video inspiration rather than footage made by Dussa BakeLab.
+
+- Muted autoplay, looping, and inline playback where browsers allow it
+- Full-bleed desktop backdrop; visually balanced upper-screen film treatment on narrow phones
+- A readable gradient overlay, natural headline, and existing order/menu actions above the background
+- Original chocolate cake photo displayed immediately and as fallback for slow networks, disabled autoplay, reduced-motion settings, or data-saving preferences
+- Manual Play/Pause and an attribution link to the original YouTube page
+- YouTube branding, advertisements, or restrictions can still appear because the footage is embedded from YouTube
+
+The background could eventually be replaced with an original licensed Dussa BakeLab video for a cleaner, fully controllable presentation.
