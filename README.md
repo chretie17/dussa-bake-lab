@@ -494,3 +494,8 @@ scripts/e2e-admin.mjs Browser test of the dashboard
   already works.
 - The site respects `prefers-reduced-motion`, is keyboard navigable, and carries
   a skip link, focus rings, breadcrumbs and per-page metadata.
+
+
+### Bakery photography and copy (2026 update)
+
+The storefront displays real, licensed Unsplash photographs in place of the old SVG cake drawings and 3D hero. **These are example photos, not verified photographs of Dussa BakeLab orders.** Image mappings and credits guidance live in `src/data/photography.js` (photo license: https://unsplash.com/license). Owner-uploaded product and gallery photos always take priority. Use photographs of actual Dussa products before presenting the menu or gallery as the bakery's own work. Default testimonial sections and unsupported review/celebration figures have been removed from the homepage. Confirm menu details, prices, hours, delivery policies and claims with the owner before publishing.
