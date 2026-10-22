@@ -1,14 +1,12 @@
 import { useRef } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
-import { ArrowRight, Star } from 'lucide-react'
-import CreationArt from '../art/CreationArt'
+import { ArrowRight } from 'lucide-react'
 import HeroCake from '../components/HeroCake'
-import SealBadge from '../components/SealBadge'
 import { Button } from '../components/ui'
 import { BRAND } from '../data/site'
 
-const HEADLINE_A = ['Made', 'with', 'the', 'finest', 'ingredients,']
-const HEADLINE_B = ['baked', 'to', 'be']
+const HEADLINE_A = ['Bring', 'the', 'people.']
+const HEADLINE_B = ["We'll", 'bring', 'the']
 
 export default function Hero() {
   const ref = useRef(null)
@@ -84,7 +82,7 @@ export default function Hero() {
               ))}
               <span className="inline-block overflow-hidden pb-[0.08em] align-bottom">
                 <motion.span variants={word} className="text-gradient-gold inline-block font-normal">
-                  loved.
+                  cake.
                 </motion.span>
               </span>
             </motion.span>
@@ -96,8 +94,8 @@ export default function Hero() {
             transition={{ duration: 0.8, delay: 0.85 }}
             className="mt-7 max-w-lg text-[1.0625rem] leading-relaxed text-on-deep/65"
           >
-            Cakes, cupcakes, cookies and custom orders, baked by hand in Kigali for whatever
-            you are celebrating.
+            Birthday coming up? Planning a wedding? Or just craving something sweet?
+            Tell us what you have in mind. We bake to order here in Kigali.
           </motion.p>
 
           <motion.div
@@ -115,29 +113,9 @@ export default function Hero() {
             </Button>
           </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1.2 }}
-            className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4 border-t border-on-deep/12 pt-7"
-          >
-            <div className="flex items-center gap-2.5">
-              <span className="flex text-accent">
-                {[0, 1, 2, 3, 4].map((i) => (
-                  <Star key={i} size={14} fill="currentColor" strokeWidth={0} />
-                ))}
-              </span>
-              <span className="text-[0.8125rem] text-on-deep/60">
-                <strong className="font-medium text-on-deep">4.9</strong> from 600+ reviews
-              </span>
-            </div>
-            <p className="text-[0.8125rem] text-on-deep/60">
-              <strong className="font-medium text-on-deep">4,000+</strong> celebrations baked for
-            </p>
-            <p className="text-[0.8125rem] text-on-deep/60">
-              <strong className="font-medium text-on-deep">48h</strong> standard turnaround
-            </p>
-          </motion.div>
+          <p className="mt-10 border-t border-on-deep/12 pt-7 text-[0.85rem] tracking-wide text-on-deep/65">
+            Cakes, cupcakes & treats · Pickup and delivery in Kigali
+          </p>
         </motion.div>
 
         {/* ------------------------------------------------- artwork
@@ -156,33 +134,7 @@ export default function Hero() {
             <HeroCake />
           </motion.div>
 
-          {/* Rotating flyer seal */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.6 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.9, delay: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute -right-2 top-0 h-20 w-20 md:h-32 md:w-32 lg:-right-4"
-          >
-            <SealBadge className="h-full w-full" />
-          </motion.div>
 
-          {/* Floating supporting creations */}
-          <motion.div
-            initial={{ opacity: 0, x: -30, y: 20 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            transition={{ duration: 1, delay: 1.05 }}
-            className="animate-drift absolute -left-2 bottom-6 hidden h-24 w-24 md:block md:h-32 md:w-32"
-          >
-            <CreationArt variant="cupcake" flavor="strawberry" seed="hero-cupcake" backdrop={false} className="h-full w-full drop-shadow-[0_18px_28px_rgba(0,0,0,0.4)]" />
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 26, y: -16 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
-            transition={{ duration: 1, delay: 1.2 }}
-            className="animate-drift absolute -bottom-2 right-4 hidden h-24 w-24 [animation-delay:1.4s] md:block md:h-28 md:w-28"
-          >
-            <CreationArt variant="macarons" flavor="berry" seed="hero-macaron" backdrop={false} className="h-full w-full drop-shadow-[0_18px_28px_rgba(0,0,0,0.4)]" />
-          </motion.div>
         </motion.div>
       </div>
 

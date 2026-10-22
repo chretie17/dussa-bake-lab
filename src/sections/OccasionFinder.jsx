@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
-import CreationArt from '../art/CreationArt'
+import CreationImage from '../components/CreationImage'
 import { Button, Section, SectionHeading } from '../components/ui'
 import { fromPrice } from '../data/catalog'
 import { useCatalog } from '../context/CatalogContext'
@@ -59,11 +59,12 @@ export default function OccasionFinder() {
             >
               <div className="flex items-center gap-6">
                 <div className="w-28 shrink-0 md:w-36">
-                  <CreationArt
-                    variant={occasion.art}
-                    flavor={occasion.flavorArt}
+                  <CreationImage
+                    art={occasion.art}
+                    flavorArt={occasion.flavorArt}
                     seed={`occ-${occasion.id}`}
-                    className="w-full"
+                    alt={`Cake inspiration for ${occasion.label.toLowerCase()}`}
+                    className="w-full rounded-xl"
                   />
                 </div>
                 <div>
@@ -91,12 +92,13 @@ export default function OccasionFinder() {
                       className="group flex h-full flex-col rounded-2xl border border-caramel/20 bg-cream/70 p-4 transition-all duration-400 hover:-translate-y-1 hover:border-caramel/50 hover:bg-cream hover:shadow-soft"
                     >
                       <div className="mx-auto w-20 transition-transform duration-500 group-hover:scale-110">
-                        <CreationArt
-                          variant={product.art}
-                          flavor={product.flavorArt}
+                        <CreationImage
+                          photo={product.photo}
+                          art={product.art}
+                          flavorArt={product.flavorArt}
                           seed={product.slug}
-                          backdrop={false}
-                          className="w-full"
+                          alt={product.name}
+                          className="w-full rounded-xl"
                         />
                       </div>
                       <h4 className="mt-3 text-center font-display text-[0.98rem] leading-snug text-espresso">

@@ -1,6 +1,6 @@
 import { useRef } from 'react'
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion'
-import CreationArt from '../art/CreationArt'
+import CreationImage from '../components/CreationImage'
 import { Button, Reveal, Section, SectionHeading } from '../components/ui'
 import { STATS, VALUES } from '../data/content'
 
@@ -18,7 +18,7 @@ export default function StorySection() {
         <div className="relative order-2 lg:order-1">
           <motion.div style={{ y: driftUp }} className="relative z-10 mx-auto max-w-sm">
             <div className="overflow-hidden rounded-[2rem] border border-caramel/25 bg-gradient-to-br from-porcelain to-blush/70 p-4 shadow-soft">
-              <CreationArt variant="cakeSlice" flavor="chocolate" seed="story-slice" className="w-full" />
+              <CreationImage art="cakeSlice" flavorArt="chocolate" seed="story-slice" alt="A slice of cake" className="w-full rounded-2xl" />
             </div>
           </motion.div>
 
@@ -27,7 +27,7 @@ export default function StorySection() {
             className="absolute -right-2 -top-6 z-20 w-32 md:w-40"
           >
             <div className="overflow-hidden rounded-[1.5rem] border border-caramel/25 bg-porcelain p-2 shadow-lift">
-              <CreationArt variant="cupcake" flavor="vanilla" seed="story-cupcake" className="w-full" />
+              <CreationImage art="cupcake" flavorArt="vanilla" seed="story-cupcake" alt="A decorated cupcake" className="w-full rounded-xl" />
             </div>
           </motion.div>
 
@@ -36,7 +36,7 @@ export default function StorySection() {
             className="absolute -bottom-8 -left-2 z-20 w-28 md:w-36"
           >
             <div className="overflow-hidden rounded-[1.5rem] border border-caramel/25 bg-porcelain p-2 shadow-lift">
-              <CreationArt variant="cookieStack" flavor="caramel" seed="story-cookie" className="w-full" />
+              <CreationImage art="cookieStack" flavorArt="caramel" seed="story-cookie" alt="Cookies" className="w-full rounded-xl" />
             </div>
           </motion.div>
 

@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion'
 import { Award, HeartHandshake, Leaf, Timer } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
-import CreationArt from '../art/CreationArt'
-import SealBadge from '../components/SealBadge'
+import CreationImage from '../components/CreationImage'
 import ProcessSection from '../sections/ProcessSection'
 import CtaBanner from '../sections/CtaBanner'
 import { Button, Flourish, Reveal, Section, SectionHeading } from '../components/ui'
@@ -86,11 +85,8 @@ export default function About() {
               transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="mx-auto max-w-md rounded-[2.5rem] border border-caramel/25 bg-gradient-to-br from-blush/70 to-porcelain p-8 shadow-soft"
             >
-              <CreationArt variant="tieredCake" flavor="ivory" seed="about-hero" className="w-full" />
+              <CreationImage art="tieredCake" flavorArt="ivory" seed="about-hero" alt="A tiered celebration cake" className="w-full rounded-[1.5rem]" />
             </motion.div>
-            <div className="absolute -bottom-4 -right-2 h-28 w-28 md:h-36 md:w-36">
-              <SealBadge className="h-full w-full" duration={34} />
-            </div>
           </div>
 
           <div>
