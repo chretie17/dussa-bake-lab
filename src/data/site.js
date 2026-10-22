@@ -6,13 +6,13 @@
 export const BRAND = {
   name: 'Dussa BakeLab',
   shortName: 'Dussa',
-  tagline: 'Made with the finest ingredients, baked to be loved.',
-  script: "Let's make life sweeter",
-  promise: 'Fresh quality · Made with love',
+  tagline: 'Good cake, made for sharing.',
+  script: "There's always room for cake",
+  promise: 'Baked in Kigali · Made to share',
   city: 'Kigali',
   country: 'Rwanda',
   description:
-    'At Dussa BakeLab we create handcrafted treats using the finest ingredients, perfect for every occasion worth celebrating.',
+    'Cakes, cupcakes and sweet treats for moments worth sharing. Baked to order in Kigali.',
   founded: 2021,
   /**
    * Your own logo, uploaded in the dashboard. Empty means the drawn monogram

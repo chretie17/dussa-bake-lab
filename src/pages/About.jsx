@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion'
 import { Award, HeartHandshake, Leaf, Timer } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
-import CreationArt from '../art/CreationArt'
-import SealBadge from '../components/SealBadge'
+import CreationImage from '../components/CreationImage'
 import ProcessSection from '../sections/ProcessSection'
 import CtaBanner from '../sections/CtaBanner'
 import { Button, Flourish, Reveal, Section, SectionHeading } from '../components/ui'
@@ -14,53 +13,37 @@ const PRINCIPLES = [
   {
     icon: Leaf,
     title: 'Real ingredients only',
-    body: 'Real chocolate, butter, free-range eggs, proper vanilla, fruit from the market. No compound chocolate, no packet mixes, no preservatives.',
+    body: 'We pay attention to the taste as much as the decoration. If you have ingredient questions, just ask.',
   },
   {
     icon: Timer,
     title: 'Made close to your date',
-    body: 'Nothing frozen, nothing sitting in a case. Your order has a bake day, as near your event as is safe.',
+    body: 'Tell us the date you have in mind and we will help you plan when to order.',
   },
   {
     icon: HeartHandshake,
     title: 'Designed with you',
-    body: 'For custom work you see a sketch and a fixed price before we start. No surprises at the door.',
+    body: 'Bring us your ideas or a reference photo and we can work through the design together.',
   },
   {
     icon: Award,
     title: 'Finished by hand',
-    body: 'Every rosette, drip and piped letter is done by hand here. It is also why no two come out identical.',
+    body: 'From the colours to the message on top, small details make a cake feel personal.',
   },
 ]
 
 const TIMELINE = [
-  {
-    year: '2021',
-    title: 'One oven, one whisk',
-    body: 'It started as weekend orders out of a home kitchen in Kigali. Mostly birthday cakes, mostly for friends of friends.',
-  },
-  {
-    year: '2022',
-    title: 'The chocolate drip',
-    body: 'A four-layer chocolate cake with a slow ganache drip became the one everyone asked for. Still is.',
-  },
-  {
-    year: '2024',
-    title: 'Weddings & events',
-    body: 'Tiered cakes, tasting boxes and branded dessert tables went on the menu once companies started calling.',
-  },
-  {
-    year: 'Today',
-    title: 'Order online, city-wide',
-    body: 'Book in a couple of minutes, follow your order with a code, and have it brought to you anywhere in Kigali.',
-  },
+  { year: '01', title: 'Tell us what you have in mind', body: 'The occasion, your date and any pictures you would like us to see.' },
+  { year: '02', title: 'Choose your cake', body: 'We talk through flavours, sizes and details before confirming the order.' },
+  { year: '03', title: 'Into the kitchen', body: 'Your order is prepared and finished for your chosen date.' },
+  { year: '04', title: 'Time to share', body: 'Arrange collection or delivery in Kigali, then enjoy it with your people.' },
 ]
 
 export default function About() {
   usePageMeta({
     title: 'Our story — Dussa BakeLab, Kigali',
     description:
-      'How Dussa BakeLab grew from one oven in Kigali into the bakery behind thousands of celebrations — and the standards we refuse to drop.',
+      'Get to know Dussa BakeLab, a Kigali bakery making cakes, cupcakes and treats for every kind of occasion.',
   })
 
   return (
@@ -86,31 +69,26 @@ export default function About() {
               transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="mx-auto max-w-md rounded-[2.5rem] border border-caramel/25 bg-gradient-to-br from-blush/70 to-porcelain p-8 shadow-soft"
             >
-              <CreationArt variant="tieredCake" flavor="ivory" seed="about-hero" className="w-full" />
+              <CreationImage art="tieredCake" flavorArt="ivory" seed="about-hero" alt="A tiered celebration cake" className="w-full rounded-[1.5rem]" />
             </motion.div>
-            <div className="absolute -bottom-4 -right-2 h-28 w-28 md:h-36 md:w-36">
-              <SealBadge className="h-full w-full" duration={34} />
-            </div>
           </div>
 
           <div>
             <SectionHeading
-              eyebrow={`Baked in ${BRAND.city} since ${BRAND.founded}`}
-              title="We started because good cake was hard to find"
-              lead="Not the kind that is sweet enough to hurt. Not the kind that photographs well and tastes of nothing. Cake with a proper crumb, real chocolate, and a finish that looks like somebody cared."
+              eyebrow={`From our kitchen in ${BRAND.city}`}
+              title="We believe a cake should taste as good as it looks"
+              lead="The best part of a celebration is gathering everyone around the table. We like making the cake that brings them there."
             />
 
             <div className="mt-6 space-y-4 text-[1rem] leading-relaxed text-cocoa/70">
               <p>
-                What began as weekend orders from a home kitchen turned into a full bakery, but the
-                way we work has not changed. Everything is still made in small batches, still
-                decorated by hand, and still baked as close to your celebration as we can safely
-                manage.
+                We make cakes, cupcakes and sweet treats here in Kigali. Every order starts with
+                a conversation about what you like, who you are sharing it with and the
+                occasion you have in mind.
               </p>
               <p>
-                We have baked for first birthdays, last-minute apologies, weddings in Nyarutarama
-                and Tuesday afternoons that needed rescuing. The occasion changes. The standard does
-                not.
+                It can be a birthday, a wedding or simply a box of something sweet to take home.
+                We will help you choose the flavour, size and finish that feel right.
               </p>
             </div>
 
@@ -162,8 +140,8 @@ export default function About() {
         <div className="container-x">
           <SectionHeading
             align="center"
-            eyebrow="How we got here"
-            title="A short history, in four cakes"
+            eyebrow="Ordering from us"
+            title="From the first message to the last slice"
           />
 
           <div className="relative mx-auto mt-14 max-w-3xl">
@@ -208,7 +186,7 @@ export default function About() {
               The promises behind every box
             </h2>
             <p className="mt-5 max-w-md text-[1rem] leading-relaxed text-on-deep/60">
-              These are not slogans. They are how the kitchen runs, and the reason people come back.
+              Here is what matters to us when we make something for you.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Button to="/creations" variant="gold" sheen>

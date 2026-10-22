@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowUpRight, Clock } from 'lucide-react'
 import CreationImage from './CreationImage'
-import { Pill, Stars } from './ui'
+import { Pill } from './ui'
 import { fromPrice } from '../data/catalog'
 import { money, classNames } from '../lib/format'
 
@@ -32,7 +32,7 @@ export default function ProductCard({ product, index = 0, className = '' }) {
           </div>
 
           <div className="absolute left-4 top-4 flex flex-col items-start gap-2">
-            {product.bestseller && <Pill tone="dark">Bestseller</Pill>}
+            {product.bestseller && <Pill tone="dark">Featured</Pill>}
           </div>
 
           <div className="absolute right-4 top-4">
@@ -53,12 +53,6 @@ export default function ProductCard({ product, index = 0, className = '' }) {
         <div className="flex flex-1 flex-col p-5">
           <div className="flex items-start justify-between gap-3">
             <h3 className="font-display text-[1.2rem] leading-snug text-espresso">{product.name}</h3>
-            {product.rating && (
-              <span className="mt-1 flex shrink-0 items-center gap-1 text-[0.72rem] text-cocoa/55">
-                <Stars value={product.rating} size={11} className="text-gold" />
-                {product.rating}
-              </span>
-            )}
           </div>
 
           <p className="mt-1.5 text-[0.8125rem] italic text-caramel">{product.tagline}</p>

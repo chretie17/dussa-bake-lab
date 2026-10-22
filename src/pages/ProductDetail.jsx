@@ -163,10 +163,15 @@ export default function ProductDetail() {
               </AnimatePresence>
 
               <div className="absolute left-6 top-6 flex flex-col gap-2">
-                {product.bestseller && <Pill tone="dark">Bestseller</Pill>}
+                {product.bestseller && <Pill tone="dark">Featured</Pill>}
                 {product.customBrief && <Pill tone="gold">Bespoke</Pill>}
               </div>
             </motion.div>
+            {!product.photo && (
+              <p className="mt-3 text-center text-[0.78rem] text-cocoa/55">
+                Example photo for inspiration. Your cake will be made to your order.
+              </p>
+            )}
 
             <div className="mt-4 grid grid-cols-3 gap-3">
               <div className="rounded-2xl border border-caramel/20 bg-porcelain p-4 text-center">
@@ -476,17 +481,14 @@ export default function ProductDetail() {
                   <div className="space-y-3">
                     <p>{product.description}</p>
                     <p>
-                      Made to order in small batches, never frozen. Yours is baked as close to
-                      your date as we can safely manage, and boxed properly before it leaves us.
+                      Your order is prepared for your chosen date. Tell us if you have a favourite flavour, colour or finishing touch in mind.
                     </p>
                   </div>
                 )}
                 {tab === 'ingredients' && (
                   <div className="space-y-3">
                     <p>
-                      Real chocolate, real butter, free-range eggs, proper vanilla, and fruit
-                      bought fresh at the market. No compound chocolate, no cake mixes, no
-                      preservatives.
+                      Ingredients vary depending on your choice of flavour, filling and decorations. Ask us for the full ingredient details before ordering.
                     </p>
                     <p>
                       <strong className="font-medium text-espresso">Allergens:</strong> contains

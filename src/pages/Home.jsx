@@ -5,7 +5,6 @@ import Bestsellers from '../sections/Bestsellers'
 import ProcessSection from '../sections/ProcessSection'
 import OccasionFinder from '../sections/OccasionFinder'
 import GalleryStrip from '../sections/GalleryStrip'
-import Testimonials from '../sections/Testimonials'
 import InfoCards from '../sections/InfoCards'
 import CtaBanner from '../sections/CtaBanner'
 import { Marquee } from '../components/ui'
@@ -16,7 +15,7 @@ export default function Home() {
   usePageMeta({
     title: 'Dussa BakeLab — Handcrafted Cakes & Treats in Kigali',
     description:
-      'Handcrafted cakes, cupcakes, cookies and custom creations baked to order in Kigali, Rwanda. Order online with delivery across the city.',
+      'Order cakes, cupcakes and sweet treats from Dussa BakeLab in Kigali. Choose your favourites or ask about a custom cake.',
   })
 
   return (
@@ -29,7 +28,6 @@ export default function Home() {
       <ProcessSection />
       <OccasionFinder />
       <GalleryStrip />
-      <Testimonials />
       <InfoCards />
       <CtaBanner />
     </>

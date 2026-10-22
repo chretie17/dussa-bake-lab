@@ -1,46 +1,35 @@
-import { useState } from 'react'
-import CreationArt from '../art/CreationArt'
+import { useEffect, useState } from 'react'
+import { photoFor } from '../data/photography'
 import { classNames } from '../lib/format'
 
 /**
- * Renders a product's photograph when one is configured, and falls back to the
- * illustrated artwork otherwise — including when a photo 404s, so a missing
- * file never leaves a broken image on the page.
+ * Real photography throughout the shop. Owner-uploaded photos always take priority.
+ * Example photos are only temporary visual references, not Dussa's own products.
  */
 export default function CreationImage({
-  photo,
-  art = 'dripCake',
-  flavorArt = 'chocolate',
-  alt = '',
-  className = '',
-  imgClassName = '',
-  seed,
-  backdrop = true,
-  loading = 'lazy',
+  photo, art = 'dripCake', flavorArt = 'chocolate', alt = '',
+  className = '', imgClassName = '', seed = '', loading = 'lazy',
 }) {
-  const [failed, setFailed] = useState(false)
+  const [status, setStatus] = useState('original')
+  const fallback = photoFor({ seed, art, flavorArt })
+  const source = status === 'original' && photo ? photo : fallback
 
-  if (photo && !failed) {
-    return (
-      <img
-        src={photo}
-        alt={alt}
-        loading={loading}
-        decoding="async"
-        onError={() => setFailed(true)}
-        className={classNames('h-full w-full object-cover', className, imgClassName)}
-      />
-    )
-  }
+  useEffect(() => setStatus('original'), [photo, seed, art, flavorArt])
+
+  if (status === 'missing') return (
+    <div role="img" aria-label={alt || 'Bakery photograph unavailable'} className={classNames('flex aspect-square h-full w-full items-center justify-center bg-blush px-5 text-center text-sm text-cocoa/60', className)}>
+      Photograph coming soon
+    </div>
+  )
 
   return (
-    <CreationArt
-      variant={art}
-      flavor={flavorArt}
-      seed={seed}
-      backdrop={backdrop}
-      title={alt || undefined}
-      className={classNames('h-full w-full', className)}
+    <img
+      src={source}
+      alt={alt}
+      loading={loading}
+      decoding="async"
+      onError={() => setStatus(status === 'original' && photo && photo !== fallback ? 'fallback' : 'missing')}
+      className={classNames('block aspect-square h-full w-full object-cover', className, imgClassName)}
     />
   )
 }

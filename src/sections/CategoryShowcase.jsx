@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
-import CreationArt from '../art/CreationArt'
+import CreationImage from '../components/CreationImage'
 import { Section, SectionHeading, Flourish } from '../components/ui'
 import { useCatalog } from '../context/CatalogContext'
 
@@ -14,9 +14,9 @@ export default function CategoryShowcase() {
       <div className="container-x">
         <SectionHeading
           align="center"
-          eyebrow="Our delicious creations"
+          eyebrow="Something for everyone"
           title="What we make"
-          lead="Everything is made to order in small batches. Pick something to start from and we will adjust it with you."
+          lead="A birthday cake, a box of cupcakes, or just a treat for yourself. Take a look and tell us what you fancy."
         />
         <Flourish className="mt-8" />
 
@@ -39,11 +39,13 @@ export default function CategoryShowcase() {
                 />
 
                 <div className="relative mx-auto w-full max-w-[11rem] transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-110 group-hover:-rotate-2">
-                  <CreationArt
-                    variant={category.art}
-                    flavor={category.flavorArt}
+                  <CreationImage
+                    photo={category.photo}
+                    art={category.art}
+                    flavorArt={category.flavorArt}
                     seed={`cat-${category.id}`}
-                    className="w-full"
+                    alt={`An example of ${category.name.toLowerCase()}`}
+                    className="w-full rounded-2xl"
                   />
                 </div>
 
