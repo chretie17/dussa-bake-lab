@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { ChevronRight } from 'lucide-react'
 import { Eyebrow } from './ui'
 
-/** Shared dark banner that opens every interior page. */
+/** Interior page banner. Colours adapt to the chosen site theme. */
 export default function PageHeader({ eyebrow, title, lead, crumbs = [], children }) {
   return (
     <header className="grain relative overflow-hidden bg-deep pb-16 pt-32 text-on-deep md:pb-20 md:pt-40">
@@ -16,7 +16,7 @@ export default function PageHeader({ eyebrow, title, lead, crumbs = [], children
       <div className="container-x relative z-10">
         {crumbs.length > 0 && (
           <nav aria-label="Breadcrumb" className="mb-7">
-            <ol className="flex flex-wrap items-center gap-1.5 text-[0.78rem] text-on-deep/45">
+            <ol className="flex flex-wrap items-center gap-1.5 text-[0.78rem] text-on-deep/70">
               <li>
                 <Link to="/" className="transition-colors hover:text-accent">
                   Home
@@ -47,7 +47,7 @@ export default function PageHeader({ eyebrow, title, lead, crumbs = [], children
           {eyebrow && <Eyebrow tone="text-accent">{eyebrow}</Eyebrow>}
           <h1 className="mt-5 text-[clamp(2.2rem,5.4vw,3.8rem)] leading-[1.05]">{title}</h1>
           {lead && (
-            <p className="mt-5 max-w-xl text-[1.0625rem] leading-relaxed text-on-deep/62">{lead}</p>
+            <p className="mt-5 max-w-xl text-[1.0625rem] leading-relaxed text-on-deep/80">{lead}</p>
           )}
           {children}
         </motion.div>
