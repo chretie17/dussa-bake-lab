@@ -29,12 +29,12 @@ export default function GalleryStrip() {
               <div className="overflow-hidden rounded-2xl border border-on-deep/12 bg-deep-2/45 p-2 transition-all duration-500 group-hover:border-accent/50">
                 <CreationImage photo={item.url} alt={item.caption || 'Cake and bakery inspiration'} className="w-full rounded-xl transition-transform duration-500 group-hover:scale-105" />
               </div>
-              {item.caption && <figcaption className="mt-3 text-center text-[0.75rem] uppercase tracking-[0.08em] text-on-deep/55">{item.caption}</figcaption>}
+              {item.caption && <figcaption className="mt-3 text-center text-[0.75rem] uppercase tracking-[0.08em] text-on-deep/72">{item.caption}</figcaption>}
             </figure>
           ))}
         </div>
       </div>
-      {!bakeryPhotos && <p className="container-x mt-7 text-center text-[0.78rem] text-on-deep/55">These are inspiration photos. Ask us what we can make for you.</p>}
+      {!bakeryPhotos && <p className="container-x mt-7 text-center text-[0.78rem] text-on-deep/72">These are inspiration photos. Ask us what we can make for you.</p>}
       <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-deep to-transparent md:w-40" />
       <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-deep to-transparent md:w-40" />
     </section>
