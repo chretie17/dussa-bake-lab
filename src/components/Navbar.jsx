@@ -8,6 +8,7 @@ import { NAV_LINKS, CONTACT } from '../data/site'
 import { useCart } from '../context/CartContext'
 import { useCatalog } from '../context/CatalogContext'
 import ThemeToggle from './ThemeToggle'
+import { useTheme } from '../context/ThemeContext'
 import { classNames } from '../lib/format'
 import { Button } from './ui'
 
@@ -16,6 +17,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const { count, openCart } = useCart()
   const { brand } = useCatalog()
+  const { isBright } = useTheme()
   // A logo file that already spells the bakery out makes the typed name a repeat.
   const showWordmark = !(brand?.logoUrl && brand?.logoHasName)
   const { pathname } = useLocation()
@@ -26,8 +28,9 @@ export default function Navbar() {
    * put dark brown links on dark footage under the bright theme.
    */
   const overHero = pathname === '/' && !scrolled
-  const heroInk = '#FAF3EA'
-  const heroAccent = '#E9C08F'
+  const heroDark = overHero && !isBright
+  const heroInk = heroDark ? '#FAF3EA' : 'var(--color-espresso)'
+  const heroAccent = heroDark ? '#E9C08F' : 'var(--color-caramel)'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -85,10 +88,10 @@ export default function Navbar() {
                   className={({ isActive }) =>
                     classNames(
                       'relative rounded-full px-4 py-2.5 text-[0.875rem] font-medium transition-colors duration-300',
-                      overHero
+                      heroDark
                         ? 'text-white/80 hover:text-white'
                         : 'text-cocoa/75 hover:text-espresso',
-                      isActive && (overHero ? 'text-white' : 'text-espresso'),
+                      isActive && (heroDark ? 'text-white' : 'text-espresso'),
                     )
                   }
                 >
@@ -100,7 +103,7 @@ export default function Navbar() {
                           layoutId="nav-active"
                           className={classNames(
                             'absolute inset-x-3 -bottom-0.5 h-px',
-                            overHero ? 'bg-[#E9C08F]' : 'bg-caramel',
+                            heroDark ? 'bg-[#E9C08F]' : 'bg-caramel',
                           )}
                           transition={{ type: 'spring', stiffness: 380, damping: 32 }}
                         />
@@ -117,21 +120,21 @@ export default function Navbar() {
               href={CONTACT.phoneHref}
               className={classNames(
                 'hidden items-center gap-2 rounded-full px-3 py-2 text-[0.8125rem] font-medium transition-colors xl:inline-flex',
-                overHero ? 'text-white/75 hover:text-white' : 'text-cocoa/70 hover:text-espresso',
+                heroDark ? 'text-white/75 hover:text-white' : 'text-cocoa/85 hover:text-espresso',
               )}
             >
               <Phone size={15} strokeWidth={1.8} />
               {CONTACT.phoneDisplay}
             </a>
 
-            <ThemeToggle onDark={overHero} className="hidden sm:flex" />
+            <ThemeToggle onDark={heroDark} className="hidden sm:flex" />
 
             <button
               type="button"
               onClick={openCart}
               className={classNames(
                 'relative flex h-11 w-11 items-center justify-center rounded-full border transition-all duration-300',
-                overHero
+                heroDark
                   ? 'border-white/30 text-white hover:bg-white/10'
                   : 'border-caramel/30 text-espresso hover:border-caramel hover:bg-blush/60',
               )}
@@ -166,7 +169,7 @@ export default function Navbar() {
               onClick={() => setMenuOpen(true)}
               className={classNames(
                 'flex h-11 w-11 items-center justify-center rounded-full border transition-colors lg:hidden',
-                overHero
+                heroDark
                   ? 'border-white/30 text-white hover:bg-white/10'
                   : 'border-caramel/30 text-espresso hover:bg-blush/60',
               )}
@@ -187,7 +190,7 @@ export default function Navbar() {
             exit={{ opacity: 0 }}
           >
             <div
-              className="absolute inset-0 bg-espresso/55 backdrop-blur-sm"
+              className="absolute inset-0 bg-black/65 backdrop-blur-sm"
               onClick={() => setMenuOpen(false)}
               aria-hidden="true"
             />
