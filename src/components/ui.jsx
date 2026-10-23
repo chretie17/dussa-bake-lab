@@ -20,7 +20,7 @@ const VARIANTS = {
   light:
     'bg-porcelain text-espresso border border-caramel/25 hover:bg-blush shadow-soft hover:shadow-lift',
   ghost: 'bg-transparent text-espresso hover:bg-espresso/6 border border-transparent',
-  danger: 'bg-transparent text-red-700 border border-red-700/25 hover:bg-red-700/8',
+  danger: 'bg-transparent text-error-foreground border border-error-foreground/35 hover:bg-error-surface',
 }
 
 const SIZES = {
@@ -183,7 +183,7 @@ export function SectionHeading({
     >
       {eyebrow && (
         <div className={align === 'center' ? 'flex justify-center' : ''}>
-          <Eyebrow tone={dark ? 'text-caramel' : 'text-gold'}>{eyebrow}</Eyebrow>
+          <Eyebrow tone={dark ? 'text-caramel' : 'text-accent'}>{eyebrow}</Eyebrow>
         </div>
       )}
       {title && (
