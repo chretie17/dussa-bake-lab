@@ -18,7 +18,7 @@ export default function GalleryStrip() {
           <Eyebrow tone="text-accent">A little inspiration</Eyebrow>
           <h2 className="mt-4 text-[clamp(1.7rem,3.4vw,2.4rem)] text-on-deep">Some sweet ideas</h2>
         </div>
-        <a href={instagramUrl} target="_blank" rel="noreferrer noopener" className="inline-flex items-center gap-2 rounded-full border border-on-deep/22 px-5 py-2.5 text-[0.85rem] text-on-deep/80 transition-all hover:border-accent hover:bg-accent hover:text-espresso">
+        <a href={instagramUrl} target="_blank" rel="noreferrer noopener" className="inline-flex items-center gap-2 rounded-full border border-on-deep/22 px-5 py-2.5 text-[0.85rem] text-on-deep/80 transition-all hover:border-accent hover:bg-accent hover:text-accent-contrast">
           <InstagramIcon size={16} strokeWidth={1.8} />@{contact.instagram}
         </a>
       </div>
