@@ -8,9 +8,9 @@ const FLOW = ORDER_STATUSES.filter((s) => s.id !== 'cancelled')
 export default function OrderTimeline({ status = 'new', className = '' }) {
   if (status === 'cancelled') {
     return (
-      <div className={classNames('rounded-2xl border border-red-200 bg-red-50 p-5', className)}>
-        <p className="font-medium text-red-800">This order was cancelled</p>
-        <p className="mt-1 text-[0.85rem] text-red-700/80">
+      <div className={classNames('rounded-2xl border border-error-border bg-error-surface p-5', className)}>
+        <p className="font-medium text-error-foreground">This order was cancelled</p>
+        <p className="mt-1 text-[0.85rem] text-error-foreground/90">
           If that was not expected, message us on WhatsApp and we will sort it out.
         </p>
       </div>
