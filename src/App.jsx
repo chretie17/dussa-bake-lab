@@ -27,7 +27,7 @@ function PageLoader() {
   return (
     <div className="flex min-h-[70vh] items-center justify-center">
       <div className="flex flex-col items-center gap-4">
-        <BrandMark className="h-14 w-14 animate-drift" tone="#2A1810" accent="#B98A5E" />
+        <BrandMark className="h-14 w-14 animate-drift" tone="var(--color-espresso)" accent="var(--color-accent)" />
         <p className="eyebrow text-caramel">Warming the oven</p>
       </div>
     </div>

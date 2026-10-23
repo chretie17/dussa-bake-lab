@@ -13,6 +13,14 @@
   --color-caramel: #b98a5e;
   --color-gold: #d4a574;
   --color-honey: #e8c9a0;
+  --color-accent-contrast: #2a1810;
+  --color-error-surface: #fff0ed;
+  --color-error-foreground: #932b2b;
+  --color-error-border: #d48c86;
+  --color-success-surface: #edf8f1;
+  --color-success-foreground: #1d693c;
+  --color-warning-surface: #fff3df;
+  --color-warning-foreground: #80501a;
   --color-blush: #f3e3d3;
   --color-cream: #faf3ea;
   --color-porcelain: #fffdfa;
@@ -50,6 +58,9 @@
   :root {
     --nav-h: 76px;
     color-scheme: light;
+    --gradient-gold-from: #995c2f;
+    --gradient-gold-mid: #b57c42;
+    --gradient-gold-to: #854520;
 
     /* Warm light pooling behind the hero cake. */
     --hero-glow: radial-gradient(
@@ -67,6 +78,9 @@
      Same layout, same brand, much airier.
   ------------------------------------------------------------------ */
   :root[data-theme='bright'] {
+    color-scheme: light;
+    --color-accent-contrast: #ffffff;
+    --color-caramel: #996338;
     --color-deep: #fdf4e9;
     --color-deep-2: #f8e8d6;
     --color-deep-3: #f3ddc6;
@@ -86,6 +100,55 @@
       ),
       radial-gradient(50% 54% at 10% 90%, rgb(246 220 190 / 0.85) 0%, transparent 72%);
     --deep-grain: 0.16;
+  }
+
+  /*
+   * Chocolate mode must be a complete dark site, not just a dark footer.
+   * Existing components use cream/porcelain/blush as surface roles and
+   * espresso/cocoa/choco as foreground roles. Swap those roles together,
+   * so cards, forms, menus, pages and product grids all remain readable.
+   */
+  :root[data-theme='chocolate'] {
+    color-scheme: dark;
+    --gradient-gold-from: #f2d3a7;
+    --gradient-gold-mid: #d6a976;
+    --gradient-gold-to: #ffe2b7;
+
+    --color-ink: #faeddf;
+    --color-espresso: #faecdc;
+    --color-cocoa: #e4cbb5;
+    --color-choco: #f0d6bb;
+    --color-mocha: #d9ae87;
+    --color-caramel: #deb68c;
+    --color-gold: #e1ba87;
+    --color-honey: #ead0aa;
+
+    --color-cream: #1b110d;
+    --color-porcelain: #2a1c15;
+    --color-blush: #38261d;
+
+    --color-deep: #21140e;
+    --color-deep-2: #2d1c14;
+    --color-deep-3: #170d09;
+    --color-on-deep: #f8eddd;
+    --color-accent: #e5b885;
+    --color-accent-soft: #d1a177;
+    --color-accent-contrast: #22130c;
+    --color-error-surface: #40211d;
+    --color-error-foreground: #ffb8ae;
+    --color-error-border: #94504a;
+    --color-success-surface: #1c3a2b;
+    --color-success-foreground: #a2e9b9;
+    --color-warning-surface: #48311c;
+    --color-warning-foreground: #ffdaa1;
+
+    --hero-glow: radial-gradient(
+      58% 62% at 72% 44%,
+      rgb(198 119 52 / 0.19) 0%,
+      rgb(108 55 23 / 0.07) 48%,
+      transparent 75%
+    ), radial-gradient(48% 55% at 15% 95%, rgb(73 35 18 / 0.3) 0%, transparent 74%);
+    --deep-grain: 0.2;
   }
 
   /* The site starts bright unless someone picks otherwise. */
@@ -192,7 +255,7 @@
 
 /* Warm gradient text for accent words inside display headings */
 @utility text-gradient-gold {
-  background: linear-gradient(105deg, #b98a5e 0%, #e8c9a0 42%, #a97846 100%);
+  background: linear-gradient(105deg, var(--gradient-gold-from) 0%, var(--gradient-gold-mid) 42%, var(--gradient-gold-to) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -394,3 +457,12 @@ input[type='time']::-webkit-calendar-picker-indicator {
     transform: scale(1.04);
   }
 }
+
+/* Preserve readable native fields and focus indicators in both looks. */
+input, select, textarea { accent-color: var(--color-accent); }
+:root[data-theme='chocolate'] input,
+:root[data-theme='chocolate'] textarea,
+:root[data-theme='chocolate'] select { color-scheme: dark; }
+:root[data-theme='bright'] input,
+:root[data-theme='bright'] textarea,
+:root[data-theme='bright'] select { color-scheme: light; }

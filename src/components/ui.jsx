@@ -10,7 +10,7 @@ import { classNames } from '../lib/format'
 const VARIANTS = {
   primary:
     'bg-espresso text-cream hover:bg-cocoa shadow-soft hover:shadow-lift border border-espresso',
-  gold: 'bg-accent text-porcelain hover:opacity-90 shadow-soft hover:shadow-lift border border-accent',
+  gold: 'bg-accent text-accent-contrast hover:opacity-90 shadow-soft hover:shadow-lift border border-accent',
   outline:
     'bg-transparent text-espresso border border-espresso/25 hover:border-espresso hover:bg-espresso/5',
   /** Outline sibling for the "deep" sections. Keeps its own colours so it never
@@ -18,9 +18,9 @@ const VARIANTS = {
   outlineLight:
     'bg-transparent text-on-deep border border-on-deep/30 hover:border-on-deep/70 hover:bg-on-deep/10',
   light:
-    'bg-porcelain text-espresso border border-white/60 hover:bg-white shadow-soft hover:shadow-lift',
+    'bg-porcelain text-espresso border border-caramel/25 hover:bg-blush shadow-soft hover:shadow-lift',
   ghost: 'bg-transparent text-espresso hover:bg-espresso/6 border border-transparent',
-  danger: 'bg-transparent text-red-700 border border-red-700/25 hover:bg-red-700/8',
+  danger: 'bg-transparent text-error-foreground border border-error-foreground/35 hover:bg-error-surface',
 }
 
 const SIZES = {
@@ -183,14 +183,14 @@ export function SectionHeading({
     >
       {eyebrow && (
         <div className={align === 'center' ? 'flex justify-center' : ''}>
-          <Eyebrow tone={dark ? 'text-caramel' : 'text-gold'}>{eyebrow}</Eyebrow>
+          <Eyebrow tone={dark ? 'text-caramel' : 'text-accent'}>{eyebrow}</Eyebrow>
         </div>
       )}
       {title && (
         <h2
           className={classNames(
             'mt-5 text-[clamp(2rem,4.6vw,3.4rem)] leading-[1.05]',
-            dark ? 'text-espresso' : 'text-cream',
+            dark ? 'text-espresso' : 'text-on-deep',
           )}
         >
           {title}
@@ -200,7 +200,7 @@ export function SectionHeading({
         <p
           className={classNames(
             'mt-5 text-[1.0625rem] leading-relaxed',
-            dark ? 'text-cocoa/75' : 'text-cream/70',
+            dark ? 'text-cocoa/80' : 'text-on-deep/80',
           )}
         >
           {lead}

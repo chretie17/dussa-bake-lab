@@ -68,7 +68,7 @@ export default function TrackOrder() {
               <Search
                 size={17}
                 strokeWidth={1.8}
-                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-cocoa/40"
+                className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-cocoa/68"
                 aria-hidden="true"
               />
               <TextInput
@@ -128,13 +128,13 @@ export default function TrackOrder() {
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-[0.72rem] uppercase tracking-[0.14em] text-on-deep/45">
+                      <p className="text-[0.72rem] uppercase tracking-[0.14em] text-on-deep/67">
                         {order.fulfilment === 'delivery' ? 'Delivery' : 'Collection'}
                       </p>
                       <p className="mt-1.5 font-display text-[1.25rem] text-accent">
                         {prettyDate(order.date)}
                       </p>
-                      <p className="text-[0.8rem] text-on-deep/55">
+                      <p className="text-[0.8rem] text-on-deep/72">
                         {order.time} · {relativeDay(order.date)}
                       </p>
                     </div>
@@ -145,7 +145,7 @@ export default function TrackOrder() {
                   <div>
                     <h3 className="font-display text-[1.15rem] text-espresso">Progress</h3>
                     <OrderTimeline status={order.status} className="mt-5" />
-                    <p className="mt-4 text-[0.78rem] text-cocoa/50">
+                    <p className="mt-4 text-[0.78rem] text-cocoa/70">
                       Placed {prettyDateTime(order.createdAt)}
                       {order.updatedAt && order.updatedAt !== order.createdAt && (
                         <> · updated {prettyDateTime(order.updatedAt)}</>
@@ -156,9 +156,9 @@ export default function TrackOrder() {
                       className={classNames(
                         'mt-5 rounded-2xl border p-4 text-[0.85rem] leading-relaxed',
                         order.payment?.status === 'verified'
-                          ? 'border-emerald-200 bg-emerald-50/70 text-emerald-900'
+                          ? 'border-success-foreground/25 bg-success-surface text-success-foreground'
                           : order.payment?.status === 'claimed'
-                            ? 'border-amber-200 bg-amber-50/70 text-amber-900'
+                            ? 'border-warning-foreground/25 bg-warning-surface text-warning-foreground'
                             : 'border-caramel/22 bg-cream/60 text-cocoa/70',
                       )}
                     >
@@ -194,7 +194,7 @@ export default function TrackOrder() {
                             <p className="truncate text-[0.875rem] text-espresso">
                               {item.quantity} × {item.name}
                             </p>
-                            <p className="truncate text-[0.75rem] text-cocoa/55">
+                            <p className="truncate text-[0.75rem] text-cocoa/72">
                               {[item.sizeLabel, item.flavorLabel].filter(Boolean).join(' · ')}
                             </p>
                           </div>

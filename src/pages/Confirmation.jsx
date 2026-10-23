@@ -99,7 +99,7 @@ export default function Confirmation() {
           </p>
 
           <div className="mx-auto mt-9 inline-flex flex-col items-center gap-3 rounded-2xl border border-on-deep/18 bg-on-deep/6 px-8 py-6 backdrop-blur-sm">
-            <span className="eyebrow text-on-deep/45">Your order code</span>
+            <span className="eyebrow text-on-deep/67">Your order code</span>
             <div className="flex items-center gap-3">
               <span className="font-display text-[clamp(1.8rem,4vw,2.6rem)] leading-none tracking-[0.06em] text-accent">
                 {code}
@@ -113,7 +113,7 @@ export default function Confirmation() {
                 {copied ? <Check size={16} strokeWidth={2.4} /> : <Copy size={16} strokeWidth={1.8} />}
               </button>
             </div>
-            <span className="text-[0.78rem] text-on-deep/45">
+            <span className="text-[0.78rem] text-on-deep/67">
               Keep this. You can check on your order with it any time
             </span>
           </div>
@@ -150,7 +150,7 @@ export default function Confirmation() {
       <section className="bg-cream py-16 md:py-20">
         <div className="container-x">
           {loading ? (
-            <p className="text-center text-cocoa/55">Fetching your order…</p>
+            <p className="text-center text-cocoa/72">Fetching your order…</p>
           ) : order ? (
             <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
               <div>
@@ -223,7 +223,7 @@ export default function Confirmation() {
                     <button
                       type="button"
                       onClick={() => window.print()}
-                      className="flex items-center gap-1.5 text-[0.78rem] text-cocoa/55 transition-colors hover:text-espresso"
+                      className="flex items-center gap-1.5 text-[0.78rem] text-cocoa/72 transition-colors hover:text-espresso"
                     >
                       <Printer size={14} strokeWidth={1.8} /> Print
                     </button>
@@ -232,7 +232,7 @@ export default function Confirmation() {
                   <dl className="mt-5 space-y-2.5 text-[0.875rem]">
                     <Row label={order.fulfilment === 'delivery' ? 'Delivery' : 'Collection'}>
                       {prettyDate(order.date)}{' '}
-                      <span className="text-cocoa/50">({relativeDay(order.date)})</span>
+                      <span className="text-cocoa/70">({relativeDay(order.date)})</span>
                     </Row>
                     <Row label="Slot">{order.time}</Row>
                     {order.fulfilment === 'delivery' && <Row label="Address">{order.address}</Row>}
@@ -257,7 +257,7 @@ export default function Confirmation() {
                           <p className="text-[0.875rem] text-espresso">
                             {item.quantity} × {item.name}
                           </p>
-                          <p className="text-[0.75rem] text-cocoa/55">
+                          <p className="text-[0.75rem] text-cocoa/72">
                             {[item.sizeLabel, item.flavorLabel, item.frostingLabel]
                               .filter(Boolean)
                               .join(' · ')}
@@ -328,7 +328,7 @@ export default function Confirmation() {
 function Row({ label, children }) {
   return (
     <div className="flex gap-4">
-      <dt className="w-24 shrink-0 text-cocoa/50">{label}</dt>
+      <dt className="w-24 shrink-0 text-cocoa/70">{label}</dt>
       <dd className="text-espresso">{children}</dd>
     </div>
   )

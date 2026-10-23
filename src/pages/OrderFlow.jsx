@@ -211,7 +211,7 @@ export default function OrderFlow() {
                       'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-[0.75rem] font-semibold transition-all duration-300',
                       active && 'border-espresso bg-espresso text-cream',
                       done && 'border-caramel bg-caramel text-espresso',
-                      !active && !done && 'border-caramel/30 text-cocoa/45',
+                      !active && !done && 'border-caramel/30 text-cocoa/70',
                       i < step && 'cursor-pointer hover:scale-105',
                     )}
                     aria-current={active ? 'step' : undefined}
@@ -221,7 +221,7 @@ export default function OrderFlow() {
                   <span
                     className={classNames(
                       'hidden text-[0.8125rem] font-medium transition-colors sm:inline',
-                      active ? 'text-espresso' : 'text-cocoa/45',
+                      active ? 'text-espresso' : 'text-cocoa/70',
                     )}
                   >
                     {s.label}
@@ -264,7 +264,7 @@ export default function OrderFlow() {
                     </p>
 
                     {errors.basket && (
-                      <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-[0.85rem] text-red-700">
+                      <p className="mt-4 rounded-xl bg-error-surface px-4 py-3 text-[0.85rem] text-error-foreground">
                         {errors.basket}
                       </p>
                     )}
@@ -308,12 +308,12 @@ export default function OrderFlow() {
                                     </p>
                                   )}
                                   {item.message && (
-                                    <p className="mt-1 text-[0.75rem] italic text-cocoa/55">
+                                    <p className="mt-1 text-[0.75rem] italic text-cocoa/72">
                                       Message: “{item.message}”
                                     </p>
                                   )}
                                   {item.brief && (
-                                    <p className="mt-1 line-clamp-2 text-[0.75rem] italic text-cocoa/55">
+                                    <p className="mt-1 line-clamp-2 text-[0.75rem] italic text-cocoa/72">
                                       Brief: {item.brief}
                                     </p>
                                   )}
@@ -321,7 +321,7 @@ export default function OrderFlow() {
                                 <button
                                   type="button"
                                   onClick={() => removeItem(item.id)}
-                                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-cocoa/40 transition-colors hover:bg-red-50 hover:text-red-600"
+                                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-cocoa/70 transition-colors hover:bg-error-surface hover:text-error-foreground"
                                   aria-label={`Remove ${item.name}`}
                                 >
                                   <Trash2 size={15} />
@@ -378,7 +378,7 @@ export default function OrderFlow() {
                                 />
                               </div>
                               <h3 className="mt-3 font-display text-[1rem] text-espresso">{p.name}</h3>
-                              <p className="mt-1 text-[0.75rem] text-cocoa/55">{p.tagline}</p>
+                              <p className="mt-1 text-[0.75rem] text-cocoa/72">{p.tagline}</p>
                             </Link>
                           ))}
                       </div>
@@ -449,7 +449,7 @@ export default function OrderFlow() {
                               <span
                                 className={classNames(
                                   'mt-1 block text-[0.78rem] leading-relaxed',
-                                  active ? 'text-cream/60' : 'text-cocoa/55',
+                                  active ? 'text-cream/60' : 'text-cocoa/72',
                                 )}
                               >
                                 {option.body}
@@ -655,7 +655,7 @@ export default function OrderFlow() {
                         className={classNames(
                           'mt-6 flex cursor-pointer items-start gap-3 rounded-2xl border p-5 transition-colors',
                           errors.deposit
-                            ? 'border-red-300 bg-red-50/60'
+                            ? 'border-error-border bg-error-surface/60'
                             : 'border-caramel/25 bg-porcelain',
                         )}
                       >
@@ -682,7 +682,7 @@ export default function OrderFlow() {
                           </strong>
                           , with the balance settled before the order leaves the kitchen.
                           {errors.deposit && (
-                            <span className="mt-1 block text-[0.78rem] text-red-700">
+                            <span className="mt-1 block text-[0.78rem] text-error-foreground">
                               {errors.deposit}
                             </span>
                           )}
@@ -746,7 +746,7 @@ export default function OrderFlow() {
                                 <p className="text-[0.9rem] text-espresso">
                                   {item.quantity} × {item.name}
                                 </p>
-                                <p className="text-[0.78rem] text-cocoa/55">
+                                <p className="text-[0.78rem] text-cocoa/72">
                                   {[item.sizeLabel, item.flavorLabel, item.frostingLabel]
                                     .filter(Boolean)
                                     .join(' · ')}
@@ -762,7 +762,7 @@ export default function OrderFlow() {
                     </div>
 
                     {submitError && (
-                      <p className="mt-5 rounded-xl bg-red-50 px-4 py-3 text-[0.85rem] text-red-700">
+                      <p className="mt-5 rounded-xl bg-error-surface px-4 py-3 text-[0.85rem] text-error-foreground">
                         {submitError}
                       </p>
                     )}
@@ -837,7 +837,7 @@ export default function OrderFlow() {
                 </div>
                 {needsDeposit && (
                   <div className="flex justify-between gap-4 text-[0.8125rem]">
-                    <dt className="text-cocoa/55">
+                    <dt className="text-cocoa/72">
                       Deposit to confirm ({fulfilment.depositPercent}%)
                     </dt>
                     <dd className="tabular-nums text-caramel">
@@ -893,7 +893,7 @@ function ReviewBlock({ title, rows, onEdit }) {
       <dl className="mt-4 space-y-2 text-[0.875rem]">
         {rows.map(([label, value]) => (
           <div key={label} className="flex gap-4">
-            <dt className="w-24 shrink-0 text-cocoa/50">{label}</dt>
+            <dt className="w-24 shrink-0 text-cocoa/70">{label}</dt>
             <dd className="text-espresso">{value}</dd>
           </div>
         ))}

@@ -39,7 +39,7 @@ export default function CartDrawer() {
           aria-modal="true"
           aria-label="Your order basket"
         >
-          <div className="absolute inset-0 bg-espresso/55 backdrop-blur-sm" onClick={closeCart} />
+          <div className="absolute inset-0 bg-black/65 backdrop-blur-sm" onClick={closeCart} />
 
           <motion.aside
             className="grain absolute inset-y-0 right-0 flex w-[min(26.5rem,94vw)] flex-col bg-cream shadow-lift"
@@ -151,7 +151,7 @@ export default function CartDrawer() {
                             <button
                               type="button"
                               onClick={() => removeItem(item.id)}
-                              className="flex h-7 w-7 items-center justify-center rounded-full text-cocoa/45 transition-colors hover:bg-red-50 hover:text-red-600"
+                              className="flex h-7 w-7 items-center justify-center rounded-full text-cocoa/70 transition-colors hover:bg-error-surface hover:text-error-foreground"
                               aria-label={`Remove ${item.name}`}
                             >
                               <Trash2 size={14} />
@@ -180,7 +180,7 @@ export default function CartDrawer() {
                       </div>
                     </div>
                   ) : (
-                    <p className="text-[0.75rem] font-medium text-green-700">
+                    <p className="text-[0.75rem] font-medium text-success-foreground">
                       ✓ Free delivery unlocked across Kigali
                     </p>
                   )}
@@ -189,7 +189,7 @@ export default function CartDrawer() {
                     <span className="text-sm text-cocoa/70">Subtotal</span>
                     <span className="font-display text-2xl tabular-nums">{money(subtotal)}</span>
                   </div>
-                  <p className="text-[0.7rem] text-cocoa/55">
+                  <p className="text-[0.7rem] text-cocoa/72">
                     Delivery and any deposit are worked out at the next step.
                   </p>
 

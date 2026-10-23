@@ -18,7 +18,7 @@ export default function GalleryStrip() {
           <Eyebrow tone="text-accent">A little inspiration</Eyebrow>
           <h2 className="mt-4 text-[clamp(1.7rem,3.4vw,2.4rem)] text-on-deep">Some sweet ideas</h2>
         </div>
-        <a href={instagramUrl} target="_blank" rel="noreferrer noopener" className="inline-flex items-center gap-2 rounded-full border border-on-deep/22 px-5 py-2.5 text-[0.85rem] text-on-deep/80 transition-all hover:border-accent hover:bg-accent hover:text-espresso">
+        <a href={instagramUrl} target="_blank" rel="noreferrer noopener" className="inline-flex items-center gap-2 rounded-full border border-on-deep/22 px-5 py-2.5 text-[0.85rem] text-on-deep/80 transition-all hover:border-accent hover:bg-accent hover:text-accent-contrast">
           <InstagramIcon size={16} strokeWidth={1.8} />@{contact.instagram}
         </a>
       </div>
@@ -29,12 +29,12 @@ export default function GalleryStrip() {
               <div className="overflow-hidden rounded-2xl border border-on-deep/12 bg-deep-2/45 p-2 transition-all duration-500 group-hover:border-accent/50">
                 <CreationImage photo={item.url} alt={item.caption || 'Cake and bakery inspiration'} className="w-full rounded-xl transition-transform duration-500 group-hover:scale-105" />
               </div>
-              {item.caption && <figcaption className="mt-3 text-center text-[0.75rem] uppercase tracking-[0.08em] text-on-deep/55">{item.caption}</figcaption>}
+              {item.caption && <figcaption className="mt-3 text-center text-[0.75rem] uppercase tracking-[0.08em] text-on-deep/72">{item.caption}</figcaption>}
             </figure>
           ))}
         </div>
       </div>
-      {!bakeryPhotos && <p className="container-x mt-7 text-center text-[0.78rem] text-on-deep/55">These are inspiration photos. Ask us what we can make for you.</p>}
+      {!bakeryPhotos && <p className="container-x mt-7 text-center text-[0.78rem] text-on-deep/72">These are inspiration photos. Ask us what we can make for you.</p>}
       <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-deep to-transparent md:w-40" />
       <div aria-hidden="true" className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-deep to-transparent md:w-40" />
     </section>

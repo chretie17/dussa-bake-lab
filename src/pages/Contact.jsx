@@ -155,7 +155,7 @@ export default function Contact() {
                     <span className="mt-2 font-display text-[1.1rem] text-espresso">
                       {c.value}
                     </span>
-                    <span className="mt-1.5 text-[0.8rem] leading-relaxed text-cocoa/55">
+                    <span className="mt-1.5 text-[0.8rem] leading-relaxed text-cocoa/72">
                       {c.note}
                     </span>
                   </a>
@@ -260,7 +260,7 @@ export default function Contact() {
                   <Button type="submit" size="lg" sheen>
                     <Send size={16} strokeWidth={1.9} /> Send via WhatsApp
                   </Button>
-                  <p className="mt-3 text-[0.78rem] text-cocoa/50">
+                  <p className="mt-3 text-[0.78rem] text-cocoa/70">
                     Ready to book instead?{" "}
                     <a
                       href="/order"
@@ -337,7 +337,7 @@ export default function Contact() {
                     </li>
                   ))}
                 </ul>
-                <p className="mt-4 text-[0.8rem] leading-relaxed text-cocoa/55">
+                <p className="mt-4 text-[0.8rem] leading-relaxed text-cocoa/72">
                   Somewhere else in Rwanda? Ask us. We price longer trips one by one.
                 </p>
               </div>

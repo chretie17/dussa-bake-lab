@@ -53,7 +53,7 @@ export default function Footer() {
                 href={whatsappEnquiryLink()}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-on-deep/20 text-on-deep/80 transition-all hover:border-accent hover:bg-accent hover:text-espresso"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-on-deep/20 text-on-deep/80 transition-all hover:border-accent hover:bg-accent hover:text-accent-contrast"
                 aria-label="Message Dussa BakeLab on WhatsApp"
               >
                 <WhatsAppIcon size={18} />
@@ -62,14 +62,14 @@ export default function Footer() {
                 href={instagramUrl}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-on-deep/20 text-on-deep/80 transition-all hover:border-accent hover:bg-accent hover:text-espresso"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-on-deep/20 text-on-deep/80 transition-all hover:border-accent hover:bg-accent hover:text-accent-contrast"
                 aria-label="Dussa BakeLab on Instagram"
               >
                 <InstagramIcon size={18} strokeWidth={1.7} />
               </a>
               <a
                 href={`mailto:${contact.email}`}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-on-deep/20 text-on-deep/80 transition-all hover:border-accent hover:bg-accent hover:text-espresso"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-on-deep/20 text-on-deep/80 transition-all hover:border-accent hover:bg-accent hover:text-accent-contrast"
                 aria-label="Email Dussa BakeLab"
               >
                 <Mail size={18} strokeWidth={1.7} />
@@ -104,7 +104,7 @@ export default function Footer() {
                 </li>
               ))}
               <li>
-                <Link to="/admin" className="text-on-deep/40 transition-colors hover:text-accent">
+                <Link to="/admin" className="text-on-deep/65 transition-colors hover:text-accent">
                   Bakery dashboard
                 </Link>
               </li>
@@ -141,7 +141,7 @@ export default function Footer() {
             </ul>
 
             <h3 className="eyebrow mt-8 text-accent">Kitchen hours</h3>
-            <ul className="mt-4 space-y-2 text-[0.8rem] text-on-deep/55">
+            <ul className="mt-4 space-y-2 text-[0.8rem] text-on-deep/72">
               {hours.map((h) => (
                 <li key={h.day} className="flex justify-between gap-4">
                   <span>{h.day}</span>
@@ -152,13 +152,13 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 border-y border-on-deep/12 py-5 text-center text-[0.72rem] tracking-[0.12em] text-on-deep/45 uppercase">
+        <div className="mt-16 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 border-y border-on-deep/12 py-5 text-center text-[0.72rem] tracking-[0.12em] text-on-deep/67 uppercase">
           {fulfilment.payments.map((p) => (
             <span key={p}>{p}</span>
           ))}
         </div>
 
-        <div className="mt-8 flex flex-col items-center justify-between gap-3 text-[0.78rem] text-on-deep/45 md:flex-row">
+        <div className="mt-8 flex flex-col items-center justify-between gap-3 text-[0.78rem] text-on-deep/67 md:flex-row">
           <p>
             © {year} {brand.name}. Baked in {brand.city}, {brand.country}.
           </p>

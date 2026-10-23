@@ -74,7 +74,7 @@ export default function StorySection() {
             {STATS.map((stat, i) => (
               <Reveal key={stat.label} delay={i * 0.06}>
                 <p className="font-display text-[1.7rem] leading-none text-espresso">{stat.value}</p>
-                <p className="mt-2 text-[0.72rem] uppercase tracking-[0.12em] text-cocoa/50">
+                <p className="mt-2 text-[0.72rem] uppercase tracking-[0.12em] text-cocoa/70">
                   {stat.label}
                 </p>
               </Reveal>

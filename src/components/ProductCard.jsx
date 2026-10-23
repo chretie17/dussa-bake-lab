@@ -43,8 +43,8 @@ export default function ProductCard({ product, index = 0, className = '' }) {
           </div>
 
           {/* Slides up on hover to invite the click */}
-          <div className="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-espresso/90 to-transparent px-5 pb-4 pt-10 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-0">
-            <span className="inline-flex items-center gap-1.5 text-[0.8125rem] font-medium text-cream">
+          <div className="absolute inset-x-0 bottom-0 translate-y-full bg-gradient-to-t from-black/85 to-transparent px-5 pb-4 pt-10 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-y-0">
+            <span className="inline-flex items-center gap-1.5 text-[0.8125rem] font-medium text-white">
               Customise & order <ArrowUpRight size={15} strokeWidth={2} />
             </span>
           </div>
@@ -62,7 +62,7 @@ export default function ProductCard({ product, index = 0, className = '' }) {
 
           <div className="mt-auto flex items-end justify-between gap-3 pt-5">
             <div>
-              <span className="block text-[0.68rem] uppercase tracking-[0.16em] text-cocoa/45">
+              <span className="block text-[0.68rem] uppercase tracking-[0.16em] text-cocoa/70">
                 From
               </span>
               <span className="font-display text-[1.35rem] text-espresso tabular-nums">
