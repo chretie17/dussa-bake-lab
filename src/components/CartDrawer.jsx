@@ -151,7 +151,7 @@ export default function CartDrawer() {
                             <button
                               type="button"
                               onClick={() => removeItem(item.id)}
-                              className="flex h-7 w-7 items-center justify-center rounded-full text-cocoa/45 transition-colors hover:bg-error-surface hover:text-error-foreground"
+                              className="flex h-7 w-7 items-center justify-center rounded-full text-cocoa/70 transition-colors hover:bg-error-surface hover:text-error-foreground"
                               aria-label={`Remove ${item.name}`}
                             >
                               <Trash2 size={14} />
@@ -189,7 +189,7 @@ export default function CartDrawer() {
                     <span className="text-sm text-cocoa/70">Subtotal</span>
                     <span className="font-display text-2xl tabular-nums">{money(subtotal)}</span>
                   </div>
-                  <p className="text-[0.7rem] text-cocoa/55">
+                  <p className="text-[0.7rem] text-cocoa/72">
                     Delivery and any deposit are worked out at the next step.
                   </p>
 
