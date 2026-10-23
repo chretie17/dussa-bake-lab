@@ -145,7 +145,7 @@ export default function Navbar() {
                     initial={{ scale: 0.4, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     exit={{ scale: 0.4, opacity: 0 }}
-                    className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1 text-[0.6875rem] font-semibold text-espresso"
+                    className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-accent px-1 text-[0.6875rem] font-semibold text-accent-contrast"
                   >
                     {count}
                   </motion.span>
@@ -199,7 +199,7 @@ export default function Navbar() {
               transition={{ type: 'spring', stiffness: 320, damping: 36 }}
             >
               <div className="relative z-10 flex items-center justify-between border-b border-caramel/20 px-6 py-5">
-                <Wordmark className="text-[0.9rem]" tone="#2A1810" />
+                <Wordmark className="text-[0.9rem]" tone="var(--color-espresso)" />
                 <button
                   type="button"
                   onClick={() => setMenuOpen(false)}
