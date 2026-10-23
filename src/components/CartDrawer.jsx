@@ -39,7 +39,7 @@ export default function CartDrawer() {
           aria-modal="true"
           aria-label="Your order basket"
         >
-          <div className="absolute inset-0 bg-espresso/55 backdrop-blur-sm" onClick={closeCart} />
+          <div className="absolute inset-0 bg-black/65 backdrop-blur-sm" onClick={closeCart} />
 
           <motion.aside
             className="grain absolute inset-y-0 right-0 flex w-[min(26.5rem,94vw)] flex-col bg-cream shadow-lift"
