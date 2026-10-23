@@ -123,7 +123,7 @@ export default function Creations() {
             <Search
               size={16}
               strokeWidth={1.8}
-              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-cocoa/40"
+              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-cocoa/68"
               aria-hidden="true"
             />
             <input
@@ -132,7 +132,7 @@ export default function Creations() {
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search cakes, flavours, occasions…"
               aria-label="Search creations"
-              className="h-11 w-full rounded-full border border-caramel/25 bg-porcelain pl-11 pr-4 text-[0.875rem] text-espresso placeholder:text-cocoa/40 focus:border-caramel focus:outline-none"
+              className="h-11 w-full rounded-full border border-caramel/25 bg-porcelain pl-11 pr-4 text-[0.875rem] text-espresso placeholder:text-cocoa/65 focus:border-caramel focus:outline-none"
             />
           </div>
 
@@ -202,7 +202,7 @@ export default function Creations() {
                 <button
                   type="button"
                   onClick={clearAll}
-                  className="inline-flex items-center gap-1 text-[0.78rem] text-cocoa/55 underline-offset-4 hover:text-espresso hover:underline"
+                  className="inline-flex items-center gap-1 text-[0.78rem] text-cocoa/72 underline-offset-4 hover:text-espresso hover:underline"
                 >
                   <X size={12} strokeWidth={2.2} /> Clear
                 </button>
