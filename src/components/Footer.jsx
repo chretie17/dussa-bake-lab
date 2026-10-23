@@ -53,7 +53,7 @@ export default function Footer() {
                 href={whatsappEnquiryLink()}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-on-deep/20 text-on-deep/80 transition-all hover:border-accent hover:bg-accent hover:text-espresso"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-on-deep/20 text-on-deep/80 transition-all hover:border-accent hover:bg-accent hover:text-accent-contrast"
                 aria-label="Message Dussa BakeLab on WhatsApp"
               >
                 <WhatsAppIcon size={18} />
@@ -62,14 +62,14 @@ export default function Footer() {
                 href={instagramUrl}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-on-deep/20 text-on-deep/80 transition-all hover:border-accent hover:bg-accent hover:text-espresso"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-on-deep/20 text-on-deep/80 transition-all hover:border-accent hover:bg-accent hover:text-accent-contrast"
                 aria-label="Dussa BakeLab on Instagram"
               >
                 <InstagramIcon size={18} strokeWidth={1.7} />
               </a>
               <a
                 href={`mailto:${contact.email}`}
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-on-deep/20 text-on-deep/80 transition-all hover:border-accent hover:bg-accent hover:text-espresso"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-on-deep/20 text-on-deep/80 transition-all hover:border-accent hover:bg-accent hover:text-accent-contrast"
                 aria-label="Email Dussa BakeLab"
               >
                 <Mail size={18} strokeWidth={1.7} />
