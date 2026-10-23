@@ -103,7 +103,7 @@ export default function ProductDetail() {
       <div className="bg-cream pt-28 md:pt-32">
         <div className="container-x">
           <nav aria-label="Breadcrumb">
-            <ol className="flex flex-wrap items-center gap-1.5 text-[0.78rem] text-cocoa/50">
+            <ol className="flex flex-wrap items-center gap-1.5 text-[0.78rem] text-cocoa/70">
               <li>
                 <Link to="/" className="transition-colors hover:text-caramel">
                   Home
@@ -168,7 +168,7 @@ export default function ProductDetail() {
               </div>
             </motion.div>
             {!product.photo && (
-              <p className="mt-3 text-center text-[0.78rem] text-cocoa/55">
+              <p className="mt-3 text-center text-[0.78rem] text-cocoa/72">
                 Example photo for inspiration. Your cake will be made to your order.
               </p>
             )}
@@ -176,19 +176,19 @@ export default function ProductDetail() {
             <div className="mt-4 grid grid-cols-3 gap-3">
               <div className="rounded-2xl border border-caramel/20 bg-porcelain p-4 text-center">
                 <Clock size={16} strokeWidth={1.7} className="mx-auto text-caramel" />
-                <p className="mt-2 text-[0.72rem] uppercase tracking-[0.1em] text-cocoa/50">Lead time</p>
+                <p className="mt-2 text-[0.72rem] uppercase tracking-[0.1em] text-cocoa/70">Lead time</p>
                 <p className="mt-0.5 text-[0.9rem] font-medium text-espresso">
                   {product.leadDays} {product.leadDays === 1 ? 'day' : 'days'}
                 </p>
               </div>
               <div className="rounded-2xl border border-caramel/20 bg-porcelain p-4 text-center">
                 <Sparkles size={16} strokeWidth={1.7} className="mx-auto text-caramel" />
-                <p className="mt-2 text-[0.72rem] uppercase tracking-[0.1em] text-cocoa/50">Serves</p>
+                <p className="mt-2 text-[0.72rem] uppercase tracking-[0.1em] text-cocoa/70">Serves</p>
                 <p className="mt-0.5 text-[0.9rem] font-medium text-espresso">{size.serves}</p>
               </div>
               <div className="rounded-2xl border border-caramel/20 bg-porcelain p-4 text-center">
                 <Truck size={16} strokeWidth={1.7} className="mx-auto text-caramel" />
-                <p className="mt-2 text-[0.72rem] uppercase tracking-[0.1em] text-cocoa/50">Delivery</p>
+                <p className="mt-2 text-[0.72rem] uppercase tracking-[0.1em] text-cocoa/70">Delivery</p>
                 <p className="mt-0.5 text-[0.9rem] font-medium text-espresso">Kigali-wide</p>
               </div>
             </div>
@@ -223,7 +223,7 @@ export default function ProductDetail() {
 
             {/* ---------------------------------------------- size */}
             <fieldset className="mt-9">
-              <legend className="eyebrow text-cocoa/55">Choose a size</legend>
+              <legend className="eyebrow text-cocoa/72">Choose a size</legend>
               <div className="mt-4 grid gap-2.5 sm:grid-cols-2">
                 {product.sizes.map((s) => (
                   <button
@@ -243,7 +243,7 @@ export default function ProductDetail() {
                       <span
                         className={classNames(
                           'mt-0.5 block text-[0.75rem]',
-                          sizeId === s.id ? 'text-cream/60' : 'text-cocoa/50',
+                          sizeId === s.id ? 'text-cream/60' : 'text-cocoa/70',
                         )}
                       >
                         {s.serves}
@@ -260,7 +260,7 @@ export default function ProductDetail() {
             {/* -------------------------------------------- flavour */}
             {product.flavors?.length > 0 && (
               <fieldset className="mt-8">
-                <legend className="eyebrow text-cocoa/55">Flavour</legend>
+                <legend className="eyebrow text-cocoa/72">Flavour</legend>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {product.flavors.map((f) => (
                     <button
@@ -297,7 +297,7 @@ export default function ProductDetail() {
             {/* ------------------------------------------- frosting */}
             {product.frostings?.length > 0 && (
               <fieldset className="mt-8">
-                <legend className="eyebrow text-cocoa/55">Finish</legend>
+                <legend className="eyebrow text-cocoa/72">Finish</legend>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {product.frostings.map((f) => (
                     <button
@@ -325,7 +325,7 @@ export default function ProductDetail() {
             {/* --------------------------------------------- addons */}
             {product.addons?.length > 0 && (
               <fieldset className="mt-8">
-                <legend className="eyebrow text-cocoa/55">Finishing touches</legend>
+                <legend className="eyebrow text-cocoa/72">Finishing touches</legend>
                 <div className="mt-4 grid gap-2 sm:grid-cols-2">
                   {product.addons.map((a) => {
                     const checked = addonIds.includes(a.id)
@@ -368,7 +368,7 @@ export default function ProductDetail() {
             {/* -------------------------------------------- message */}
             {product.allowsMessage && (
               <div className="mt-8">
-                <label htmlFor="cake-message" className="eyebrow text-cocoa/55">
+                <label htmlFor="cake-message" className="eyebrow text-cocoa/72">
                   Message on the cake
                 </label>
                 <input
@@ -378,15 +378,15 @@ export default function ProductDetail() {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Happy Birthday, Keza!"
-                  className="mt-3 h-12 w-full rounded-xl border border-caramel/25 bg-porcelain px-4 text-[0.9rem] text-espresso placeholder:text-cocoa/35 focus:border-caramel focus:outline-none"
+                  className="mt-3 h-12 w-full rounded-xl border border-caramel/25 bg-porcelain px-4 text-[0.9rem] text-espresso placeholder:text-cocoa/65 focus:border-caramel focus:outline-none"
                 />
-                <p className="mt-1.5 text-right text-[0.7rem] text-cocoa/45">{message.length}/60</p>
+                <p className="mt-1.5 text-right text-[0.7rem] text-cocoa/70">{message.length}/60</p>
               </div>
             )}
 
             {product.customBrief && (
               <div className="mt-6">
-                <label htmlFor="brief" className="eyebrow text-cocoa/55">
+                <label htmlFor="brief" className="eyebrow text-cocoa/72">
                   Tell us your idea
                 </label>
                 <textarea
@@ -395,9 +395,9 @@ export default function ProductDetail() {
                   value={brief}
                   onChange={(e) => setBrief(e.target.value)}
                   placeholder="Theme, colours, a reference you have seen, the guest of honour's favourite thing…"
-                  className="mt-3 w-full rounded-xl border border-caramel/25 bg-porcelain p-4 text-[0.9rem] leading-relaxed text-espresso placeholder:text-cocoa/35 focus:border-caramel focus:outline-none"
+                  className="mt-3 w-full rounded-xl border border-caramel/25 bg-porcelain p-4 text-[0.9rem] leading-relaxed text-espresso placeholder:text-cocoa/65 focus:border-caramel focus:outline-none"
                 />
-                <p className="mt-2 text-[0.78rem] text-cocoa/55">
+                <p className="mt-2 text-[0.78rem] text-cocoa/72">
                   We will reply with a sketch and a firm quote before anything is baked.
                 </p>
               </div>
@@ -407,7 +407,7 @@ export default function ProductDetail() {
             <div className="mt-10 rounded-[1.5rem] border border-caramel/25 bg-porcelain p-5 shadow-soft">
               <div className="flex flex-wrap items-end justify-between gap-4">
                 <div>
-                  <p className="text-[0.72rem] uppercase tracking-[0.14em] text-cocoa/45">
+                  <p className="text-[0.72rem] uppercase tracking-[0.14em] text-cocoa/70">
                     Total for {quantity} × {size.label}
                   </p>
                   <p className="mt-1 font-display text-[2rem] leading-none text-espresso tabular-nums">
@@ -449,7 +449,7 @@ export default function ProductDetail() {
                 )}
               </Button>
 
-              <p className="mt-3 text-center text-[0.78rem] text-cocoa/55">
+              <p className="mt-3 text-center text-[0.78rem] text-cocoa/72">
                 We need at least {product.leadDays}{' '}
                 {product.leadDays === 1 ? 'day' : 'days'} notice · free delivery over{' '}
                 {money(fulfilment.freeDeliveryOver)}
@@ -468,7 +468,7 @@ export default function ProductDetail() {
                       'relative -mb-px border-b-2 pb-3 text-[0.85rem] font-medium transition-colors',
                       tab === t.id
                         ? 'border-caramel text-espresso'
-                        : 'border-transparent text-cocoa/50 hover:text-espresso',
+                        : 'border-transparent text-cocoa/70 hover:text-espresso',
                     )}
                   >
                     {t.label}
