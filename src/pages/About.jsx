@@ -96,7 +96,7 @@ export default function About() {
               {STATS.map((stat) => (
                 <div key={stat.label}>
                   <p className="font-display text-[1.7rem] leading-none text-espresso">{stat.value}</p>
-                  <p className="mt-2 text-[0.72rem] uppercase tracking-[0.12em] text-cocoa/50">
+                  <p className="mt-2 text-[0.72rem] uppercase tracking-[0.12em] text-cocoa/70">
                     {stat.label}
                   </p>
                 </div>
