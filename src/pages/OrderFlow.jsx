@@ -264,7 +264,7 @@ export default function OrderFlow() {
                     </p>
 
                     {errors.basket && (
-                      <p className="mt-4 rounded-xl bg-red-50 px-4 py-3 text-[0.85rem] text-red-700">
+                      <p className="mt-4 rounded-xl bg-error-surface px-4 py-3 text-[0.85rem] text-error-foreground">
                         {errors.basket}
                       </p>
                     )}
@@ -321,7 +321,7 @@ export default function OrderFlow() {
                                 <button
                                   type="button"
                                   onClick={() => removeItem(item.id)}
-                                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-cocoa/40 transition-colors hover:bg-red-50 hover:text-red-600"
+                                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-cocoa/70 transition-colors hover:bg-error-surface hover:text-error-foreground"
                                   aria-label={`Remove ${item.name}`}
                                 >
                                   <Trash2 size={15} />
@@ -655,7 +655,7 @@ export default function OrderFlow() {
                         className={classNames(
                           'mt-6 flex cursor-pointer items-start gap-3 rounded-2xl border p-5 transition-colors',
                           errors.deposit
-                            ? 'border-red-300 bg-red-50/60'
+                            ? 'border-error-border bg-error-surface/60'
                             : 'border-caramel/25 bg-porcelain',
                         )}
                       >
@@ -682,7 +682,7 @@ export default function OrderFlow() {
                           </strong>
                           , with the balance settled before the order leaves the kitchen.
                           {errors.deposit && (
-                            <span className="mt-1 block text-[0.78rem] text-red-700">
+                            <span className="mt-1 block text-[0.78rem] text-error-foreground">
                               {errors.deposit}
                             </span>
                           )}
@@ -762,7 +762,7 @@ export default function OrderFlow() {
                     </div>
 
                     {submitError && (
-                      <p className="mt-5 rounded-xl bg-red-50 px-4 py-3 text-[0.85rem] text-red-700">
+                      <p className="mt-5 rounded-xl bg-error-surface px-4 py-3 text-[0.85rem] text-error-foreground">
                         {submitError}
                       </p>
                     )}
