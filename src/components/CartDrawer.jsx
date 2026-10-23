@@ -151,7 +151,7 @@ export default function CartDrawer() {
                             <button
                               type="button"
                               onClick={() => removeItem(item.id)}
-                              className="flex h-7 w-7 items-center justify-center rounded-full text-cocoa/45 transition-colors hover:bg-red-50 hover:text-red-600"
+                              className="flex h-7 w-7 items-center justify-center rounded-full text-cocoa/45 transition-colors hover:bg-error-surface hover:text-error-foreground"
                               aria-label={`Remove ${item.name}`}
                             >
                               <Trash2 size={14} />
@@ -180,7 +180,7 @@ export default function CartDrawer() {
                       </div>
                     </div>
                   ) : (
-                    <p className="text-[0.75rem] font-medium text-green-700">
+                    <p className="text-[0.75rem] font-medium text-success-foreground">
                       ✓ Free delivery unlocked across Kigali
                     </p>
                   )}
