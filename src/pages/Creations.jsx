@@ -102,11 +102,12 @@ export default function Creations() {
               key={c.id}
               type="button"
               onClick={() => setParam('category', category === c.id ? 'all' : c.id)}
+              aria-pressed={category === c.id}
               className={classNames(
-                'rounded-full border px-4 py-2 text-[0.8125rem] font-medium transition-all duration-300',
+                'rounded-full border px-4 py-2 text-[0.8125rem] font-medium transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
                 category === c.id
-                  ? 'border-gold bg-gold text-espresso'
-                  : 'border-cream/22 text-cream/75 hover:border-cream/50 hover:text-cream',
+                  ? 'border-accent bg-accent text-accent-contrast shadow-soft'
+                  : 'border-on-deep/35 bg-on-deep/5 text-on-deep/90 hover:border-accent hover:bg-on-deep/10 hover:text-on-deep',
               )}
             >
               {c.name}
