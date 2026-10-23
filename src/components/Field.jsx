@@ -20,7 +20,7 @@ export function Field({ label, hint, error, required, htmlFor, children, classNa
       </div>
       <div className="mt-2">{children}</div>
       {error && (
-        <p className="mt-1.5 flex items-center gap-1.5 text-[0.75rem] text-red-700" role="alert">
+        <p className="mt-1.5 flex items-center gap-1.5 text-[0.75rem] text-error-foreground" role="alert">
           <AlertCircle size={13} strokeWidth={2} />
           {error}
         </p>
@@ -35,7 +35,7 @@ export function TextInput({ error, className = '', ...props }) {
       className={classNames(
         baseInput,
         'h-12',
-        error ? 'border-red-400 focus:border-red-500' : 'border-caramel/25 focus:border-caramel',
+        error ? 'border-error-border focus:border-error-foreground' : 'border-caramel/25 focus:border-caramel',
         className,
       )}
       aria-invalid={error ? 'true' : undefined}
@@ -51,7 +51,7 @@ export function TextArea({ error, className = '', rows = 4, ...props }) {
       className={classNames(
         baseInput,
         'py-3 leading-relaxed',
-        error ? 'border-red-400 focus:border-red-500' : 'border-caramel/25 focus:border-caramel',
+        error ? 'border-error-border focus:border-error-foreground' : 'border-caramel/25 focus:border-caramel',
         className,
       )}
       aria-invalid={error ? 'true' : undefined}
@@ -66,7 +66,7 @@ export function Select({ error, className = '', children, ...props }) {
       className={classNames(
         baseInput,
         'h-12 pr-9',
-        error ? 'border-red-400 focus:border-red-500' : 'border-caramel/25 focus:border-caramel',
+        error ? 'border-error-border focus:border-error-foreground' : 'border-caramel/25 focus:border-caramel',
         className,
       )}
       aria-invalid={error ? 'true' : undefined}
