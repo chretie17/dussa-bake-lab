@@ -58,6 +58,9 @@
   :root {
     --nav-h: 76px;
     color-scheme: light;
+    --gradient-gold-from: #995c2f;
+    --gradient-gold-mid: #b57c42;
+    --gradient-gold-to: #854520;
 
     /* Warm light pooling behind the hero cake. */
     --hero-glow: radial-gradient(
@@ -107,6 +110,9 @@
    */
   :root[data-theme='chocolate'] {
     color-scheme: dark;
+    --gradient-gold-from: #f2d3a7;
+    --gradient-gold-mid: #d6a976;
+    --gradient-gold-to: #ffe2b7;
 
     --color-ink: #faeddf;
     --color-espresso: #faecdc;
@@ -249,7 +255,7 @@
 
 /* Warm gradient text for accent words inside display headings */
 @utility text-gradient-gold {
-  background: linear-gradient(105deg, #b98a5e 0%, #e8c9a0 42%, #a97846 100%);
+  background: linear-gradient(105deg, var(--gradient-gold-from) 0%, var(--gradient-gold-mid) 42%, var(--gradient-gold-to) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
