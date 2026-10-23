@@ -2,7 +2,7 @@ import { AlertCircle } from 'lucide-react'
 import { classNames } from '../lib/format'
 
 const baseInput =
-  'w-full rounded-xl border bg-porcelain px-4 text-[0.9375rem] text-espresso placeholder:text-cocoa/35 transition-colors focus:outline-none'
+  'w-full rounded-xl border bg-porcelain px-4 text-[0.9375rem] text-espresso placeholder:text-cocoa/65 transition-colors focus:outline-none'
 
 export function Field({ label, hint, error, required, htmlFor, children, className = '' }) {
   return (
@@ -16,7 +16,7 @@ export function Field({ label, hint, error, required, htmlFor, children, classNa
             </span>
           )}
         </label>
-        {hint && <span className="text-[0.72rem] text-cocoa/45">{hint}</span>}
+        {hint && <span className="text-[0.72rem] text-cocoa/70">{hint}</span>}
       </div>
       <div className="mt-2">{children}</div>
       {error && (
