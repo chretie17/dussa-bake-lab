@@ -156,9 +156,9 @@ export default function TrackOrder() {
                       className={classNames(
                         'mt-5 rounded-2xl border p-4 text-[0.85rem] leading-relaxed',
                         order.payment?.status === 'verified'
-                          ? 'border-emerald-200 bg-emerald-50/70 text-emerald-900'
+                          ? 'border-success-foreground/25 bg-success-surface text-success-foreground'
                           : order.payment?.status === 'claimed'
-                            ? 'border-amber-200 bg-amber-50/70 text-amber-900'
+                            ? 'border-warning-foreground/25 bg-warning-surface text-warning-foreground'
                             : 'border-caramel/22 bg-cream/60 text-cocoa/70',
                       )}
                     >
