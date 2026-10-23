@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useReducedMotion } from 'framer-motion'
 import { ArrowUpRight, Pause, Play } from 'lucide-react'
 import { HERO_PHOTO } from '../data/photography'
+import { useTheme } from '../context/ThemeContext'
 
 // Official privacy-enhanced embed. This is inspiration footage from YouTube,
 // not video recorded in Dussa BakeLab's kitchen.
@@ -88,6 +89,7 @@ const isPhone = () => window.matchMedia('(max-width: 767px)').matches
  */
 export default function HeroCake({ children }) {
   const reducedMotion = useReducedMotion()
+  const { isBright } = useTheme()
   const layerRef = useRef(null)
   const frameRef = useRef(null)
 
@@ -305,17 +307,17 @@ export default function HeroCake({ children }) {
 
   /* Full control, for the hero's baseline row on larger screens. */
   const controls = needsTap ? (
-    <p className="text-[0.7rem] uppercase tracking-[0.18em] text-white/70">Tap the film to play</p>
+    <p className={`text-[0.7rem] uppercase tracking-[0.18em] ${isBright ? 'text-[#52331f]' : 'text-white/70'}`}>Tap the film to play</p>
   ) : (
-    <div className="flex items-center gap-4 text-[0.7rem] uppercase tracking-[0.18em] text-white/70">
+    <div className={`flex items-center gap-4 text-[0.7rem] uppercase tracking-[0.18em] ${isBright ? 'text-[#52331f]' : 'text-white/70'}`}>
       <button
         type="button"
         onClick={toggle}
         aria-pressed={wanted}
         aria-label={label}
-        className="group inline-flex items-center gap-2.5 transition-colors hover:text-white focus-visible:rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+        className={`group inline-flex items-center gap-2.5 transition-colors focus-visible:rounded-full focus-visible:outline-2 focus-visible:outline-offset-4 ${isBright ? 'hover:text-[#9a5e29] focus-visible:outline-[#52331f]' : 'hover:text-white focus-visible:outline-white'}`}
       >
-        <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/35 transition-colors group-hover:border-white/70">
+        <span className={`flex h-8 w-8 items-center justify-center rounded-full border transition-colors ${isBright ? 'border-[#52331f]/40 group-hover:border-[#52331f]/80' : 'border-white/35 group-hover:border-white/70'}`}>
           {icon}
         </span>
         {wanted ? 'Pause film' : 'Play film'}
@@ -324,7 +326,7 @@ export default function HeroCake({ children }) {
         href={VIDEO_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-1 text-white/45 transition-colors hover:text-white/80"
+        className={`inline-flex items-center gap-1 transition-colors ${isBright ? 'text-[#52331f]/80 hover:text-[#52331f]' : 'text-white/60 hover:text-white'}`}
       >
         Film via YouTube
         <ArrowUpRight size={12} aria-hidden="true" />
@@ -369,7 +371,7 @@ export default function HeroCake({ children }) {
           {mounted && (
             <iframe
               ref={frameRef}
-              title="Background film: baking at Dussa BakeLab"
+              title="Background film: baking inspiration from YouTube"
               src={src}
               // Out of the tab order while it is decoration; reachable when it
               // is the only way to start the film.
