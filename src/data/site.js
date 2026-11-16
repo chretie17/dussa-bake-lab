@@ -3,20 +3,25 @@
  * Change these values and they propagate across the whole site.
  */
 
+export const BRAND_ASSETS = {
+  logo: '/brand/dussa-bakelab-logo.png',
+  mark: '/brand/dussa-bakelab-mark.png',
+}
+
 export const BRAND = {
   name: 'Dussa BakeLab',
   shortName: 'Dussa',
-  tagline: 'Good cake, made for sharing.',
-  script: "There's always room for cake",
+  tagline: 'Made with the finest ingredients, baked to be loved.',
+  script: 'Baked to be loved',
   promise: 'Baked in Kigali · Made to share',
   city: 'Kigali',
   country: 'Rwanda',
   description:
-    'Cakes, cupcakes and sweet treats for moments worth sharing. Baked to order in Kigali.',
+    'Cakes, cupcakes and treats, made to order in Kigali for celebrations and everyday sharing.',
   founded: 2021,
   /**
-   * Your own logo, uploaded in the dashboard. Empty means the drawn monogram
-   * is used. Set logoHasName when the file already includes "Dussa BakeLab",
+   * An optional dashboard upload overrides the bundled Dussa logo.
+   * Set logoHasName when the file already includes "Dussa BakeLab",
    * so the typed wordmark next to it is dropped rather than repeated.
    */
   logoUrl: '',
@@ -59,7 +64,7 @@ export const FULFILMENT = {
 }
 
 export const NAV_LINKS = [
-  { label: 'Creations', to: '/creations' },
+  { label: 'Menu', to: '/creations' },
   { label: 'Order', to: '/order' },
   { label: 'Our story', to: '/about' },
   { label: 'Track order', to: '/track' },

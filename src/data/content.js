@@ -1,32 +1,32 @@
 export const PROCESS = [
   {
     step: '01',
-    title: 'Tell us the plan',
-    body: 'Occasion, date, how many people, and any pictures you have saved. Two minutes on the order form, or just message us on WhatsApp.',
+    title: 'Tell us what you need',
+    body: 'Tell us your date, the occasion and how many people you are serving. Order online or send us your ideas on WhatsApp.',
     icon: 'chat',
   },
   {
     step: '02',
-    title: 'We design & quote',
-    body: 'You get a price in writing, and a sketch if the design is custom. Nothing goes in the oven until you say yes.',
+    title: 'Confirm the details',
+    body: 'We will go through the size, flavours, design and price with you before confirming your order.',
     icon: 'pencil',
   },
   {
     step: '03',
-    title: 'Baked fresh',
-    body: 'Small batches, made to order. Nothing frozen, nothing from a packet mix. Your cake is baked the day before it reaches you.',
+    title: 'We bake your order',
+    body: 'We bake and decorate your cake or treats for your chosen date, with the details we agreed on.',
     icon: 'oven',
   },
   {
     step: '04',
-    title: 'Delivered or collected',
-    body: 'Boxed, kept cold and driven across Kigali, or waiting for you at a time that suits.',
+    title: 'Collect or have it delivered',
+    body: 'Collect from our kitchen or arrange delivery in Kigali at the time confirmed with your order.',
     icon: 'truck',
   },
 ]
 
 export const VALUES = [
-  { title: 'Baked for your order', body: 'We make cakes and treats for your chosen date, rather than asking you to choose from a display case.' },
+  { title: 'Baked for your order', body: 'Your cakes and treats are made for the date you choose.' },
   { title: 'Flavours you love', body: 'Chocolate, vanilla, red velvet or something a little different. Tell us what sounds good.' },
   { title: 'A personal touch', body: 'Choose a message, colours or a design idea. We can talk through the details together.' },
   { title: 'Made to share', body: 'From a little treat for two to a cake for a room full of people, we want everyone to get a slice.' },
@@ -78,31 +78,31 @@ export const TESTIMONIALS = [
 export const FAQS = [
   {
     q: 'How far in advance should I order?',
-    a: 'Two days for our standard cakes and boxes, four or five for custom designs, two weeks for wedding tiers. If your date is sooner, message us on WhatsApp. We keep a few rush slots open each week.',
+    a: 'Allow two days for standard cakes and boxes, four or five days for custom designs, and two weeks for wedding cakes. Each product lists its notice period. Need it sooner? Message us to check availability.',
   },
   {
     q: 'Do you deliver across Kigali?',
-    a: 'Yes. Delivery is RWF 3,000 inside the city and free on orders over RWF 60,000. We cover Kimihurura, Kacyiru, Remera, Nyarutarama, Gacuriro, Kibagabaga, Gisozi, Kinyinya, Kagugu, Nyamirambo, Kicukiro and Kanombe. Further out, ask and we will price it.',
+    a: 'Yes. Delivery is RWF 3,000 inside the city and free on orders over RWF 60,000. We cover Kimihurura, Kacyiru, Remera, Nyarutarama, Gacuriro, Kibagabaga, Gisozi, Kinyinya, Kagugu, Nyamirambo, Kicukiro and Kanombe. For other areas, contact us for a delivery quote.',
   },
   {
     q: 'How do I pay?',
-    a: 'MTN Mobile Money, Airtel Money, bank transfer, or cash when you collect. Normal orders are paid on delivery. Custom and wedding work needs a 50% deposit to hold the date, and the rest before the cake leaves us.',
+    a: 'MTN Mobile Money, Airtel Money, bank transfer, or cash when you collect. Standard orders are paid on delivery or collection. Custom and wedding orders need a 50% deposit to reserve your date, with the balance due before delivery or collection.',
   },
   {
     q: 'Can you match a cake I saw online?',
-    a: 'We can work from a picture, and we will tell you straight what we can and cannot match. We will not copy another baker\'s signature design outright. We would rather make you something that is yours.',
+    a: 'Send us a reference photo. We will talk through the colours, shape and details, then agree on a design for your cake.',
   },
   {
     q: 'Do you cater for allergies or dietary needs?',
-    a: 'We do eggless and lower-sugar versions of most cakes, and can talk through nut-free options. Our kitchen handles nuts, dairy, gluten and eggs, so we cannot promise a fully allergen-free environment. Tell us in the order notes and we will be honest about the risk.',
+    a: 'We do eggless and lower-sugar versions of most cakes, and can talk through nut-free options. Our kitchen handles nuts, dairy, gluten and eggs, so we cannot promise a fully allergen-free environment. Please contact us about any allergies before ordering.',
   },
   {
     q: 'What if I need to change or cancel my order?',
-    a: 'Changes are free up to 48 hours before your date. After that we have usually bought the ingredients and started, so deposits stop being refundable. We will always try to move your date rather than lose the order.',
+    a: 'Changes are free up to 48 hours before your date. After that, deposits are non-refundable because preparation may already have started. Contact us if you need to move your date and we will check what is possible.',
   },
   {
     q: 'How should I store my cake?',
-    a: 'Keep buttercream and ganache cakes in the fridge, then take them out 45 minutes before serving. That is when they taste best. Cookies and brownies keep in a sealed box at room temperature for three or four days.',
+    a: 'Keep buttercream and ganache cakes in the fridge, then take them out 45 minutes before serving so they have time to soften. Cookies and brownies keep in a sealed box at room temperature for three or four days.',
   },
 ]
 

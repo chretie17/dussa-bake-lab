@@ -31,7 +31,7 @@ function buildChannels(contact) {
       icon: WhatsAppIcon,
       label: "WhatsApp",
       value: contact.phoneDisplay,
-      note: "Usually answered within the hour",
+      note: "Send us your questions or cake ideas",
       href: whatsappEnquiryLink(),
       accent: "bg-[#25D366]/15 text-[#128C4A]",
     },
@@ -47,7 +47,7 @@ function buildChannels(contact) {
       icon: InstagramIcon,
       label: "Instagram",
       value: `@${contact.instagram}`,
-      note: "See what came out of the oven today",
+      note: "Visit our Instagram page",
       href:
         contact.instagramUrl ||
         `https://www.instagram.com/${contact.instagram}`,
@@ -98,9 +98,9 @@ export default function Contact() {
     if (!isValidPhone(form.phone))
       next.phone = "Enter a valid Rwandan number, e.g. 0788 722 064.";
     if (!isValidEmail(form.email))
-      next.email = "That email address does not look right.";
+      next.email = "Please check your email address.";
     if (form.message.trim().length < 10)
-      next.message = "A sentence or two helps us answer properly.";
+      next.message = "Please add a few details so we can help.";
     setErrors(next);
     if (Object.keys(next).length > 0) return;
 
@@ -125,7 +125,7 @@ export default function Contact() {
       <PageHeader
         eyebrow="Say hello"
         title="Let's talk cake"
-        lead="Questions about a design, a date, or whether we come to your area? Ask. We would rather talk it through than have you guessing."
+        lead="Ask us about a cake design, check a date or find out about delivery to your area."
         crumbs={[{ label: "Contact" }]}
       />
 
@@ -170,7 +170,7 @@ export default function Contact() {
               <SectionHeading
                 eyebrow="Send an enquiry"
                 title="Tell us what you have in mind"
-                lead="Fill this in and it opens WhatsApp with your message ready to send. That is the quickest way to reach us."
+                lead="Add your details below. We will open WhatsApp with your message ready for you to send."
               />
 
               <form onSubmit={send} className="mt-8 grid gap-5 sm:grid-cols-2">
@@ -251,24 +251,24 @@ export default function Contact() {
                     rows={5}
                     value={form.message}
                     error={errors.message}
-                    placeholder="The date, roughly how many people, and anything you have seen that you liked…"
+                    placeholder="Your date, number of guests, preferred flavours and any design ideas…"
                     onChange={(e) => update("message", e.target.value)}
                   />
                 </Field>
 
                 <div className="sm:col-span-2">
                   <Button type="submit" size="lg" sheen>
-                    <Send size={16} strokeWidth={1.9} /> Send via WhatsApp
+                    <Send size={16} strokeWidth={1.9} /> Continue to WhatsApp
                   </Button>
                   <p className="mt-3 text-[0.78rem] text-cocoa/70">
-                    Ready to book instead?{" "}
+                    Ready to order?{" "}
                     <a
                       href="/order"
                       className="text-caramel underline-offset-4 hover:underline"
                     >
                       Use the order form
                     </a>{" "}
-                    and get an order code straight away.
+                    to get started.
                   </p>
                 </div>
               </form>
@@ -288,9 +288,8 @@ export default function Contact() {
                   </h3>
                 </div>
                 <p className="mt-3 text-[0.9rem] leading-relaxed text-cocoa/65">
-                  We bake in {contact.location}. It is a kitchen rather than a shop you
-                  can walk into, so pickups happen at a booked time. We send the
-                  exact spot with your confirmation.
+                  Our kitchen is in {contact.location}. Collection is by appointment.
+                  We will send the address and confirm your collection time with your order.
                 </p>
                 <Button
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(contact.mapQuery || contact.location)}`}
@@ -338,7 +337,7 @@ export default function Contact() {
                   ))}
                 </ul>
                 <p className="mt-4 text-[0.8rem] leading-relaxed text-cocoa/72">
-                  Somewhere else in Rwanda? Ask us. We price longer trips one by one.
+                  Outside these areas? Contact us to check availability and delivery costs.
                 </p>
               </div>
             </div>
@@ -351,7 +350,7 @@ export default function Contact() {
         <div className="container-x">
           <SectionHeading
             align="center"
-            eyebrow="Before you ask"
+            eyebrow="Good to know"
             title="Frequently asked questions"
           />
           <Flourish className="mt-8" />
@@ -363,7 +362,7 @@ export default function Contact() {
 
           <div className="mt-12 text-center">
             <p className="text-[0.9375rem] text-cocoa/62">
-              Still not answered?
+              Have another question?
             </p>
             <Button href={whatsappEnquiryLink()} className="mt-4" sheen>
               <MessageCircle size={16} strokeWidth={1.9} /> Ask us on WhatsApp

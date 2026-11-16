@@ -269,9 +269,9 @@ export async function notifyOrderOnWhatsApp(order) {
  * passed into the status template as {{3}}, so they must stay single-line.
  */
 export const CUSTOMER_STATUS_LINES = {
-  confirmed: 'Your order is confirmed and booked into the kitchen. Nothing more is needed from you for now.',
-  baking: 'Your order is being baked and decorated today. We will message again once it is boxed.',
-  ready: 'Your order is finished, boxed and chilled. See you at your slot.',
+  confirmed: 'Your order is confirmed for your chosen date. We will let you know when it is ready.',
+  baking: 'Your order is being baked and decorated. We will message you when it is ready.',
+  ready: 'Your order is ready for your scheduled collection or delivery.',
   completed: 'Your order is complete. Thank you for letting us bake for you — enjoy every slice.',
   cancelled: 'Your order has been cancelled. If that was not expected, reply to this message and we will put it right.',
 }
@@ -333,7 +333,7 @@ export function formatCustomerConfirmation(order, momo) {
     `Total: ${money(order.total)}`,
     order.depositDue ? `Deposit to confirm: ${money(order.depositDue)}` : null,
     '',
-    'Kindly make payment to:',
+    'You can pay using:',
     `MTN Mobile Money: ${momo}`,
     '',
     'After paying, reply to this WhatsApp conversation with "PAID" and attach a screenshot of the payment confirmation.',
@@ -350,10 +350,10 @@ export function formatPaymentAcknowledgement(order, withProof) {
     `Thank you ${firstName(order)} — we have your payment note for order ${order.code}.`,
     '',
     withProof
-      ? 'We have the screenshot and someone at the bakery is checking it now.'
+      ? 'We have received your screenshot. The bakery will check it against the payment record.'
       : 'If you have a screenshot of the confirmation, send it here and it will speed things up.',
     '',
-    'You will get a message from us the moment it is verified.',
+    'We will message you once your payment has been verified.',
   ].join('\n')
 }
 

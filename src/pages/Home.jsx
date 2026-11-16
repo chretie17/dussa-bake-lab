@@ -13,7 +13,7 @@ import usePageMeta from '../lib/usePageMeta'
 
 export default function Home() {
   usePageMeta({
-    title: 'Dussa BakeLab — Handcrafted Cakes & Treats in Kigali',
+    title: 'Dussa BakeLab — Cakes & Treats in Kigali',
     description:
       'Order cakes, cupcakes and sweet treats from Dussa BakeLab in Kigali. Choose your favourites or ask about a custom cake.',
   })

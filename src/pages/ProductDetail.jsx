@@ -112,7 +112,7 @@ export default function ProductDetail() {
               <li className="flex items-center gap-1.5">
                 <ChevronRight size={13} strokeWidth={2} className="opacity-45" aria-hidden="true" />
                 <Link to="/creations" className="transition-colors hover:text-caramel">
-                  Creations
+                  Menu
                 </Link>
               </li>
               <li className="flex items-center gap-1.5">
@@ -164,7 +164,7 @@ export default function ProductDetail() {
 
               <div className="absolute left-6 top-6 flex flex-col gap-2">
                 {product.bestseller && <Pill tone="dark">Featured</Pill>}
-                {product.customBrief && <Pill tone="gold">Bespoke</Pill>}
+                {product.customBrief && <Pill tone="gold">Custom design</Pill>}
               </div>
             </motion.div>
             {!product.photo && (
@@ -189,7 +189,7 @@ export default function ProductDetail() {
               <div className="rounded-2xl border border-caramel/20 bg-porcelain p-4 text-center">
                 <Truck size={16} strokeWidth={1.7} className="mx-auto text-caramel" />
                 <p className="mt-2 text-[0.72rem] uppercase tracking-[0.1em] text-cocoa/70">Delivery</p>
-                <p className="mt-0.5 text-[0.9rem] font-medium text-espresso">Kigali-wide</p>
+                <p className="mt-0.5 text-[0.9rem] font-medium text-espresso">Across Kigali</p>
               </div>
             </div>
           </div>
@@ -394,7 +394,7 @@ export default function ProductDetail() {
                   rows={4}
                   value={brief}
                   onChange={(e) => setBrief(e.target.value)}
-                  placeholder="Theme, colours, a reference you have seen, the guest of honour's favourite thing…"
+                  placeholder="Your theme, colours and any design ideas or reference photos…"
                   className="mt-3 w-full rounded-xl border border-caramel/25 bg-porcelain p-4 text-[0.9rem] leading-relaxed text-espresso placeholder:text-cocoa/65 focus:border-caramel focus:outline-none"
                 />
                 <p className="mt-2 text-[0.78rem] text-cocoa/72">
@@ -502,7 +502,7 @@ export default function ProductDetail() {
                   <div className="space-y-3">
                     <p>
                       Keep buttercream and ganache cakes in the fridge, then bring them out 45
-                      minutes before serving. That is when they taste best.
+                      minutes before serving. Allow time for them to soften before serving.
                     </p>
                     <p>
                       Cookies, brownies and macarons keep in a sealed box at room temperature for

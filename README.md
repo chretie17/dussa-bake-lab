@@ -381,23 +381,18 @@ WhatsApp carries the conversation.** That is what is wired up here.
 
 ---
 
-## Using your own logo
+## Brand assets
 
-Open **Settings → Your logo** in the dashboard and drop the file in. It replaces
-the drawn monogram in the navbar, the footer, the dashboard sign-in and the
-browser tab. Leave it empty and the drawn one comes back.
+The supplied Dussa BakeLab logo has web versions in `public/brand/`:
 
-Tick **My logo already includes the name** when the file spells out "Dussa
-BakeLab", so the typed wordmark beside it is dropped rather than printed twice.
+- `dussa-bakelab-logo.png`: the full logo and tagline, used on the About page, in the footer and in sharing metadata.
+- `dussa-bakelab-mark.png`: the compact D, whisk and bowl, used in navigation, loading screens, dashboard sign-in and the browser tab.
 
-What works best: a **square PNG or SVG with a transparent background**. The site
-has a light and a dark theme, so a logo sitting on a white square will show that
-square against the dark one — the drawn monogram recolours itself, an uploaded
-file cannot.
+The assets were prepared from the supplied logo reference. The compact mark has an ivory background so it remains readable in both themes. The full logo sits on an ivory panel. Shared rendering lives in `src/components/BrandMark.jsx`; brand wording and asset paths live in `src/data/site.js`.
 
-The one thing this does not change is the social sharing image
-(`public/og-image.svg`), which is what appears when someone pastes a link into
-WhatsApp or Facebook. That is a file in the repo, not a setting.
+To replace the logo later, open **Settings → Your logo** in the dashboard. Tick **My logo includes the business name** to hide the separate wordmark. Clearing the upload restores the bundled Dussa logo. This also restores the default browser icon. Sharing metadata uses the bundled full logo in `index.html`.
+
+Use plain, friendly language for customer copy. Explain the next step directly and keep product details, ordering instructions and notification messages consistent. Keep product URLs and option IDs stable when editing wording.
 
 ## Adding your photos
 

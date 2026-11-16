@@ -10,28 +10,28 @@ function buildCards(fulfilment) {
       icon: Clock,
       label: "Lead time",
       title: `${fulfilment.leadDays?.standard ?? 2} days for most orders`,
-      body: `Custom designs need ${fulfilment.leadDays?.custom ?? 4} days, wedding tiers ${fulfilment.leadDays?.wedding ?? 14}. Rush slots open weekly.`,
+      body: `Custom designs need ${fulfilment.leadDays?.custom ?? 4} days, wedding tiers ${fulfilment.leadDays?.wedding ?? 14}. Contact us if you need it sooner.`,
       tint: "bg-blush text-choco",
     },
     {
       icon: MapPin,
       label: "Collection",
       title: "Pick up in Kigali",
-      body: "Pick a time at checkout and collect it boxed, cold and ready to travel.",
+      body: "Choose a collection time at checkout. We will confirm the location with your order.",
       tint: "bg-gold/22 text-mocha",
     },
     {
       icon: Truck,
       label: "Delivery",
       title: `${money(fulfilment.deliveryFee)} citywide`,
-      body: `Free over ${money(fulfilment.freeDeliveryOver)}. Kept cold on the way, across every zone in the city.`,
+      body: `Free over ${money(fulfilment.freeDeliveryOver)}. Choose your delivery area at checkout.`,
       tint: "bg-caramel/18 text-choco",
     },
     {
       icon: Wallet,
       label: "Payment",
       title: "MoMo, Airtel, bank or cash",
-      body: `Normal orders are paid on delivery. Custom work needs a ${fulfilment.depositPercent}% deposit to hold the date.`,
+      body: `Standard orders are paid on delivery or collection. Custom orders need a ${fulfilment.depositPercent}% deposit to hold the date.`,
       tint: "bg-espresso/8 text-espresso",
     },
   ];
@@ -75,7 +75,7 @@ export default function InfoCards() {
         <Reveal delay={0.1}>
           <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
             <Button to="/order" size="lg" sheen>
-              Book your order
+              Place an order
             </Button>
             <Button href={whatsappEnquiryLink()} size="lg" variant="outline">
               Ask on WhatsApp

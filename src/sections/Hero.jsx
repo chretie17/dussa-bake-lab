@@ -52,7 +52,7 @@ export default function Hero() {
                   className={`eyebrow mb-5 flex items-center gap-3 md:mb-8 ${isBright ? "text-[#8d5425]" : "text-[#e9c08f]"}`}
                 >
                   <span aria-hidden="true" className={`h-px w-8 md:w-10 ${isBright ? "bg-[#8d5425]/75" : "bg-[#e9c08f]/70"}`} />
-                  {BRAND.city}, {BRAND.country} · Est. {BRAND.founded}
+                  Made to order in {BRAND.city}, {BRAND.country}
                 </motion.p>
 
                 <h1
@@ -60,10 +60,10 @@ export default function Hero() {
                   className={`font-display text-[clamp(2.5rem,7.2vw,6rem)] font-light leading-[1.04] tracking-[-0.025em] ${isBright ? "text-[#2a1810]" : "text-white [text-shadow:0_2px_30px_rgba(0,0,0,0.35)]"}`}
                 >
                   <motion.span {...entrance(0.22)} className="block italic">
-                    Bring the people.
+                    A cake for
                   </motion.span>
                   <motion.span {...entrance(0.38)} className="block">
-                    We’ll bring the <span className={`italic ${isBright ? "text-[#9a5e29]" : "text-[#e9c08f]"}`}>cake.</span>
+                    your <span className={`italic ${isBright ? "text-[#9a5e29]" : "text-[#e9c08f]"}`}>occasion.</span>
                   </motion.span>
                 </h1>
 
@@ -71,8 +71,8 @@ export default function Hero() {
                   {...entrance(0.6)}
                   className={`mt-5 max-w-[30rem] text-[clamp(0.98rem,1.6vw,1.125rem)] leading-[1.65] md:mt-8 md:leading-[1.7] ${isBright ? "text-[#4a2f1c]" : "text-white/80"}`}
                 >
-                  Birthday coming up? Planning a wedding? Or just craving something sweet? Tell us
-                  what you have in mind. We bake to order here in Kigali.
+                  Birthday cakes, wedding cakes and a box of something sweet. Choose from our menu
+                  or tell us what you have in mind. We bake to order here in Kigali.
                 </motion.p>
 
                 <motion.div

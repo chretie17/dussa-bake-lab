@@ -37,8 +37,8 @@ export default function CtaBanner() {
                 {BRAND.script}
               </p>
               <h2 className="mx-auto mt-6 max-w-2xl text-[clamp(1.9rem,4.4vw,3rem)] leading-[1.1]">
-                Tell us the date and we will{' '}
-                <span className="italic text-gradient-gold">take it from there</span>
+                Have a cake in mind?{' '}
+                <span className="italic text-gradient-gold">Let’s plan it together.</span>
               </h2>
               <p className="mx-auto mt-5 max-w-lg text-[1.0625rem] leading-relaxed text-on-deep/65">
                 Share your date and what you are looking for. We will help you work out the size,

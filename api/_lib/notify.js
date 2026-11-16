@@ -23,7 +23,7 @@ const BRAND = {
 const STATUS_COPY = {
   confirmed: {
     subject: 'Your order is confirmed',
-    heading: 'You are in the book',
+    heading: 'Your order is confirmed',
     body: 'We have confirmed your order and it is scheduled in the kitchen. Nothing more is needed from you for now.',
   },
   baking: {
@@ -33,13 +33,13 @@ const STATUS_COPY = {
   },
   ready: {
     subject: 'Your order is ready',
-    heading: 'Boxed and waiting',
-    body: 'Your order is finished, boxed and chilled. See you at your slot.',
+    heading: 'Your order is ready',
+    body: 'Your order is ready for your scheduled collection or delivery.',
   },
   completed: {
     subject: 'Thank you from Dussa BakeLab',
     heading: 'Enjoy every slice',
-    body: 'Your order is on its way to being eaten. Thank you for letting us be part of it — we would love to see a photo.',
+    body: 'Thank you for ordering from Dussa BakeLab. We hope you enjoy it and look forward to baking for you again.',
   },
   cancelled: {
     subject: 'Your order has been cancelled',
@@ -88,7 +88,7 @@ function itemRows(order) {
             </div>
             ${options ? `<div style="font-size:13px;color:#8A6B55;margin-top:3px;">${escapeHtml(options)}</div>` : ''}
             ${extras ? `<div style="font-size:12px;color:${BRAND.caramel};margin-top:3px;">${escapeHtml(extras)}</div>` : ''}
-            ${i.message ? `<div style="font-size:12px;color:#8A6B55;margin-top:3px;font-style:italic;">Pipe: “${escapeHtml(i.message)}”</div>` : ''}
+            ${i.message ? `<div style="font-size:12px;color:#8A6B55;margin-top:3px;font-style:italic;">Cake message: “${escapeHtml(i.message)}”</div>` : ''}
           </td>
           <td style="padding:12px 0;border-bottom:1px solid #EADCC7;text-align:right;white-space:nowrap;font-size:15px;color:${BRAND.ink};">
             ${money(i.linePrice)}
@@ -235,7 +235,7 @@ export async function notifyNewOrder(order) {
   const html = layout({
     preheader: `${order.name} · ${money(order.total)} · ${prettyDate(order.date)}`,
     heading: `New order from ${order.name}`,
-    intro: `A new order just came through the website. It is already waiting in your dashboard.`,
+    intro: `A new order has been placed on the website. Open your dashboard to review and confirm it.`,
     code: order.code,
     bodyHtml: `
       ${orderSummaryHtml(order)}
@@ -332,7 +332,7 @@ export async function notifyPaymentClaim(order, { withProof, reference } = {}) {
     preheader: `${order.name} says they paid ${money(order.total)} for ${order.code}`,
     heading: `${escapeHtml(order.name)} reports a payment`,
     intro:
-      'A customer has messaged on WhatsApp to say they have paid. Nothing has moved — the order stays where it is until you verify the money has arrived.',
+      'A customer has messaged on WhatsApp to say they have paid. The order status will stay the same until you verify that the payment has arrived.',
     code: order.code,
     bodyHtml: `
       <div style="margin-top:22px;background:${BRAND.cream};border-radius:14px;padding:18px;font-size:14px;line-height:1.8;color:#6B5344;">

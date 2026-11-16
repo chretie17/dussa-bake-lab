@@ -2,11 +2,9 @@ import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Menu, ShoppingBag, X, Phone } from 'lucide-react'
-import { Wordmark } from '../art/Logo'
-import { BrandMark } from './BrandMark'
+import { BrandLockup } from './BrandMark'
 import { NAV_LINKS, CONTACT } from '../data/site'
 import { useCart } from '../context/CartContext'
-import { useCatalog } from '../context/CatalogContext'
 import ThemeToggle from './ThemeToggle'
 import { useTheme } from '../context/ThemeContext'
 import { classNames } from '../lib/format'
@@ -16,10 +14,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const { count, openCart } = useCart()
-  const { brand } = useCatalog()
   const { isBright } = useTheme()
-  // A logo file that already spells the bakery out makes the typed name a repeat.
-  const showWordmark = !(brand?.logoUrl && brand?.logoHasName)
   const { pathname } = useLocation()
 
   /**
@@ -60,24 +55,18 @@ export default function Navbar() {
             : 'glass border-b border-caramel/18 py-2 shadow-[0_1px_24px_-12px_rgba(42,24,16,0.5)]',
         )}
       >
-        <nav className="container-x flex items-center justify-between gap-6" aria-label="Main">
+        <nav className="container-x flex items-center justify-between gap-3 sm:gap-6" aria-label="Main">
           <Link
             to="/"
             className="group flex shrink-0 items-center gap-2.5"
             aria-label="Dussa BakeLab — home"
           >
-            <BrandMark
-              className="h-11 w-11 transition-transform duration-500 group-hover:rotate-[-6deg] md:h-12 md:w-12"
+            <BrandLockup
+              markClass="h-11 w-11 md:h-12 md:w-12"
+              wordClass="text-[0.72rem] sm:text-[0.9rem]"
               tone={overHero ? heroInk : 'var(--color-espresso)'}
               accent={overHero ? heroAccent : 'var(--color-caramel)'}
             />
-            {showWordmark && (
-              <Wordmark
-                className="hidden text-[0.9rem] sm:inline-flex"
-                tone={overHero ? heroInk : 'var(--color-espresso)'}
-                accent={overHero ? heroAccent : 'var(--color-caramel)'}
-              />
-            )}
           </Link>
 
           <ul className="hidden items-center gap-1 lg:flex">
@@ -202,7 +191,7 @@ export default function Navbar() {
               transition={{ type: 'spring', stiffness: 320, damping: 36 }}
             >
               <div className="relative z-10 flex items-center justify-between border-b border-caramel/20 px-6 py-5">
-                <Wordmark className="text-[0.9rem]" tone="var(--color-espresso)" />
+                <BrandLockup wordClass="text-[0.8rem]" tone="var(--color-espresso)" accent="var(--color-caramel)" />
                 <button
                   type="button"
                   onClick={() => setMenuOpen(false)}
@@ -239,7 +228,7 @@ export default function Navbar() {
 
               <div className="relative z-10 space-y-3 border-t border-caramel/20 px-6 py-6">
                 <div className="flex items-center justify-between gap-3 pb-1">
-                  <span className="text-[0.85rem] text-cocoa/70">Look</span>
+                  <span className="text-[0.85rem] text-cocoa/70">Theme</span>
                   <ThemeToggle />
                 </div>
                 <Button to="/order" className="w-full" sheen>

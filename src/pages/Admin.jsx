@@ -104,7 +104,7 @@ export default function Admin() {
     } catch (err) {
       if (/401|admin key/i.test(err.message)) {
         setAuthed(false)
-        setSignInError('That key was not accepted.')
+        setSignInError('That admin key was not recognised. Please try again.')
       } else {
         // Offline: show what this browser saved so the kitchen is not blind.
         setAuthed(true)
@@ -328,8 +328,8 @@ export default function Admin() {
           )}
 
           <p className="mt-6 text-center text-[0.75rem] leading-relaxed text-on-deep/35">
-            This is the ADMIN_KEY you set on your deployment. If you have not set one yet, any
-            word will get you in.
+            Use the dashboard password set as ADMIN_KEY in your hosting settings.
+            In local development, any value works until a key is configured.
           </p>
         </div>
       </section>
@@ -402,10 +402,10 @@ export default function Admin() {
             <AlertTriangle size={17} strokeWidth={1.8} className="mt-0.5 shrink-0 text-caramel" />
             <span className="text-[0.85rem] leading-relaxed text-cocoa/80">
               {storage === 'memory'
-                ? 'No database is connected, so orders are not being saved. Open Setup to fix this.'
+                ? 'No database is connected. Orders are stored temporarily and will be lost when the server restarts. Open Setup to connect a database.'
                 : storage === 'offline'
-                  ? 'Cannot reach the order service. Showing what this browser has saved.'
-                  : 'This dashboard has no password set. Open Setup to see how to lock it.'}
+                  ? 'The order service is unavailable. Showing orders saved in this browser.'
+                  : 'No dashboard password is set. Open Setup to add one.'}
             </span>
           </button>
         )}

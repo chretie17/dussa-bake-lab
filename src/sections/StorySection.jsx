@@ -56,7 +56,7 @@ export default function StorySection() {
                 <span className="italic text-caramel">a good slice of cake</span>
               </>
             }
-            lead="We make cakes and treats for birthdays, weddings, gatherings and ordinary afternoons. Nothing complicated. Just something lovely to share."
+            lead="We bake cakes and treats for birthdays, weddings and everyday gatherings. Tell us what you like and who you are sharing it with."
           />
 
           <div className="mt-9 grid gap-x-8 gap-y-6 sm:grid-cols-2">

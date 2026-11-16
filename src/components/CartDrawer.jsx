@@ -71,9 +71,9 @@ export default function CartDrawer() {
                   <ShoppingBag size={30} strokeWidth={1.4} />
                 </div>
                 <div>
-                  <h3 className="text-xl">Nothing sweet in here yet</h3>
+                  <h3 className="text-xl">Your basket is empty</h3>
                   <p className="mt-2 text-sm text-cocoa/65">
-                    Have a look at what we make. Everything can be adjusted to suit you.
+                    Browse our menu and choose something you would like.
                   </p>
                 </div>
                 <Button
@@ -82,7 +82,7 @@ export default function CartDrawer() {
                     navigate('/creations')
                   }}
                 >
-                  Explore creations
+                  Browse the menu
                 </Button>
               </div>
             ) : (

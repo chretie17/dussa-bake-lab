@@ -46,7 +46,7 @@ export default function SettingsPanel({ settings, onSave, onReset, saving, error
 
       {/* ------------------------------------------------- money */}
       <Card
-        title="Money & fulfilment"
+        title="Pricing, delivery & collection"
         note="These drive the basket, the checkout totals and the deposit wording."
       >
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -70,7 +70,7 @@ export default function SettingsPanel({ settings, onSave, onReset, saving, error
             />
           </Field>
 
-          <Field label="Deposit for big orders" htmlFor="s-deposit" hint="%">
+          <Field label="Deposit percentage" htmlFor="s-deposit" hint="%">
             <TextInput
               id="s-deposit"
               type="number"
@@ -229,7 +229,7 @@ export default function SettingsPanel({ settings, onSave, onReset, saving, error
       {/* ------------------------------------------- gallery */}
       <Card
         title="Photos on the home page"
-        note='The moving shelf under "Today on the shelf".'
+        note='Photos in the scrolling gallery on the home page.'
       >
         <GalleryEditor
           rows={form.gallery || []}
@@ -241,7 +241,7 @@ export default function SettingsPanel({ settings, onSave, onReset, saving, error
       {/* --------------------------------------------- logo */}
       <Card
         title="Your logo"
-        note="Shown in the navbar, the footer and the browser tab. Leave it empty to keep the drawn monogram."
+        note="Shown in the navigation, footer and browser tab. Leave this empty to use the Dussa BakeLab logo."
       >
         <ImagePicker
           value={form.brand.logoUrl || ''}
@@ -258,18 +258,18 @@ export default function SettingsPanel({ settings, onSave, onReset, saving, error
             className="mt-0.5 h-4 w-4 accent-espresso"
           />
           <span className="text-[0.85rem] leading-relaxed text-cocoa/70">
-            My logo already includes the name — don’t print “Dussa BakeLab” next to it.
+            My logo includes the business name. Hide the separate wordmark.
           </span>
         </label>
 
         <p className="mt-4 rounded-xl bg-cream/70 px-4 py-3 text-[0.8rem] leading-relaxed text-cocoa/65">
-          A square PNG or SVG with a transparent background works best — the site has a light and a
-          dark theme, and a logo baked onto a white square will show that square on the dark one.
+          Use a clear PNG or SVG. Check that the lettering is readable at a small size
+          and in both the light and dark themes.
         </p>
       </Card>
 
       {/* --------------------------------------------- brand */}
-      <Card title="Brand words" note="The headline phrases customers read first.">
+      <Card title="Brand details" note="Your business name and the wording shown across the site.">
         <div className="grid gap-5">
           <Field label="Business name" htmlFor="s-name">
             <TextInput
@@ -284,7 +284,7 @@ export default function SettingsPanel({ settings, onSave, onReset, saving, error
               id="s-script"
               value={form.brand.script || ''}
               onChange={(e) => setIn('brand', 'script', e.target.value)}
-              placeholder="Let's make life sweeter"
+              placeholder="Baked to be loved"
             />
           </Field>
 

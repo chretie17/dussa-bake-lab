@@ -71,9 +71,9 @@ export default function OrderFlow() {
   })
 
   usePageMeta({
-    title: 'Book your order — Dussa BakeLab',
+    title: 'Place an order — Dussa BakeLab',
     description:
-      'Place your Dussa BakeLab order online: choose your creations, pick a delivery or collection slot in Kigali, and confirm in a couple of minutes.',
+      'Place your Dussa BakeLab order online: choose your cakes and treats, pick a delivery or collection slot in Kigali, and send us your order.',
   })
 
   const earliestDate = isoDaysFromNow(leadDays)
@@ -94,15 +94,15 @@ export default function OrderFlow() {
     const next = {}
 
     if (index === 0 && items.length === 0) {
-      next.basket = 'Add at least one creation before continuing.'
+      next.basket = 'Add an item to your basket before continuing.'
     }
 
     if (index === 1) {
-      if (!form.date) next.date = 'Pick a date.'
+      if (!form.date) next.date = 'Please choose a date.'
       else if (form.date < earliestDate) {
         next.date = `The earliest we can be ready is ${prettyDate(earliestDate)}.`
       }
-      if (!form.time) next.time = 'Choose a slot.'
+      if (!form.time) next.time = 'Please choose a time slot.'
       if (form.fulfilment === 'delivery' && form.address.trim().length < 6) {
         next.address = 'We need a street, building or landmark to find you.'
       }
@@ -111,7 +111,7 @@ export default function OrderFlow() {
     if (index === 2) {
       if (form.name.trim().length < 2) next.name = 'Tell us who the order is for.'
       if (!isValidPhone(form.phone)) next.phone = 'Enter a valid Rwandan number, e.g. 0788 722 064.'
-      if (!isValidEmail(form.email)) next.email = 'That email address does not look right.'
+      if (!isValidEmail(form.email)) next.email = 'Please check your email address.'
       if (needsDeposit && !form.deposit) {
         next.deposit = `Please acknowledge the ${fulfilment.depositPercent}% deposit for custom work.`
       }
@@ -188,9 +188,9 @@ export default function OrderFlow() {
   return (
     <>
       <PageHeader
-        eyebrow="Booking"
-        title="Let's get this baked"
-        lead="Four short steps. You get an order code straight away, and a reply from us not long after."
+        eyebrow="Your order"
+        title="Place your order"
+        lead="Review your basket, choose delivery or collection, and add your details. We will confirm your order with you."
         crumbs={[{ label: 'Order' }]}
       />
 
@@ -386,7 +386,7 @@ export default function OrderFlow() {
 
                     <div className="mt-7 flex flex-wrap gap-3">
                       <Button to="/creations" variant="outline">
-                        {items.length > 0 ? 'Add something else' : 'Browse all creations'}
+                        {items.length > 0 ? 'Add something else' : 'Browse the menu'}
                       </Button>
                       {items.length > 0 && (
                         <Button variant="ghost" onClick={openCart}>
@@ -478,7 +478,7 @@ export default function OrderFlow() {
                         />
                       </Field>
 
-                      <Field label="Preferred slot" htmlFor="time" required error={errors.time}>
+                      <Field label="Preferred time slot" htmlFor="time" required error={errors.time}>
                         <Select
                           id="time"
                           value={form.time}
@@ -595,7 +595,7 @@ export default function OrderFlow() {
                         />
                       </Field>
 
-                      <Field label="Occasion" htmlFor="occasion" hint="helps us finish it right">
+                      <Field label="Occasion" htmlFor="occasion" hint="optional">
                         <Select
                           id="occasion"
                           value={form.occasion}
@@ -619,7 +619,7 @@ export default function OrderFlow() {
                         <TextArea
                           id="notes"
                           value={form.notes}
-                          placeholder="Allergies, colours, the name to pipe, a gate code, who not to tell…"
+                          placeholder="Dietary needs, design details or delivery instructions…"
                           onChange={(e) => update('notes', e.target.value)}
                         />
                       </Field>
@@ -697,8 +697,8 @@ export default function OrderFlow() {
                   <div>
                     <h2 className="text-[1.75rem] text-espresso">Review &amp; confirm</h2>
                     <p className="mt-2 text-[0.9375rem] text-cocoa/62">
-                      One last look. Nothing is charged here. We confirm the order and sort out
-                      payment with you directly.
+                      Check your details before sending your order. You will not be charged online;
+                      we will contact you to confirm the order and arrange payment.
                     </p>
 
                     <div className="mt-7 space-y-4">
@@ -707,7 +707,7 @@ export default function OrderFlow() {
                         onEdit={() => setStep(1)}
                         rows={[
                           ['Date', prettyDate(form.date)],
-                          ['Slot', form.time],
+                          ['Time slot', form.time],
                           form.fulfilment === 'delivery' ? ['Zone', form.zone] : null,
                           form.fulfilment === 'delivery' ? ['Address', form.address] : null,
                         ].filter(Boolean)}

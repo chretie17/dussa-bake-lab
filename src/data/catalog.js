@@ -15,25 +15,25 @@ export const CATEGORIES = [
     name: 'Cakes',
     blurb: 'for all occasions',
     description:
-      'Tall, soft layers finished by hand. Usually the thing everyone photographs.',
+      'Layer cakes for birthdays, weddings and other celebrations, finished in your chosen style.',
     art: 'dripCake',
     flavorArt: 'chocolate',
   },
   {
     id: 'cupcakes',
     name: 'Cupcakes',
-    blurb: 'beautifully made',
+    blurb: 'for sharing and gifting',
     description:
-      'Piped one at a time and boxed so they arrive standing up straight.',
+      'Cupcakes with buttercream swirls, boxed for parties, gifts or a treat at home.',
     art: 'cupcake',
     flavorArt: 'vanilla',
   },
   {
     id: 'cookies',
     name: 'Cookies',
-    blurb: 'baked to perfection',
+    blurb: 'crisp edges, soft centres',
     description:
-      'Crisp at the edge, soft in the middle, still warm if we can manage it.',
+      'Choose chocolate chip cookies or iced designs for your occasion.',
     art: 'cookieStack',
     flavorArt: 'caramel',
   },
@@ -42,7 +42,7 @@ export const CATEGORIES = [
     name: 'Treats',
     blurb: 'small & sweet',
     description:
-      'Brownies, macarons, doughnuts and cheesecakes for an ordinary Tuesday.',
+      'Brownies, macarons, doughnuts and cheesecakes to share or enjoy yourself.',
     art: 'macarons',
     flavorArt: 'berry',
   },
@@ -51,7 +51,7 @@ export const CATEGORIES = [
     name: 'Custom orders',
     blurb: 'made just for you',
     description:
-      'Tiered, sculpted, themed, or an idea you have not seen anywhere yet. We work it out with you.',
+      'Tell us your theme, colours and ideas. We will help you plan a cake for your occasion.',
     art: 'tieredCake',
     flavorArt: 'ivory',
   },
@@ -97,7 +97,7 @@ export const PRODUCTS = [
     slug: 'signature-chocolate-drip',
     name: 'Signature Chocolate Drip',
     category: 'cakes',
-    tagline: 'Chocolate for everyone',
+    tagline: 'Chocolate sponge, ganache and a drip finish',
     description:
       'Chocolate sponge layered with ganache and finished with a chocolate drip. Made for birthdays and sharing.',
     art: 'dripCake',
@@ -146,7 +146,7 @@ export const PRODUCTS = [
     category: 'cakes',
     tagline: 'For the big day',
     description:
-      'A tiered cake with a smooth ivory finish and delicate details. Let us talk about the size and look for your day.',
+      'A tiered cake with a smooth ivory finish and delicate details. Talk to us about the size and design you have in mind.',
     art: 'tieredCake',
     flavorArt: 'ivory',
     leadDays: 14,
@@ -239,7 +239,7 @@ export const PRODUCTS = [
     slug: 'chocolate-hazelnut-cupcakes',
     name: 'Chocolate Hazelnut Cupcakes',
     category: 'cupcakes',
-    tagline: 'Chocolate lovers, this way',
+    tagline: 'Chocolate with a hazelnut centre',
     description:
       'Chocolate cupcakes with a hazelnut filling and cocoa frosting. Lovely with a cup of coffee.',
     art: 'cupcake',
@@ -274,7 +274,7 @@ export const PRODUCTS = [
     ],
     flavors: CAKE_FLAVORS,
     frostings: FROSTINGS.filter((f) => f.id !== 'fondant'),
-    addons: [...BOX_ADDONS, { id: 'palette', label: 'Bespoke colour palette match', price: 5000 }],
+    addons: [...BOX_ADDONS, { id: 'palette', label: 'Custom colour matching', price: 5000 }],
     allowsMessage: false,
   },
 
@@ -332,7 +332,7 @@ export const PRODUCTS = [
     frostings: [],
     addons: [
       ...BOX_ADDONS,
-      { id: 'logo', label: 'Logo or artwork reproduction', price: 8000 },
+      { id: 'logo', label: 'Your logo or artwork', price: 8000 },
       { id: 'sleeve', label: 'Individual sleeves for favours', price: 6000 },
     ],
     allowsMessage: true,
@@ -447,7 +447,7 @@ export const PRODUCTS = [
   /* -------------------------------- CUSTOM ----------------------------- */
   {
     slug: 'bespoke-design-cake',
-    name: 'Bespoke Design Cake',
+    name: 'Custom Design Cake',
     category: 'custom',
     tagline: 'Made from your idea',
     description:
@@ -456,12 +456,12 @@ export const PRODUCTS = [
     flavorArt: 'caramel',
     bestseller: true,
     leadDays: 5,
-    tags: ['Bespoke', 'Design-led', 'Consultation'],
+    tags: ['Custom design', 'Personalised', 'Made to order'],
     occasions: ['birthday', 'wedding', 'corporate', 'graduation', 'baby', 'anniversary'],
     sizes: [
       { id: 'single', label: 'Single tier, custom design', serves: '15–20 slices', price: 65000 },
       { id: 'double', label: 'Two tiers, custom design', serves: '35–45 slices', price: 145000 },
-      { id: 'sculpted', label: 'Sculpted / 3D showpiece', serves: 'quoted per design', price: 190000 },
+      { id: 'sculpted', label: 'Sculpted / 3D cake', serves: 'price confirmed after discussion', price: 190000 },
     ],
     flavors: CAKE_FLAVORS,
     frostings: FROSTINGS,
@@ -493,7 +493,7 @@ export const PRODUCTS = [
     flavors: CAKE_FLAVORS,
     frostings: FROSTINGS,
     addons: [
-      { id: 'logo', label: 'Logo reproduction across items', price: 12000 },
+      { id: 'logo', label: 'Your logo on the treats', price: 12000 },
       { id: 'setup', label: 'On-site setup & styling', price: 25000 },
       { id: 'stands', label: 'Stand & prop hire', price: 18000 },
     ],
@@ -506,21 +506,21 @@ export const OCCASIONS = [
   {
     id: 'birthday',
     label: 'Birthday',
-    note: 'Candles, colour, and something everyone will recognise.',
+    note: 'A favourite flavour, birthday candles and a message just for them.',
     art: 'celebrationCake',
     flavorArt: 'redVelvet',
   },
   {
     id: 'wedding',
     label: 'Wedding',
-    note: 'Tiers, a tasting first, and a cake that holds up through the photos.',
+    note: 'Choose flavours, colours and tiers to suit your wedding day.',
     art: 'tieredCake',
     flavorArt: 'ivory',
   },
   {
     id: 'baby',
     label: 'Baby shower',
-    note: 'Soft colours, iced cookies, nothing too rich.',
+    note: 'Cupcakes, cookies and cakes in the colours you have chosen.',
     art: 'cupcake',
     flavorArt: 'strawberry',
   },
@@ -534,28 +534,28 @@ export const OCCASIONS = [
   {
     id: 'corporate',
     label: 'Corporate',
-    note: 'Branded, invoiced, and there when you said it would be.',
+    note: 'Cakes and treats for team celebrations, client gifts and company events.',
     art: 'macarons',
     flavorArt: 'coffee',
   },
   {
     id: 'anniversary',
     label: 'Anniversary',
-    note: 'Grown-up flavours and something quieter to look at.',
+    note: 'A cake or a box of treats to celebrate another year together.',
     art: 'cakeSlice',
     flavorArt: 'chocolate',
   },
   {
     id: 'thanks',
     label: 'Thank you',
-    note: 'A box that says it better than a text message would.',
+    note: 'Send a box of their favourite treats with a personal note.',
     art: 'brownies',
     flavorArt: 'caramel',
   },
   {
     id: 'justbecause',
     label: 'Just because',
-    note: 'No occasion needed. Genuinely.',
+    note: 'Something sweet, just because you feel like it.',
     art: 'donut',
     flavorArt: 'strawberry',
   },

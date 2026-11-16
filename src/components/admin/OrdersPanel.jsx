@@ -260,13 +260,13 @@ export default function OrdersPanel({
                           </div>
 
                           <div>
-                            <h3 className="eyebrow text-cocoa/50">Fulfilment</h3>
+                            <h3 className="eyebrow text-cocoa/50">Delivery or collection</h3>
                             <dl className="mt-3 space-y-2 text-[0.85rem]">
                               <Detail label="Type">
                                 {order.fulfilment === 'delivery' ? 'Delivery' : 'Collection'}
                               </Detail>
                               <Detail label="Date">{prettyDate(order.date)}</Detail>
-                              <Detail label="Slot">{order.time}</Detail>
+                              <Detail label="Time slot">{order.time}</Detail>
                               {order.zone && <Detail label="Zone">{order.zone}</Detail>}
                               {order.address && <Detail label="Address">{order.address}</Detail>}
                               {order.occasion && <Detail label="Occasion">{order.occasion}</Detail>}
@@ -318,7 +318,7 @@ export default function OrdersPanel({
                               onChangePayment={onChangePayment}
                             />
 
-                            <h3 className="eyebrow mt-7 text-cocoa/50">Move to</h3>
+                            <h3 className="eyebrow mt-7 text-cocoa/50">Update status</h3>
                             <div className="mt-3 flex flex-wrap gap-1.5">
                               {ORDER_STATUSES.map((s) => (
                                 <button

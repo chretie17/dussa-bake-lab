@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 import { Award, HeartHandshake, Leaf, Timer } from 'lucide-react'
 import PageHeader from '../components/PageHeader'
-import CreationImage from '../components/CreationImage'
+import { BrandLogo } from '../components/BrandMark'
 import ProcessSection from '../sections/ProcessSection'
 import CtaBanner from '../sections/CtaBanner'
 import { Button, Flourish, Reveal, Section, SectionHeading } from '../components/ui'
@@ -12,7 +12,7 @@ import usePageMeta from '../lib/usePageMeta'
 const PRINCIPLES = [
   {
     icon: Leaf,
-    title: 'Real ingredients only',
+    title: 'Taste comes first',
     body: 'We pay attention to the taste as much as the decoration. If you have ingredient questions, just ask.',
   },
   {
@@ -52,7 +52,7 @@ export default function About() {
         eyebrow="Our story"
         title={
           <>
-            Sweet moments, <span className="italic text-gradient-gold">made better</span>
+            Cakes for the moments <span className="italic text-gradient-gold">you share</span>
           </>
         }
         lead={BRAND.description}
@@ -69,7 +69,7 @@ export default function About() {
               transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
               className="mx-auto max-w-md rounded-[2.5rem] border border-caramel/25 bg-gradient-to-br from-blush/70 to-porcelain p-8 shadow-soft"
             >
-              <CreationImage art="tieredCake" flavorArt="ivory" seed="about-hero" alt="A tiered celebration cake" className="w-full rounded-[1.5rem]" />
+              <BrandLogo className="aspect-square w-full !rounded-[1.5rem]" />
             </motion.div>
           </div>
 
@@ -111,8 +111,8 @@ export default function About() {
         <div className="container-x">
           <SectionHeading
             align="center"
-            eyebrow="What we will not compromise on"
-            title="Four things we will not bend on"
+            eyebrow="What matters to us"
+            title="Care in every order"
           />
           <Flourish className="mt-8" />
 
@@ -183,7 +183,7 @@ export default function About() {
               {BRAND.script}
             </p>
             <h2 className="mt-6 text-[clamp(1.8rem,4vw,2.8rem)] leading-[1.1]">
-              The promises behind every box
+              Made with you in mind
             </h2>
             <p className="mt-5 max-w-md text-[1rem] leading-relaxed text-on-deep/60">
               Here is what matters to us when we make something for you.

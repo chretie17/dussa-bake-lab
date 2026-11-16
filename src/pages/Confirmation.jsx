@@ -19,7 +19,7 @@ export default function Confirmation() {
 
   usePageMeta({
     title: `Order ${code} confirmed — Dussa BakeLab`,
-    description: 'Your Dussa BakeLab order is in. Here is your order code and what happens next.',
+    description: 'Find your Dussa BakeLab order code, order details and next steps.',
   })
 
   useEffect(() => {
@@ -91,11 +91,11 @@ export default function Confirmation() {
 
           <p className="eyebrow mt-8 text-accent">Order received</p>
           <h1 className="mt-5 text-[clamp(2.2rem,5.4vw,3.6rem)] leading-[1.06]">
-            Thank you{order?.name ? `, ${order.name.split(' ')[0]}` : ''}. We are on it
+            Thank you{order?.name ? `, ${order.name.split(' ')[0]}` : ''}!
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-[1.0625rem] leading-relaxed text-on-deep/62">
-            It has landed in the kitchen. We will confirm the details and the final price
-            shortly, usually within a couple of hours while we are open.
+            We will review your order and contact you to confirm the details and final price.
+            Keep your order code below so you can check its progress.
           </p>
 
           <div className="mx-auto mt-9 inline-flex flex-col items-center gap-3 rounded-2xl border border-on-deep/18 bg-on-deep/6 px-8 py-6 backdrop-blur-sm">
@@ -114,7 +114,7 @@ export default function Confirmation() {
               </button>
             </div>
             <span className="text-[0.78rem] text-on-deep/67">
-              Keep this. You can check on your order with it any time
+              Use this code to check your order’s progress.
             </span>
           </div>
 
@@ -122,7 +122,7 @@ export default function Confirmation() {
             <div className="mt-9 flex flex-wrap justify-center gap-3">
               <Button href={whatsappOrderLink(order)} variant="gold" size="lg" sheen>
                 <MessageCircle size={17} strokeWidth={1.9} />
-                Send it to us on WhatsApp
+                Send order on WhatsApp
               </Button>
               <Button
                 to={`/track/${code}`}
@@ -139,8 +139,8 @@ export default function Confirmation() {
               <Info size={18} strokeWidth={1.8} className="mt-0.5 shrink-0 text-accent" />
               <p className="text-[0.85rem] leading-relaxed text-on-deep/75">
                 We saved this order on your device but could not reach our kitchen dashboard just
-                now. Please tap <strong className="text-accent">Send it to us on WhatsApp</strong> so
-                we definitely get it. Your code stays the same.
+                now. Please tap <strong className="text-accent">Send order on WhatsApp</strong> so
+                we receive your order. You can use the same order code.
               </p>
             </div>
           )}
@@ -163,9 +163,9 @@ export default function Confirmation() {
                       We will keep you posted on WhatsApp
                     </h3>
                     <p className="mt-2 text-[0.9rem] leading-relaxed text-cocoa/65">
-                      A confirmation is on its way to the number you gave us, and we will message
-                      you again each time your order moves — confirmed, in the kitchen, then boxed
-                      and ready. No need to check back here.
+                      You have asked for WhatsApp updates. Once your order is confirmed,
+                      we can send updates to the number you provided. You can also check
+                      your progress using the order tracker.
                     </p>
                   </div>
                 )}
@@ -192,7 +192,7 @@ export default function Confirmation() {
                       </>
                     ) : (
                       <>
-                        We have sent the payment details to your WhatsApp. Pay by{' '}
+                        Contact us on WhatsApp for payment details. You can pay by{' '}
                         {FULFILMENT.payments.slice(0, 3).join(', ')} or cash on collection, then
                         reply <strong className="text-espresso">PAID</strong> on WhatsApp with a
                         screenshot and we will confirm your order.
@@ -234,7 +234,7 @@ export default function Confirmation() {
                       {prettyDate(order.date)}{' '}
                       <span className="text-cocoa/70">({relativeDay(order.date)})</span>
                     </Row>
-                    <Row label="Slot">{order.time}</Row>
+                    <Row label="Time slot">{order.time}</Row>
                     {order.fulfilment === 'delivery' && <Row label="Address">{order.address}</Row>}
                     <Row label="Contact">
                       {order.name} · {order.phone}

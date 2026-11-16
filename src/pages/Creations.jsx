@@ -27,9 +27,9 @@ export default function Creations() {
   const [showFilters, setShowFilters] = useState(false)
 
   usePageMeta({
-    title: 'Creations — Cakes, Cupcakes, Cookies & Custom Orders | Dussa BakeLab',
+    title: 'Menu — Cakes, Cupcakes, Cookies & Custom Orders | Dussa BakeLab',
     description:
-      'Browse the full Dussa BakeLab menu: signature cakes, piped cupcakes, brown butter cookies, macarons, brownies and bespoke custom designs. Baked to order in Kigali.',
+      'Browse cakes, cupcakes, cookies, brownies and custom cakes from Dussa BakeLab. Made to order in Kigali.',
   })
 
   /** Keep the URL shareable — filters live in the query string, not just state. */
@@ -92,9 +92,9 @@ export default function Creations() {
     <>
       <PageHeader
         eyebrow="The full menu"
-        title="Our creations"
-        lead="Find something you like, pick a size and flavour, and tell us when you need it. Photos are examples, not pictures of Dussa orders."
-        crumbs={[{ label: 'Creations' }]}
+        title="Our menu"
+        lead="Choose a cake or treat, pick your size and flavour, and tell us when you need it. Photos show design ideas rather than completed Dussa orders."
+        crumbs={[{ label: 'Menu' }]}
       >
         <div className="mt-8 flex flex-wrap gap-2">
           {categories.map((c) => (
@@ -131,7 +131,7 @@ export default function Creations() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search cakes, flavours, occasions…"
-              aria-label="Search creations"
+              aria-label="Search the menu"
               className="h-11 w-full rounded-full border border-caramel/25 bg-porcelain pl-11 pr-4 text-[0.875rem] text-espresso placeholder:text-cocoa/65 focus:border-caramel focus:outline-none"
             />
           </div>
@@ -165,7 +165,7 @@ export default function Creations() {
             </select>
 
             <label className="sr-only" htmlFor="sort-order">
-              Sort creations
+              Sort the menu
             </label>
             <select
               id="sort-order"
@@ -188,7 +188,7 @@ export default function Creations() {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <p className="text-[0.875rem] text-cocoa/60">
               <strong className="font-medium text-espresso">{results.length}</strong>{' '}
-              {results.length === 1 ? 'creation' : 'creations'}
+              {results.length === 1 ? 'item' : 'items'}
               {activeOccasion && <> for {activeOccasion.label.toLowerCase()}</>}
             </p>
 
@@ -226,9 +226,9 @@ export default function Creations() {
                 animate={{ opacity: 1, y: 0 }}
                 className="mt-16 rounded-[2rem] border border-dashed border-caramel/35 bg-porcelain/60 px-8 py-16 text-center"
               >
-                <h2 className="font-display text-2xl text-espresso">Nothing matches that yet</h2>
+                <h2 className="font-display text-2xl text-espresso">No items match your search</h2>
                 <p className="mx-auto mt-3 max-w-sm text-[0.9375rem] text-cocoa/60">
-                  Try a different filter, or tell us what you were after and we will make it specially.
+                  Try another search or clear the filters. You can also ask us about a custom order.
                 </p>
                 <div className="mt-7 flex flex-wrap justify-center gap-3">
                   <Button onClick={clearAll} variant="outline">
@@ -245,13 +245,13 @@ export default function Creations() {
               Not seeing what you had in mind?
             </h2>
             <p className="mx-auto mt-3 max-w-lg text-[0.9375rem] leading-relaxed text-cocoa/62">
-              Custom work is the part we enjoy most. Send a picture, a colour, or an idea you cannot
-              quite explain yet, and we will sketch it and price it. Bespoke designs start from{' '}
+              Send us a reference photo, your preferred colours or a few ideas. We will talk through
+              the design and confirm a price with you. Custom cakes start from{' '}
               {custom ? money(fromPrice(custom)) : 'RWF 65,000'}.
             </p>
             <div className="mt-7 flex flex-wrap justify-center gap-3">
               <Button to={custom ? `/creations/${custom.slug}` : '/contact'} sheen>
-                Design something bespoke
+                Plan a custom cake
               </Button>
               <Button to="/contact" variant="outline">
                 Ask a question

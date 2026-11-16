@@ -12,13 +12,13 @@ export default function Bestsellers() {
       <div className="container-x">
         <div className="flex flex-wrap items-end justify-between gap-8">
           <SectionHeading
-            eyebrow="Most requested"
-            title="A few favourites to start with"
-            lead="Not sure where to start? Have a look at these cakes and treats, then choose what sounds good to you."
+            eyebrow="From the menu"
+            title="Find your favourite"
+            lead="Start with a chocolate cake, a box of cupcakes or a few cookies to share."
             className="max-w-xl"
           />
           <Button to="/creations" variant="outline" className="shrink-0">
-            See all creations
+            Browse the full menu
             <ArrowRight size={16} strokeWidth={2} className="transition-transform duration-300 group-hover:translate-x-1" />
           </Button>
         </div>

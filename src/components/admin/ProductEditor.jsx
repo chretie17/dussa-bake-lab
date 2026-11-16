@@ -231,7 +231,7 @@ export default function ProductEditor({ product, onSave, onClose, saving, error,
                     id="p-tagline"
                     value={form.tagline}
                     onChange={(e) => set('tagline', e.target.value)}
-                    placeholder="The one on the poster"
+                    placeholder="Chocolate sponge with a ganache finish"
                   />
                 </Field>
 
@@ -241,7 +241,7 @@ export default function ProductEditor({ product, onSave, onClose, saving, error,
                     rows={5}
                     value={form.description}
                     onChange={(e) => set('description', e.target.value)}
-                    placeholder="What it is, what is in it, and why people order it."
+                    placeholder="Describe the flavours, filling, decoration and serving suggestions."
                   />
                 </Field>
 
@@ -348,7 +348,7 @@ export default function ProductEditor({ product, onSave, onClose, saving, error,
                 />
                 <Toggle
                   label="Ask for a design brief"
-                  description="For bespoke work — shows a box for their idea."
+                  description="Let customers describe their design ideas when ordering."
                   checked={form.customBrief}
                   onChange={(v) => set('customBrief', v)}
                 />

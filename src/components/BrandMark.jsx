@@ -1,17 +1,8 @@
 import { LogoMark, Wordmark } from '../art/Logo'
+import { BRAND_ASSETS } from '../data/site'
 import { useCatalog } from '../context/CatalogContext'
 
-/**
- * The logo, wherever it appears.
- *
- * Uses the file uploaded in the dashboard when there is one, and falls back to
- * the drawn monogram otherwise — so the site never sits without a logo while
- * settings load, and swapping it never needs a code change.
- *
- * An uploaded file cannot recolour itself for the two themes the way the drawn
- * mark does, which is worth knowing when picking one: a logo on a transparent
- * background works on both, a white-on-white one will not.
- */
+/** Dashboard uploads override the bundled brand assets. */
 export function BrandMark({ className = '', tone, accent, ...rest }) {
   const { brand } = useCatalog()
 
@@ -30,24 +21,31 @@ export function BrandMark({ className = '', tone, accent, ...rest }) {
   return <LogoMark className={className} tone={tone} accent={accent} {...rest} />
 }
 
-/**
- * Mark plus name, as used in the navbar and footer. When the uploaded logo
- * already spells the bakery out, the typed wordmark is dropped so the name is
- * not printed twice.
- */
+/** Compact brand for navigation, drawers and other small spaces. */
 export function BrandLockup({ markClass = 'h-11 w-11', tone, accent, wordClass = '' }) {
   const { brand } = useCatalog()
-  const showWordmark = !(brand?.logoUrl && brand?.logoHasName)
+  const hasName = Boolean(brand?.logoUrl && brand?.logoHasName)
 
   return (
-    <>
-      <BrandMark className={markClass} tone={tone} accent={accent} />
-      {showWordmark ? (
-        <Wordmark tone={tone} accent={accent} className={wordClass} />
-      ) : (
-        <span className="sr-only">{brand?.name || 'Dussa BakeLab'}</span>
-      )}
-    </>
+    <span className="inline-flex shrink-0 items-center gap-2.5" role="img" aria-label={brand?.name || 'Dussa BakeLab'}>
+      <BrandMark className={hasName ? 'h-12 w-28 sm:w-36' : markClass} tone={tone} accent={accent} />
+      {!hasName && <span aria-hidden="true"><Wordmark tone={tone} accent={accent} className={wordClass} /></span>}
+    </span>
+  )
+}
+
+/** Full logo and tagline on a cream ground for readability in either theme. */
+export function BrandLogo({ className = '' }) {
+  const { brand } = useCatalog()
+  return (
+    <img
+      src={brand?.logoUrl || BRAND_ASSETS.logo}
+      alt={brand?.name || 'Dussa BakeLab'}
+      width="1254"
+      height="1254"
+      loading="lazy"
+      className={`rounded-2xl bg-[#fff3e9] object-contain p-4 ${className}`}
+    />
   )
 }
 

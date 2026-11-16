@@ -54,7 +54,7 @@ export default function TrackOrder() {
       <PageHeader
         eyebrow="Order tracking"
         title="Where is my cake?"
-        lead="Put in the code from your confirmation, the one that looks like DBL-XXXXXXX, and we will show you where things are."
+        lead="Enter the order code from your confirmation, such as DBL-XXXXXXX, to check its progress."
         crumbs={[{ label: 'Track order' }]}
       />
 
@@ -166,14 +166,14 @@ export default function TrackOrder() {
                         {order.payment?.status === 'verified'
                           ? 'Payment received'
                           : order.payment?.status === 'claimed'
-                            ? 'Payment reported — being checked'
+                            ? 'Payment being checked'
                             : 'Awaiting payment'}
                       </strong>
                       {order.payment?.status === 'verified'
                         ? 'Thank you. Nothing more is needed from you.'
                         : order.payment?.status === 'claimed'
                           ? 'We have your note and are matching it against our Mobile Money statement. You will hear from us on WhatsApp.'
-                          : 'The payment details are on your WhatsApp. Reply PAID with a screenshot once you have sent it.'}
+                          : 'Contact us on WhatsApp for payment details. Once you have paid, reply PAID with a screenshot.'}
                     </div>
                   </div>
 

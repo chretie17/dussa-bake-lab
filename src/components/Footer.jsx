@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Mail, MapPin, Phone } from 'lucide-react'
 import { InstagramIcon, WhatsAppIcon } from './BrandIcons'
-import { BrandLockup } from './BrandMark'
+import { BrandLogo } from './BrandMark'
 import { NAV_LINKS } from '../data/site'
 import { useCatalog } from '../context/CatalogContext'
 import { whatsappEnquiryLink } from '../lib/orders'
@@ -35,15 +35,9 @@ export default function Footer() {
         <div className="mt-16 grid gap-12 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           <div>
             <div className="flex items-center gap-3">
-              <BrandLockup
-                markClass="h-12 w-12"
-                /* Theme tokens, not fixed cream: the footer is dark under the
-                   chocolate theme and light under the bright one, and a
-                   hardcoded cream mark disappeared on the latter. */
-                tone="var(--color-on-deep)"
-                accent="var(--color-accent)"
-                wordClass="text-[1rem]"
-              />
+              <Link to="/" aria-label="Dussa BakeLab — home">
+                <BrandLogo className="h-52 w-52" />
+              </Link>
             </div>
             <p className="mt-5 max-w-xs text-[0.9rem] leading-relaxed text-on-deep/60">
               {brand.description}
@@ -77,8 +71,8 @@ export default function Footer() {
             </div>
           </div>
 
-          <nav aria-label="Creations">
-            <h3 className="eyebrow text-accent">Creations</h3>
+          <nav aria-label="Menu">
+            <h3 className="eyebrow text-accent">Our menu</h3>
             <ul className="mt-5 space-y-3 text-[0.9rem]">
               {categories.map((c) => (
                 <li key={c.id}>
@@ -94,7 +88,7 @@ export default function Footer() {
           </nav>
 
           <nav aria-label="Company">
-            <h3 className="eyebrow text-accent">Company</h3>
+            <h3 className="eyebrow text-accent">Useful links</h3>
             <ul className="mt-5 space-y-3 text-[0.9rem]">
               {NAV_LINKS.map((l) => (
                 <li key={l.to}>
@@ -112,7 +106,7 @@ export default function Footer() {
           </nav>
 
           <div>
-            <h3 className="eyebrow text-accent">Order via</h3>
+            <h3 className="eyebrow text-accent">Get in touch</h3>
             <ul className="mt-5 space-y-4 text-[0.9rem]">
               <li>
                 <a

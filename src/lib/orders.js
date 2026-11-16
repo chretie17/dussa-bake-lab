@@ -6,11 +6,11 @@ const ADMIN_KEY_STORE = 'dussa.adminKey.v1'
 
 export const ORDER_STATUSES = [
   { id: 'new', label: 'New', hint: 'Received, awaiting confirmation', tone: 'gold' },
-  { id: 'confirmed', label: 'Confirmed', hint: 'Quoted and locked into the schedule', tone: 'blue' },
+  { id: 'confirmed', label: 'Confirmed', hint: 'Your order is confirmed for your chosen date', tone: 'blue' },
   { id: 'baking', label: 'In the kitchen', hint: 'Being baked and decorated', tone: 'amber' },
-  { id: 'ready', label: 'Ready', hint: 'Boxed and waiting for collection or dispatch', tone: 'green' },
+  { id: 'ready', label: 'Ready', hint: 'Ready for collection or delivery', tone: 'green' },
   { id: 'completed', label: 'Completed', hint: 'Delivered or collected', tone: 'slate' },
-  { id: 'cancelled', label: 'Cancelled', hint: 'Called off', tone: 'red' },
+  { id: 'cancelled', label: 'Cancelled', hint: 'This order has been cancelled', tone: 'red' },
 ]
 
 export function statusMeta(id) {

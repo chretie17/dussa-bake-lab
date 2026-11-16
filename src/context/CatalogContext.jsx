@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
 import { PRODUCTS, CATEGORIES, OCCASIONS } from '../data/catalog'
-import { BRAND, CONTACT, FULFILMENT, HOURS } from '../data/site'
+import { BRAND, BRAND_ASSETS, CONTACT, FULFILMENT, HOURS } from '../data/site'
 
 const CatalogContext = createContext(null)
 
@@ -67,24 +67,15 @@ export function CatalogProvider({ children }) {
     refresh()
   }, [refresh])
 
-  /**
-   * The browser tab follows the uploaded logo. index.html ships the drawn
-   * favicon, so there is always one; this only replaces it once the bakery's
-   * own settings have loaded.
-   */
+  /** Use the supplied monogram by default, including after a custom logo is cleared. */
   useEffect(() => {
-    const url = settings?.brand?.logoUrl
-    if (!url) return undefined
-
+    const url = settings?.brand?.logoUrl || BRAND_ASSETS.mark
     const link = document.querySelector("link[rel='icon']") || document.createElement('link')
-    const previous = link.getAttribute('href')
     link.rel = 'icon'
+    // Uploaded files may be PNG, JPEG, WebP or SVG; let the browser detect the type.
+    link.removeAttribute('type')
     link.href = url
     if (!link.parentNode) document.head.appendChild(link)
-
-    return () => {
-      if (previous) link.setAttribute('href', previous)
-    }
   }, [settings?.brand?.logoUrl])
 
   const value = useMemo(() => {

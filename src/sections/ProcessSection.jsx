@@ -18,8 +18,8 @@ export default function ProcessSection() {
           align="center"
           tone="light"
           eyebrow="How it works"
-          title="How an order actually goes"
-          lead="You always know where your order is, and there are no surprises on the day."
+          title="From your idea to your order"
+          lead="Choose what you like. We will confirm the details and prepare it for your date."
         />
 
         <div className="relative mt-16">

@@ -69,7 +69,7 @@ export default function OverviewPanel({ orders, products, onGoToOrders, onGoToPr
         />
         <Stat label="Due tomorrow" value={view.dueTomorrow.length} />
         <Stat
-          label="Waiting on you"
+          label="Awaiting confirmation"
           value={view.awaiting.length}
           tone={view.awaiting.length > 0 ? 'alert' : 'plain'}
           hint={view.awaiting.length > 0 ? 'new orders to confirm' : 'all confirmed'}
@@ -114,7 +114,7 @@ export default function OverviewPanel({ orders, products, onGoToOrders, onGoToPr
         <section className="rounded-[1.5rem] border border-gold/45 bg-gold/10 p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h3 className="font-display text-[1.2rem] text-espresso">Needs your reply</h3>
+              <h3 className="font-display text-[1.2rem] text-espresso">Orders to confirm</h3>
               <p className="mt-1 text-[0.85rem] text-cocoa/65">
                 These came in and have not been confirmed yet.
               </p>
@@ -153,7 +153,7 @@ export default function OverviewPanel({ orders, products, onGoToOrders, onGoToPr
       {/* ------------------------------------------- money & menu */}
       <div className="grid gap-5 lg:grid-cols-2">
         <section className="rounded-[1.5rem] border border-caramel/22 bg-porcelain p-6">
-          <h3 className="font-display text-[1.2rem] text-espresso">How it is going</h3>
+          <h3 className="font-display text-[1.2rem] text-espresso">Order totals</h3>
           <dl className="mt-4 space-y-3 text-[0.9rem]">
             <Row label="Last 7 days">
               {money(view.weekValue)}{' '}

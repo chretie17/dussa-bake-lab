@@ -309,8 +309,8 @@ export default function ProductsPanel({
               Delete “{confirmDelete.name}”?
             </h3>
             <p className="mt-2.5 text-[0.9rem] leading-relaxed text-cocoa/65">
-              It comes off the site straight away. Orders already placed keep their own record of
-              it. If you just want it off the menu for now, hide it instead.
+              This removes the product from your menu. Existing orders keep their details.
+              To remove it temporarily, choose Hide instead.
             </p>
             <div className="mt-6 flex flex-wrap justify-end gap-2">
               <Button variant="ghost" size="sm" onClick={() => setConfirmDelete(null)}>

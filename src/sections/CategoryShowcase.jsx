@@ -16,7 +16,7 @@ export default function CategoryShowcase() {
           align="center"
           eyebrow="Something for everyone"
           title="What we make"
-          lead="A birthday cake, a box of cupcakes, or just a treat for yourself. Take a look and tell us what you fancy."
+          lead="Browse our cakes, cupcakes, cookies and treats. Choose a favourite or ask us about a custom order."
         />
         <Flourish className="mt-8" />
 

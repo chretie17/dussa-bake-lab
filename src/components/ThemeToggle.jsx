@@ -54,7 +54,7 @@ export default function ThemeToggle({ className = '', onDark = false }) {
           onDark ? 'text-white/80' : 'text-cocoa/85',
         )}
       >
-        {bright ? 'Dark' : 'Lite'}
+        {bright ? 'Dark' : 'Light'}
       </span>
     </button>
   )

@@ -116,8 +116,8 @@ export default function MediaPanel({ adminKey, usedUrls = [] }) {
               Drop your photos here
             </p>
             <p className="mt-1.5 max-w-md text-[0.85rem] leading-relaxed text-cocoa/60">
-              Or click to pick them off your computer or phone. You can drop several at once. Big
-              camera photos get shrunk automatically so the site stays quick to load.
+              Or choose files from your computer or phone. You can upload several at once.
+              Large photos are resized automatically to help pages load quickly.
             </p>
           </>
         )}

@@ -48,7 +48,7 @@ export default function GalleryEditor({ rows = [], onChange, adminKey }) {
     <div>
       {rows.length === 0 ? (
         <p className="rounded-xl border border-dashed border-caramel/30 bg-cream/50 px-4 py-3 text-[0.8rem] text-cocoa/60">
-          No photos chosen, so the shelf shows the drawings. Add a few and they take over.
+          No gallery photos selected. The home page currently shows example photos. Add your own bakery photos here.
         </p>
       ) : (
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -72,7 +72,7 @@ export default function GalleryEditor({ rows = [], onChange, adminKey }) {
                   onChange={(e) => update(index, 'caption', e.target.value)}
                   placeholder="Caption, e.g. Red velvet · birthday"
                   className="h-9 text-[0.8rem]"
-                  aria-label={`Caption for shelf photo ${index + 1}`}
+                  aria-label={`Caption for gallery photo ${index + 1}`}
                 />
                 <button
                   type="button"
